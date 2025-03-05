@@ -18,6 +18,10 @@
     "onCommand:myExtension.focusSearchBar"
   ],
   "main": "./out/extension.js",
+  "files": [
+    "out/",
+    "commands/"
+  ],
   "contributes": {
     "commands": [
       {
@@ -31,6 +35,10 @@
       {
         "command": "myExtension.focusSearchBar",
         "title": "Focus Search Bar"
+      },
+      {
+        "command": "laravelTinker.removeCommand",
+        "title": "Remove LaravelTinkerRun Command"
       }
     ],
     "keybindings": [

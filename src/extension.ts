@@ -17,6 +17,9 @@ export function activate(context: vscode.ExtensionContext) {
   console.log("Laravel Tinker extension activated!");
   EXTENSION_URI = context.extensionUri;
 
+  // ✅ Copy LaravelTinkerRun.php to the Laravel project when extension is activated
+  copyLaravelTinkerCommand();
+
   const provider = new PhpRunCodeLensProvider();
   const providerRegistration = vscode.languages.registerCodeLensProvider(
       { language: 'php', scheme: 'file' },
@@ -29,7 +32,6 @@ export function activate(context: vscode.ExtensionContext) {
   });
   context.subscriptions.push(runCommand);
 
-  // ✅ Register the clearOutput command
   const clearOutputCommand = vscode.commands.registerCommand('myExtension.clearOutput', () => {
       if (outputPanel) {
           outputPanel.webview.postMessage({ command: 'clearOutput' });
@@ -37,18 +39,59 @@ export function activate(context: vscode.ExtensionContext) {
           vscode.window.showInformationMessage('No output to clear.');
       }
   });
-
-  context.subscriptions.push(clearOutputCommand); // Add it to VS Code's command registry
+  context.subscriptions.push(clearOutputCommand);
 
   const focusSearchBarCommand = vscode.commands.registerCommand("myExtension.focusSearchBar", () => {
-    if (outputPanel) {
-        outputPanel.webview.postMessage({ command: "focusSearchBar" });
-    } else {
-        vscode.window.showInformationMessage("No output panel open.");
-    }
+      if (outputPanel) {
+          outputPanel.webview.postMessage({ command: "focusSearchBar" });
+      } else {
+          vscode.window.showInformationMessage("No output panel open.");
+      }
   });
   context.subscriptions.push(focusSearchBarCommand);
+}
 
+/**
+ * Copies LaravelTinkerRun.php to the Laravel app/Console/Commands/LaravelTinkerRunner directory.
+ */
+function copyLaravelTinkerCommand() {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders) {
+      vscode.window.showErrorMessage("No workspace opened! Open a Laravel project.");
+      return;
+  }
+
+  const projectRoot = workspaceFolders[0].uri.fsPath;
+  const laravelCommandsPath = path.join(projectRoot, 'app', 'Console', 'Commands', 'LaravelTinkerRunner');
+  const destPath = path.join(laravelCommandsPath, 'LaravelTinkerRun.php');
+  const sourcePath = path.join(EXTENSION_URI.fsPath, 'commands', 'LaravelTinkerRun.php');
+
+  // Ensure the directory exists
+  if (!fs.existsSync(laravelCommandsPath)) {
+      fs.mkdirSync(laravelCommandsPath, { recursive: true });
+  }
+
+  // Copy the file only if it doesn’t already exist
+  if (!fs.existsSync(destPath)) {
+      fs.copyFileSync(sourcePath, destPath);
+      vscode.window.showInformationMessage("✅ LaravelTinkerRun.php has been installed in your Laravel project.");
+  }
+}
+
+/**
+* Removes LaravelTinkerRun.php when the extension is uninstalled.
+*/
+export function deactivate() {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders) return;
+
+  const projectRoot = workspaceFolders[0].uri.fsPath;
+  const destPath = path.join(projectRoot, 'app', 'Console', 'Commands', 'LaravelTinkerRunner', 'LaravelTinkerRun.php');
+
+  if (fs.existsSync(destPath)) {
+      fs.unlinkSync(destPath);
+      vscode.window.showInformationMessage("❌ LaravelTinkerRun.php has been removed from your Laravel project.");
+  }
 }
 
 
