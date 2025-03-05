@@ -1,0 +1,68 @@
+{
+  "name": "laravel-tinker-runner",
+  "displayName": "Laravel Tinker Runner",
+  "description": "Run PHP/Laravel Scripts directly from VS Code.",
+  "version": "0.0.1",
+  "publisher": "ali-raza-saleem",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers"
+  ],
+  "activationEvents": [
+    "onLanguage:php",
+    "onCommand:myExtension.runPhpFile",
+    "onCommand:myExtension.clearOutput",
+    "onCommand:myExtension.focusSearchBar"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "myExtension.runPhpFile",
+        "title": "Run PHP File"
+      },
+      {
+        "command": "myExtension.clearOutput",
+        "title": "Clear Output"
+      },
+      {
+        "command": "myExtension.focusSearchBar",
+        "title": "Focus Search Bar"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "ctrl+alt+r",
+        "command": "myExtension.runPhpFile",
+        "when": "editorLangId == php"
+      },
+      {
+        "key": "ctrl+alt+c",
+        "command": "myExtension.clearOutput",
+        "when": "editorLangId == php || webviewFocus"
+      },
+      {
+        "key": "ctrl+alt+f",
+        "command": "myExtension.focusSearchBar",
+        "when": "editorLangId == php || webviewFocus"
+      }
+    ],
+    "menus": {}
+  },
+  "scripts": {
+    "compile": "tsc -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^16.0.0",
+    "@types/vscode": "^1.70.0",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.0.2",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.5.3",
+    "typescript": "^4.0.0"
+  }
+}
