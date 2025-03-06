@@ -3,4 +3,5 @@ node_modules/
 .vscode/
 out/
 /dist
+/packages
 *.vsix

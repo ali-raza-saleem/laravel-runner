@@ -1,0 +1,24 @@
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="{{highlightCssUri}}" />
+  <link rel="stylesheet" href="{{styleUri}}" />
+</head>
+<body>
+  <div id="controls">
+    <input id="search-input" type="text" placeholder="Search output..." />
+    <button id="clear-button">Clear Output</button>
+  </div>
+  <div id="output-container">
+    <div id="loading" hidden>
+        <span class="loader"></span>
+    </div>
+  </div>
+
+  <!-- Load external JS files -->
+  <script src="{{highlightJsUri}}"></script>
+  <script src="{{markJsUri}}"></script>
+  <script src="{{utilsJsUri}}"></script>
+  <script src="{{outputHandlerUri}}"></script>
+</body>
+</html>
