@@ -1,8 +1,0 @@
-node_modules/**          # Exclude all dependencies (only keep required)
-.vscode/**               # Ignore local VS Code settings
-.git/**                  # Ignore Git-related files
-test/**                  # Ignore test files
-src/**                   # Exclude source files if using compiled output
-tsconfig.json            # Ignore TypeScript config
-README.md                # Keep README if useful for the extension
-CHANGELOG.md 

@@ -86,6 +86,10 @@ export function deactivate() {
   if (!workspaceFolders) return;
 
   const projectRoot = workspaceFolders[0].uri.fsPath;
+    if (!cachedLaravelRoots.includes(projectRoot)) {
+        console.log("❌ Not a Laravel project. Skipping LaravelTinkerRun.php copy.");
+        return;
+    }
   const destPath = path.join(projectRoot, 'app', 'Console', 'Commands', 'LaravelTinkerRunner', 'LaravelTinkerRun.php');
 
   if (fs.existsSync(destPath)) {

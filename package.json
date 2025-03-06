@@ -4,6 +4,11 @@
   "description": "Run PHP/Laravel Scripts directly from VS Code.",
   "version": "0.0.1",
   "publisher": "ali-raza-saleem",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ali-raza-saleem/laravel-tinker-runner.git"
+  },
+  "license": "GPL-3.0",
   "engines": {
     "vscode": "^1.70.0"
   },
@@ -20,7 +25,11 @@
   "main": "./out/extension.js",
   "files": [
     "out/",
-    "commands/"
+    "commands/",
+    "media/",
+    "package.json",
+    "README.md",
+    "LICENSE"
   ],
   "contributes": {
     "commands": [
