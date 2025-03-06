@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { exec } from 'child_process';
 import * as fs from 'fs';
 import { spawn } from 'child_process';
 
@@ -17,8 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
   console.log("Laravel Tinker extension activated!");
   EXTENSION_URI = context.extensionUri;
 
-  // ✅ Copy LaravelTinkerRun.php to the Laravel project when extension is activated
-  copyLaravelTinkerCommand();
+  copyTinkerScriptToLaravelVendorFolder();
 
   const provider = new PhpRunCodeLensProvider();
   const providerRegistration = vscode.languages.registerCodeLensProvider(
@@ -51,51 +49,49 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(focusSearchBarCommand);
 }
 
-/**
- * Copies LaravelTinkerRun.php to the Laravel app/Console/Commands/LaravelTinkerRunner directory.
- */
-function copyLaravelTinkerCommand() {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (!workspaceFolders) {
-      vscode.window.showErrorMessage("No workspace opened! Open a Laravel project.");
-      return;
-  }
+function copyTinkerScriptToLaravelVendorFolder() {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders) {
+        vscode.window.showErrorMessage("No workspace opened! Open a Laravel project.");
+        return;
+    }
 
-  const projectRoot = workspaceFolders[0].uri.fsPath;
-  const laravelCommandsPath = path.join(projectRoot, 'app', 'Console', 'Commands', 'LaravelTinkerRunner');
-  const destPath = path.join(laravelCommandsPath, 'LaravelTinkerRun.php');
-  const sourcePath = path.join(EXTENSION_URI.fsPath, 'commands', 'LaravelTinkerRun.php');
+    const projectRoot = workspaceFolders[0].uri.fsPath;
 
-  // Ensure the directory exists
-  if (!fs.existsSync(laravelCommandsPath)) {
-      fs.mkdirSync(laravelCommandsPath, { recursive: true });
-  }
+    const vendorDir = path.join(projectRoot, 'vendor', 'ali-raza-saleem', 'laravel-tinker-runner');
+    const destPath = path.join(vendorDir, 'tinker.php');
+    const sourcePath = path.join(EXTENSION_URI.fsPath, 'src', 'tinker.php');
 
-  // Copy the file only if it doesn’t already exist
-  if (!fs.existsSync(destPath)) {
-      fs.copyFileSync(sourcePath, destPath);
-      vscode.window.showInformationMessage("✅ LaravelTinkerRun.php has been installed in your Laravel project.");
-  }
+    // Ensure the directory exists
+    if (!fs.existsSync(vendorDir)) {
+        fs.mkdirSync(vendorDir, { recursive: true });
+    }
+
+    // Copy the file only if it doesn’t already exist
+    if (!fs.existsSync(destPath)) {
+        fs.copyFileSync(sourcePath, destPath);
+        vscode.window.showInformationMessage("✅ Laravel Tinker Runner installed successfully.");
+    }
 }
+
+
 
 /**
 * Removes LaravelTinkerRun.php when the extension is uninstalled.
 */
+
 export function deactivate() {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (!workspaceFolders) return;
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders) return;
 
-  const projectRoot = workspaceFolders[0].uri.fsPath;
-    if (!cachedLaravelRoots.includes(projectRoot)) {
-        console.log("❌ Not a Laravel project. Skipping LaravelTinkerRun.php copy.");
-        return;
+    const projectRoot = workspaceFolders[0].uri.fsPath;
+
+    const vendorDir = path.join(projectRoot, 'vendor', 'ali-raza-saleem');
+
+    if (fs.existsSync(vendorDir)) {
+        fs.rmSync(vendorDir, { recursive: true, force: true });
+        vscode.window.showInformationMessage("❌ Laravel Tinker Runner has been removed from your Laravel project");
     }
-  const destPath = path.join(projectRoot, 'app', 'Console', 'Commands', 'LaravelTinkerRunner', 'LaravelTinkerRun.php');
-
-  if (fs.existsSync(destPath)) {
-      fs.unlinkSync(destPath);
-      vscode.window.showInformationMessage("❌ LaravelTinkerRun.php has been removed from your Laravel project.");
-  }
 }
 
 
@@ -117,63 +113,91 @@ class PhpRunCodeLensProvider implements vscode.CodeLensProvider {
     }
 }
 
+let isRunning = false; // ✅ Track execution state
+
+
 /**
- * Runs the given PHP file using `php artisan laravel-tinker:run {file}` and captures all output.
+ * Runs the given PHP file using tinker script and captures all output.
  */
 function runPhpFile(fileUri?: vscode.Uri) {
-  if (!fileUri) {
-      const activeEditor = vscode.window.activeTextEditor;
-      if (activeEditor && activeEditor.document.languageId === 'php') {
-          fileUri = activeEditor.document.uri;
-      } else {
-          vscode.window.showErrorMessage('No PHP file selected to run.');
-          return;
-      }
-  }
+    if (isRunning) {
+        vscode.window.showWarningMessage("Query in Progress.  Please wait..");
+        return;
+    }
+    isRunning = true; // ✅ Mark execution as in progress
 
-  if (!isInsideWorkspaceDirectory(fileUri)) {
-      vscode.window.showErrorMessage('This command can only be run on PHP files inside the workspace directory of a Laravel project.');
-      return;
-  }
+    if (!fileUri) {
+        const activeEditor = vscode.window.activeTextEditor;
+        if (activeEditor && activeEditor.document.languageId === 'php') {
+            fileUri = activeEditor.document.uri;
+        } else {
+            vscode.window.showErrorMessage('No PHP file selected to run.');
+            isRunning = false;
+            return;
+        }
+    }
 
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (!workspaceFolders || workspaceFolders.length === 0) {
-      vscode.window.showErrorMessage('No workspace folder found.');
-      return;
-  }
+    if (!isInsideWorkspaceDirectory(fileUri)) {
+        vscode.window.showErrorMessage('This command can only be run on PHP files inside a Laravel project.');
+        isRunning = false;
+        return;
+    }
 
-  let projectRoot = workspaceFolders[0].uri.fsPath.replace(/\\/g, '/');
-  let relativePath = path.relative(projectRoot, fileUri.fsPath).replace(/\\/g, '/');
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders || workspaceFolders.length === 0) {
+        vscode.window.showErrorMessage('No workspace folder found.');
+        isRunning = false;
+        return;
+    }
 
-  // ✅ Send "Running..." message to WebView
-  updateWebView("Running...", false, true);
+    let projectRoot = workspaceFolders[0].uri.fsPath.replace(/\\/g, '/');
+    let relativePath = path.relative(projectRoot, fileUri.fsPath).replace(/\\/g, '/');
 
-  const process = spawn('php', ['artisan', 'laravel-tinker:run', relativePath], { cwd: projectRoot });
+    // ✅ Send "Running..." message to WebView
+    updateWebView("Running...", false, true);
 
-  let output = '';
-  process.stdout.on('data', (data) => {
-      output += data.toString();
-  });
+    const tinkerScriptPath = path.join(projectRoot, 'vendor', 'ali-raza-saleem', 'laravel-tinker-runner', 'tinker.php');
 
-  process.stderr.on('data', (data) => {
-      output += data.toString();
-  });
+    if (!fs.existsSync(tinkerScriptPath)) {
+        vscode.window.showErrorMessage("❌ Laravel Tinker Runner not installed. Please reload your project.");
+        isRunning = false;
+        return;
+    }
 
-  process.on('close', (code) => {
-      if (code !== 0) {
-          updateWebView(output || `Process exited with code ${code}`, true, false);
-      } else {
-          updateWebView(output || "No output from Custom Tinker.", false, false);
-      }
-  });
+    const process = spawn('php', [tinkerScriptPath, relativePath], { cwd: projectRoot });
+
+    let output = '';
+    process.stdout.on('data', (data) => {
+        output += data.toString();
+    });
+
+    process.stderr.on('data', (data) => {
+        output += data.toString();
+    });
+
+    process.on('close', (code) => {
+        isRunning = false; // ✅ Reset execution state
+
+        if (code !== 0) {
+            updateWebView(output || `Process exited with code ${code}`, true, false);
+        } else {
+            updateWebView(output || "No output from Custom Tinker.", false, false);
+        }
+    });
+
+    process.on('error', (err) => {
+        updateWebView(output || `Error running script: ${err.message}`, true, false);
+        isRunning = false; // ✅ Ensure flag is reset even on errors
+        vscode.window.showErrorMessage(`Error running script: ${err.message}`);
+    });
 }
-
 
 /**
  * Updates the existing WebView panel with new content, or creates one if needed.
  * The new output is appended to the container in the webview.
  */
 function updateWebView(content: string, isError: boolean = false, isRunning: boolean = false) {
+
   if (!outputPanel) {
       outputPanel = vscode.window.createWebviewPanel(
           'tinkerOutput',
@@ -208,11 +232,16 @@ function refreshLaravelRoots() {
 
     cachedLaravelRoots = workspaceFolders
         .map(folder => folder.uri.fsPath)
-        .filter(root => fs.existsSync(path.join(root, 'artisan')) && fs.existsSync(path.join(root, 'workspace')));
+        .filter(root => fs.existsSync(path.join(root, 'artisan')));
 }
 
 // ✅ Call this function at the beginning to ensure cache is set initially
 refreshLaravelRoots();
+
+// ✅ Listen for workspace changes and refresh the cache dynamically
+vscode.workspace.onDidChangeWorkspaceFolders(() => {
+    refreshLaravelRoots();
+});
 
 function isInsideWorkspaceDirectory(fileUri: vscode.Uri): boolean {
     // ✅ Ensure cache is valid before using it (check if paths still exist)
@@ -222,11 +251,6 @@ function isInsideWorkspaceDirectory(fileUri: vscode.Uri): boolean {
 
     return cachedLaravelRoots.some(root => fileUri.fsPath.startsWith(path.join(root, 'workspace')));
 }
-
-// ✅ Listen for workspace changes and refresh the cache dynamically
-vscode.workspace.onDidChangeWorkspaceFolders(() => {
-    refreshLaravelRoots();
-});
 
 
 /**
@@ -343,7 +367,11 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): s
     <input id="search-input" type="text" placeholder="Search output..." />
     <button id="clear-button">Clear Output</button>
   </div>
-  <div id="output-container"></div>
+  <div id="output-container">
+    <div id="loading" style={"display": "none"}>
+        <span class="loader"></span>
+    </div>
+  </div>
 
   <!-- Load external JS files -->
   <script src="${highlightJsUri}"></script>

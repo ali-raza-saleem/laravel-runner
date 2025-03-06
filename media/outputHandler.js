@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const clearButton = document.getElementById('clear-button');
     const searchInput = document.getElementById('search-input');
     const searchBar = searchInput.parentElement; // Get the container of search input
+    const loader = document.getElementById('loading');
 
     // Initially make the search bar invisible
     searchBar.style.visibility = 'hidden';
@@ -60,52 +61,56 @@ document.addEventListener("DOMContentLoaded", function () {
      * @param {boolean} isError - Whether it's an error message
      * @param {boolean} isRunning - Whether script is currently running
      */
-    function updateOutput(content, isError, isRunning) {
-        outputContainer.innerHTML = "";
-
-        if (isRunning) {
-            // ✅ Show "Running..." Indicator
-            outputContainer.innerHTML = `
-                <div id="loading">
-                    <span class="loader"></span>
-                </div>
-            `;
-        } else {
-            const pre = document.createElement('pre');
-            const code = document.createElement('code');
-            code.textContent = content;
-
-            if (isError) {
-                code.style.color = '#ff5555';
-            } else {
-                code.classList.add('language-php');
-            }
-
-            pre.appendChild(code);
-            outputContainer.appendChild(pre);
-
-            // ✅ Make search bar visible when there is content
-            searchBar.style.visibility = 'visible';
-
-            // ✅ Restore Syntax Highlighting
-            setTimeout(() => {
-                window.hljs.highlightElement(code);
-            }, 0);
-
-            // ✅ Highlight Search Term (if any)
-            if (searchInput.value) {
-                highlightSearch(searchInput.value);
-            }
-
-            // ✅ Smooth Scroll to Bottom
-            setTimeout(() => {
-                outputContainer.scrollTo({
-                    top: outputContainer.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 50);
-        }
+    /**
+ * ✅ Update Output Without Removing Previous Messages
+ * @param {string} content - Output content to display
+ * @param {boolean} isError - Whether it's an error message
+ * @param {boolean} isRunning - Whether script is currently running
+ */
+function updateOutput(content, isError, isRunning) {
+    if (isRunning) {
+        loader.style.display = 'flex';
+        return;
     }
+
+    loader.style.display = 'none';
+
+    // ✅ Create a new <pre> element for the new output
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.textContent = content;
+
+    if (isError) {
+        code.style.color = '#ff5555'; // Error styling
+    } else {
+        code.classList.add('language-php'); // Apply syntax highlighting
+    }
+
+    pre.appendChild(code);
+    outputContainer.appendChild(pre); // ✅ Append new output instead of replacing existing one
+
+    // ✅ Make search bar visible when there is content
+    searchBar.style.visibility = 'visible';
+
+    // ✅ Restore Syntax Highlighting
+    setTimeout(() => {
+        window.hljs.highlightElement(code);
+    }, 0);
+
+    // ✅ Highlight Search Term (if any)
+    if (searchInput.value) {
+        highlightSearch(searchInput.value);
+    }
+
+    // ✅ Scroll to Bottom (Smoothly)
+    setTimeout(() => {
+        outputContainer.scrollTo({
+            top: outputContainer.scrollHeight,
+            behavior: 'smooth'
+        });
+    }, 50);
+}
+
 
     /**
      * ✅ Highlight Search Terms Without Removing Syntax Highlighting
