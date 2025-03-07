@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
+import { Config } from '../utils/Config';
+
 export class WebviewManager {
     public outputPanel: vscode.WebviewPanel | null = null;
     private extensionUri: vscode.Uri;
@@ -38,12 +40,14 @@ export class WebviewManager {
             });
         }
 
+        const appendOutput = Config.getInstance().get<boolean>('appendOutput');
+
         // ✅ Send message to WebView to update content and show/hide loader
-        this.outputPanel.webview.postMessage({ command: 'updateOutput', content, isError, isRunning });
+        this.outputPanel.webview.postMessage({ command: 'updateOutput', content, isError, isRunning, appendOutput });
     }
 
     /**
-     * Retrieves the WebView content.
+     * Retrieves the WebView content.7
      * @param webview The VSCode WebView instance.
      * @returns The HTML content string.
      */

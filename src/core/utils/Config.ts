@@ -49,7 +49,7 @@ export class Config {
     private loadConfig() {
         const config = vscode.workspace.getConfiguration('tinkerRunner');
         this.playgroundFolder = config.get<string>('playgroundFolder', 'tinker-playground');
-        this.appendOutput = config.get<boolean>('appendOutput', true);
+        this.appendOutput = config.get<boolean>('appendOutput');
     }
 
     /**
