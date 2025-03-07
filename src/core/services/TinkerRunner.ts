@@ -17,7 +17,8 @@ export class TinkerRunner {
         this.context = context;
         this.extensionUri = context.extensionUri;
         this.webviewManager = webviewManager;
-        this.config = Config.make(context);
+        Config.init(context);
+        this.config = Config.getInstance();
         this.tinkerScriptExtensionFile = this.config.get('customConfig.tinkerScriptExtensionFile');
 
 

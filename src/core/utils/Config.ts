@@ -21,11 +21,24 @@ export class Config {
     }
 
     /**
-     * Returns the singleton instance of Config.
+     * Initializes the Config class with context.
+     * Must be called once in `activate()`.
+     * @param context VSCode extension context
      */
-    public static make(context: vscode.ExtensionContext): Config {
+    public static init(context: vscode.ExtensionContext): void {
         if (!this.instance) {
             this.instance = new Config(context);
+        }
+    }
+
+    /**
+     * Gets the singleton instance of Config.
+     * Ensures `init()` has been called before access.
+     * @returns Config instance
+     */
+    public static getInstance(): Config {
+        if (!this.instance) {
+            throw new Error("Config has not been initialized. Call Config.init(context) first.");
         }
         return this.instance;
     }

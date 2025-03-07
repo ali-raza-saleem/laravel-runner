@@ -16,7 +16,7 @@ export class ExtensionManager {
         this.context = context;
         this.webviewManager = new WebviewManager(context);
         this.tinkerRunner = new TinkerRunner(context, this.webviewManager);
-        this.config = Config.make(context);
+        this.config = Config.getInstance();
 
     }
 
