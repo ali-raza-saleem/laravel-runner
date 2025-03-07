@@ -41,7 +41,7 @@ export class TinkerRunner {
         }
         this.isRunning = true;
 
-        const phpFileUri = fileUri ?? this.getActivePhpFileUri();
+        const phpFileUri = fileUri ?? this.getPhpFileUri();
         const workspaceRoot = this.pathUtils.getWorkspaceRoot(phpFileUri);
 
         if (!this.canRunPhpFile(workspaceRoot, phpFileUri)) {
@@ -69,7 +69,7 @@ export class TinkerRunner {
      * Retrieves the currently active PHP file URI if available.
      * @returns The URI of the active PHP file, or null if none is found.
      */
-    private getActivePhpFileUri(): vscode.Uri | null {
+    private getPhpFileUri(): vscode.Uri | null {
         const activeEditor = vscode.window.activeTextEditor;
         if (activeEditor && activeEditor.document.languageId === 'php') {
             return activeEditor.document.uri;
