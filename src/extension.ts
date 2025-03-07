@@ -4,16 +4,20 @@ import * as fs from 'fs';
 import { WebviewManager } from './core/services/WebviewManager';
 import { CodeLensProvider } from './core/providers/CodeLensProvider';
 import { TinkerRunner } from './core/services/TinkerRunner';
+import { Config } from './core/utils/Config';
 
 export class ExtensionManager {
     private webviewManager: WebviewManager;
     private tinkerRunner: TinkerRunner;
     private context: vscode.ExtensionContext;
+    private config: Config;
 
     constructor(context: vscode.ExtensionContext) {
         this.context = context;
         this.webviewManager = new WebviewManager(context);
         this.tinkerRunner = new TinkerRunner(context, this.webviewManager);
+        this.config = Config.make(context);
+
     }
 
     /**
@@ -87,10 +91,10 @@ export class ExtensionManager {
         if (!workspaceFolders) return;
 
         const projectRoot = workspaceFolders[0].uri.fsPath;
-        const vendorDir = path.join(projectRoot, 'vendor', 'ali-raza-saleem');
+        const extensionPublisherDirInLaravelVendor = path.join(projectRoot, 'vendor', this.config.get('publisher'));
 
-        if (fs.existsSync(vendorDir)) {
-            fs.rmSync(vendorDir, { recursive: true, force: true });
+        if (fs.existsSync(extensionPublisherDirInLaravelVendor)) {
+            fs.rmSync(extensionPublisherDirInLaravelVendor, { recursive: true, force: true });
             vscode.window.showInformationMessage("❌ Laravel Tinker Runner has been removed from your Laravel project");
         }
     }

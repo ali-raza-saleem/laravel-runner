@@ -3,15 +3,24 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { spawn } from 'child_process';
 import { WebviewManager } from './WebviewManager';
+import { Config } from '../utils/Config';
 
 export class TinkerRunner {
     private isRunning: boolean = false;
     private extensionUri: vscode.Uri;
     private webviewManager: WebviewManager;
+    private context: vscode.ExtensionContext;
+    private config: Config;
+    private tinkerScriptExtensionFile: string;
 
     constructor(context: vscode.ExtensionContext, webviewManager: WebviewManager) {
+        this.context = context;
         this.extensionUri = context.extensionUri;
         this.webviewManager = webviewManager;
+        this.config = Config.make(context);
+        this.tinkerScriptExtensionFile = this.config.get('customConfig.tinkerScriptExtensionFile');
+
+
     }
 
     /**
@@ -26,28 +35,17 @@ export class TinkerRunner {
         this.isRunning = true;
 
         const phpFileUri = fileUri ?? this.getActivePhpFileUri();
-        if (!phpFileUri) {
-            this.isRunning = false;
-            return;
-        }
-
         const workspaceRoot = this.getWorkspaceRoot(phpFileUri);
-        if (!workspaceRoot) {
-            vscode.window.showErrorMessage("No workspace found.");
+
+        if (!this.canRunPhpFile(workspaceRoot, phpFileUri)) {
             this.isRunning = false;
             return;
         }
 
-        if (!this.fileIsInsideTinkerPlayground(workspaceRoot, phpFileUri)) {
-            vscode.window.showErrorMessage('This command can only be run on PHP files inside a Laravel project.');
-            this.isRunning = false;
-            return;
-        }
+        const phpFileRelativePath = path.relative(workspaceRoot, phpFileUri.fsPath).replace(/\\/g, '/');
+        const tinkerScriptPathInLaravelVendorDir = this.tinkerScriptPathInLaravelVendorDir(workspaceRoot);
 
-        const relativePath = path.relative(workspaceRoot, phpFileUri.fsPath).replace(/\\/g, '/');
-        const tinkerScriptPath = path.join(workspaceRoot, 'vendor', 'ali-raza-saleem', 'laravel-tinker-runner', 'tinker.php');
-
-        if (!fs.existsSync(tinkerScriptPath)) {
+        if (!fs.existsSync(tinkerScriptPathInLaravelVendorDir)) {
             vscode.window.showErrorMessage("Laravel Tinker Runner is missing. Please reload your project.");
             this.isRunning = false;
             return;
@@ -57,7 +55,26 @@ export class TinkerRunner {
         this.webviewManager.updateWebView("Running...", false, true);
 
         // ✅ Execute the Tinker script
-        this.evalScript('php', [tinkerScriptPath, relativePath], workspaceRoot);
+        this.evalScript('php', [tinkerScriptPathInLaravelVendorDir, phpFileRelativePath], workspaceRoot);
+    }
+
+    private canRunPhpFile(workspaceRoot: string, phpFileUri?: vscode.Uri): boolean { 
+        if (!phpFileUri) {
+            vscode.window.showErrorMessage("No php file found.");
+            return false;
+        }
+
+        if (!workspaceRoot) {
+            vscode.window.showErrorMessage("No workspace found.");
+            return false;
+        }
+
+        if (!this.fileIsInsideTinkerPlayground(workspaceRoot, phpFileUri)) {
+            vscode.window.showErrorMessage('This command can only be run on PHP files inside a Laravel project.');
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -74,17 +91,19 @@ export class TinkerRunner {
             if (!this.isLaravelProjectDir(folder.uri.fsPath)) {
                 return;
             }
+            
+            const laravelWorkspaceRoot = folder.uri.fsPath;
+            const tinkerScriptPathInLaravelVendorDir = this.tinkerScriptPathInLaravelVendorDir(laravelWorkspaceRoot);
+            const laravelVendorExtensionDirectoryPath = this.laravelVendorExtensionDirectoryPath(laravelWorkspaceRoot);
 
-            const vendorDir = path.join(folder.uri.fsPath, 'vendor', 'ali-raza-saleem', 'laravel-tinker-runner');
-            const destPath = path.join(vendorDir, 'tinker.php');
-            const sourcePath = path.join(this.extensionUri.fsPath, 'resources', 'tinker.php');
+            const tinkerScriptPathInExtension = path.join(this.extensionUri.fsPath, 'resources', this.tinkerScriptExtensionFile);
 
-            if (!fs.existsSync(vendorDir)) {
-                fs.mkdirSync(vendorDir, { recursive: true });
+            if (!fs.existsSync(laravelVendorExtensionDirectoryPath)) {
+                fs.mkdirSync(laravelVendorExtensionDirectoryPath, { recursive: true });
             }
 
-            if (!fs.existsSync(destPath)) {
-                fs.copyFileSync(sourcePath, destPath);
+            if (!fs.existsSync(tinkerScriptPathInLaravelVendorDir)) {
+                fs.copyFileSync(tinkerScriptPathInExtension, tinkerScriptPathInLaravelVendorDir);
                 vscode.window.showInformationMessage("✅ Laravel Tinker Runner installed successfully.");
             }
         });
@@ -117,10 +136,12 @@ export class TinkerRunner {
         if (! this.isLaravelProjectDir(workspaceRoot)) {
             return false; // Not a Laravel project
         }
-        const tinkerPlaygroundPath = path.join(workspaceRootFolder, 'tinker-playground');
+        const tinkerPlaygroundPath = path.join(workspaceRootFolder, this.config.get('playgroundFolder'));
         return fileUri.fsPath.startsWith(tinkerPlaygroundPath + path.sep);
     
     }
+
+    
     /**
      * Gets the workspace root for a given file URI.
      * @param fileUri The URI of the file.
@@ -134,6 +155,14 @@ export class TinkerRunner {
 
         const workspace = workspaceFolders.find(folder => fileUri.fsPath.startsWith(folder.uri.fsPath));
         return workspace ? workspace.uri.fsPath : null;
+    }
+
+    private laravelVendorExtensionDirectoryPath(laravelWorkspaceRoot: string): string {
+        return path.join(laravelWorkspaceRoot, 'vendor', this.config.get('publisher'), this.config.get('name'));
+    }
+
+    private tinkerScriptPathInLaravelVendorDir(laravelWorkspaceRoot: string): string {
+        return path.join(this.laravelVendorExtensionDirectoryPath(laravelWorkspaceRoot), this.tinkerScriptExtensionFile);
     }
 
     /**

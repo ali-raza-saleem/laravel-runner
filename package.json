@@ -66,7 +66,25 @@
         "when": "editorLangId == php || webviewFocus"
       }
     ],
-    "menus": {}
+      "menus": {},
+      "configuration": {
+        "title": "Laravel Tinker Runner",
+        "properties": {
+          "tinkerRunner.playgroundFolder": {
+            "type": "string",
+            "default": "tinker-playground",
+            "description": "The folder inside the Laravel project where PHP files can be executed."
+          },
+          "tinkerRunner.appendOutput": {
+            "type": "boolean",
+            "default": true,
+            "description": "If true appends new output to existing output, else replaces old output with new."
+          }
+        }
+      }
+  },
+  "customConfig": {
+    "tinkerScriptExtensionFile": "tinker.php"
   },
   "scripts": {
     "compile": "tsc -p ./"
