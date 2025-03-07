@@ -5,6 +5,7 @@ import { WebviewManager } from './core/services/WebviewManager';
 import { CodeLensProvider } from './core/providers/CodeLensProvider';
 import { TinkerRunner } from './core/services/TinkerRunner';
 import { Config } from './core/utils/Config';
+import { PathUtils } from './core/utils/PathUtils';
 
 export class ExtensionManager {
     private webviewManager: WebviewManager;
@@ -16,8 +17,9 @@ export class ExtensionManager {
         this.context = context;
         this.webviewManager = new WebviewManager(context);
         this.tinkerRunner = new TinkerRunner(context, this.webviewManager);
-        this.config = Config.getInstance();
 
+        Config.init(context); // Initialize Config singleton
+        this.config = Config.getInstance();
     }
 
     /**
@@ -26,7 +28,7 @@ export class ExtensionManager {
     public activate() {
         console.log("🚀 Laravel Tinker extension activated!");
 
-        this.tinkerRunner.copyTinkerScript();
+        this.tinkerRunner.copyTinkerScriptToLaravel();
         this.registerProviders();
         this.registerCommands();
     }
