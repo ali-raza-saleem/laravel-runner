@@ -31,15 +31,15 @@ export class TinkerRunner {
             return;
         }
 
-        if (!this.isInsideLaravelRoot(phpFileUri)) {
-            vscode.window.showErrorMessage('This command can only be run on PHP files inside a Laravel project.');
+        const workspaceRoot = this.getWorkspaceRoot(phpFileUri);
+        if (!workspaceRoot) {
+            vscode.window.showErrorMessage("No workspace found.");
             this.isRunning = false;
             return;
         }
 
-        const workspaceRoot = this.getWorkspaceRoot(phpFileUri);
-        if (!workspaceRoot) {
-            vscode.window.showErrorMessage("No workspace found.");
+        if (!this.fileIsInsideTinkerPlayground(workspaceRoot, phpFileUri)) {
+            vscode.window.showErrorMessage('This command can only be run on PHP files inside a Laravel project.');
             this.isRunning = false;
             return;
         }
@@ -71,7 +71,7 @@ export class TinkerRunner {
         }
 
         workspaceFolders.forEach((folder) => {
-            if (!this.isInsideLaravelRoot(folder.uri)) {
+            if (!this.isLaravelProjectDir(folder.uri.fsPath)) {
                 return;
             }
 
@@ -91,18 +91,36 @@ export class TinkerRunner {
     }
 
     /**
-     * Checks if the given file is inside a Laravel workspace directory.
-     * @param fileUri The URI of the file.
-     * @returns True if the file is inside a Laravel project, false otherwise.
+     * Checks if the given folder is a Laravel project root directory.
+     * @param workspaceRootFolder The URI of the workspace root folder.
+     * @returns boolean
      */
-    private isInsideLaravelRoot(fileUri: vscode.Uri): boolean {
-        const workspaceRoot = this.getWorkspaceRoot(fileUri);
-        if (!workspaceRoot) {
-            return false;
-        }
-        return fs.existsSync(path.join(workspaceRoot, 'artisan'));
+
+    private isLaravelProjectDir(workspaceRootFolder: string): boolean { 
+        const artisanPath = path.join(workspaceRootFolder, 'artisan');
+        return fs.existsSync(artisanPath)
     }
 
+    /**
+     * Checks if the given file is inside tinker-playground directory.
+     * @param workspaceRootFolder The URI of the workspace root folder.
+     * @param fileUri The URI of the file.
+     * @returns boolean
+     */
+
+    private fileIsInsideTinkerPlayground(workspaceRootFolder: string, fileUri: vscode.Uri): boolean {
+        const workspaceRoot = this.getWorkspaceRoot(fileUri);
+        if (!workspaceRoot) {
+            return false; // No workspace found
+        }
+    
+        if (! this.isLaravelProjectDir(workspaceRoot)) {
+            return false; // Not a Laravel project
+        }
+        const tinkerPlaygroundPath = path.join(workspaceRootFolder, 'tinker-playground');
+        return fileUri.fsPath.startsWith(tinkerPlaygroundPath + path.sep);
+    
+    }
     /**
      * Gets the workspace root for a given file URI.
      * @param fileUri The URI of the file.
