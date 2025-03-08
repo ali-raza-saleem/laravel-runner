@@ -85,11 +85,31 @@ function transformCode($code)
         throw new \Exception("Parse error: " . $error->getMessage());
     }
 
+    // Remove comments and Nop statements
+    $traverser = new \PhpParser\NodeTraverser();
+    $traverser->addVisitor(new class extends \PhpParser\NodeVisitorAbstract {
+        public function beforeTraverse(array $nodes) {
+            // Remove comments from nodes
+            foreach ($nodes as $node) {
+                $node->setAttribute('comments', []);
+            }
+            return $nodes;
+        }
+
+        public function leaveNode(\PhpParser\Node $node) {
+            // Remove Nop statements
+            if ($node instanceof \PhpParser\Node\Stmt\Nop) {
+                return \PhpParser\NodeTraverser::REMOVE_NODE;
+            }
+        }
+    });
+
+    $ast = $traverser->traverse($ast);
+
     // If there are statements, check the last one.
     if (!empty($ast)) {
         $lastIndex = count($ast) - 1;
         $lastStmt = $ast[$lastIndex];
-
         // If the last statement is an expression (and not already a return), replace it with a return statement.
         if ($lastStmt instanceof \PhpParser\Node\Stmt\Expression) {
             $ast[$lastIndex] = new \PhpParser\Node\Stmt\Return_($lastStmt->expr, $lastStmt->getAttributes());
