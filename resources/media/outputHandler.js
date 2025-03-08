@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const searchInput = document.getElementById('search-input')
   const searchBar = searchInput.parentElement // Get the container of search input
   const loader = document.getElementById('loading')
+  const stopButton = document.getElementById('stop-button')
 
   // Initially make the search bar invisible
   searchBar.style.visibility = 'hidden'
@@ -20,6 +21,18 @@ document.addEventListener('DOMContentLoaded', function () {
         searchInput.focus() // ✅ Handle Ctrl+Alt+F
       }
     }
+  })
+
+  const vscode = acquireVsCodeApi(); 
+
+  // ✅ Handle Stop Button Click
+  stopButton.addEventListener('click', () => {
+    vscode.postMessage({ command: 'stopExecution' })
+    console.log('Execution Stopped')
+
+    // ✅ Hide Stop Button & Loader
+    stopButton.style.display = 'none'
+    loader.style.display = 'none'
   })
 
   // ✅ Handle Messages from VS Code Extension
@@ -39,6 +52,10 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (message.command === 'focusSearchBar') {
       searchInput.focus()
     }
+
+    // ✅ Show/hide Stop Button and Loader together
+    stopButton.style.display = message.isRunning ? 'inline-block' : 'none'
+    loader.style.display = message.isRunning ? 'flex' : 'none'
   })
 
   // ✅ Ensure Search Bar Shortcut Works

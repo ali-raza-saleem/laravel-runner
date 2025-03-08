@@ -60,9 +60,6 @@ try {
 function evaluatePhpFile($filePath)
 {
     $code = file_get_contents($filePath);
-    // Remove the opening PHP tag if present.
-    $code = preg_replace('/^<\?php\s*/', '', $code);
-
     // Transform the code to ensure the last expression is returned.
     $transformedCode = transformCode($code);
 
@@ -79,14 +76,6 @@ function evaluatePhpFile($filePath)
  */
 function transformCode($code)
 {
-    // Remove the opening PHP tag.
-    $code = preg_replace('/^<\?php\s*/', '', $code);
-
-    // Remove comments (since you don't care if they're removed).
-    $code = preg_replace([
-        '/\/\/.*$/m',
-        '/\/\*.*?\*\//s'
-    ], '', $code);
 
     $lexer = new \PhpParser\Lexer();
     $parser = new \PhpParser\Parser\Php7($lexer);
@@ -111,24 +100,6 @@ function transformCode($code)
     $transformedCode = $printer->prettyPrintFile($ast);
     // Remove the PHP opening tag that prettyPrintFile() adds.
     $transformedCode = preg_replace('/^<\?php\s*/', '', $transformedCode);
-
-    // Fallback: Check only the last non-empty line.
-    // Fallback: If the transformed code doesn't start with "return", force it.
-    $lines = explode("\n", $transformedCode);
-    $lastNonEmptyLine = null;
-    $lastNonEmptyIndex = null;
-    for ($i = count($lines) - 1; $i >= 0; $i--) {
-        if (trim($lines[$i]) !== '') {
-            $lastNonEmptyLine = trim($lines[$i]);
-            $lastNonEmptyIndex = $i;
-            break;
-        }
-    }
-    // Only prepend "return" if the last nonempty line doesn't start with "return", "echo", or "print".
-    if ($lastNonEmptyLine !== null && !preg_match('/^(return|echo|print)\b/i', $lastNonEmptyLine)) {
-        $lines[$lastNonEmptyIndex] = 'return ' . $lines[$lastNonEmptyIndex];
-        $transformedCode = implode("\n", $lines);
-    }
 
 
     return $transformedCode;

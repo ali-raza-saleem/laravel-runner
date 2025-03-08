@@ -1,20 +1,23 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 import { WebviewManager } from './WebviewManager';
 import { Config } from '../utils/Config';
 import { PathUtils } from '../utils/PathUtils';
 
 export class TinkerRunner {
     private isRunning: boolean = false;
+    private currentProcess: ChildProcess | null = null;
     private extensionUri: vscode.Uri;
     private webviewManager: WebviewManager;
     private config: Config;
     private pathUtils: PathUtils;
     private tinkerScriptName: string;
+    private registeredStopExecutionListener: boolean = false;
 
     constructor(context: vscode.ExtensionContext, webviewManager: WebviewManager) {
+        
         this.extensionUri = context.extensionUri;
         this.webviewManager = webviewManager;
 
@@ -25,8 +28,6 @@ export class TinkerRunner {
         this.pathUtils = PathUtils.getInstance();
         
         this.tinkerScriptName = this.config.get('customConfig.tinkerScriptName');
-
-
 
     }
 
@@ -60,9 +61,34 @@ export class TinkerRunner {
 
         // ✅ Send "Running..." message to WebView
         this.webviewManager.updateWebView("Running...", false, true);
+        // IMPORTANT: Must be registered after the WebView is updated/created (first time) 
+        // since it is attached on outputPanel webview, latter is null before
+
+        this.registerStopExecutionListener();
 
         // ✅ Execute the Tinker script
-        this.evalScript('php', [tinkerScriptPathInLaravelVendorDir, phpFileRelativePath], workspaceRoot);
+        this.currentProcess = this.evalScript('php', [tinkerScriptPathInLaravelVendorDir, phpFileRelativePath], workspaceRoot);
+    }
+
+    public registerStopExecutionListener() {
+        const outputPanel = this.webviewManager.outputPanel;
+        if (!outputPanel) { 
+            this.registeredStopExecutionListener = false;
+            return;
+        }
+
+        if (this.registeredStopExecutionListener) {
+            return;
+        }
+
+        this.webviewManager.outputPanel?.webview.onDidReceiveMessage((message) => {        
+            if (message.command === "stopExecution") {
+                this.stopExecution();
+            }
+        });
+
+        this.registeredStopExecutionListener = true;
+        
     }
 
     /**
@@ -104,7 +130,7 @@ export class TinkerRunner {
      * @param args Arguments for the command.
      * @param cwd The working directory for the command.
      */
-    private evalScript(command: string, args: string[], cwd: string): void {
+    private evalScript(command: string, args: string[], cwd: string): ChildProcess {
         const process = spawn(command, args, { cwd });
 
         let output = '';
@@ -118,20 +144,43 @@ export class TinkerRunner {
 
         process.on('close', (code) => {
             this.isRunning = false;
+            this.currentProcess = null;
 
             if (code !== 0) {
                 this.webviewManager.updateWebView(output || `Process exited with code ${code}`, true, false);
             } else {
-                this.webviewManager.updateWebView(output || "No output from Custom Tinker.", false, false);
+                this.webviewManager.updateWebView(output || "No output returned by script.", false, false);
             }
         });
 
         process.on('error', (err) => {
             this.webviewManager.updateWebView(output || `Error running script: ${err.message}`, true, false);
             this.isRunning = false;
+            this.currentProcess = null;
             vscode.window.showErrorMessage(`Error running script: ${err.message}`);
         });
+
+
+        return process;
     }
+
+
+
+    /**
+     * Stops the currently running PHP process.
+     */
+    public stopExecution(): void {
+        
+        if (this.currentProcess) {
+            this.currentProcess.kill('SIGTERM'); // ✅ Terminate the process gracefully
+            this.currentProcess = null;
+            this.isRunning = false;
+                        
+            // ✅ Update WebView to hide loader & stop button
+            this.webviewManager.updateWebView("Execution Stopped", true, false);
+        }
+    }
+
 
     /**
      * Copies the tinker.php script to the Laravel project's vendor directory if it does not exist.

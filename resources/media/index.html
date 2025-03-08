@@ -6,9 +6,15 @@
 </head>
 <body>
   <div id="controls">
+    <div id="left-controls">
+        <button id="stop-button" style="display: none;">Stop Execution</button>
+        <div id="loading" style="display: none;">
+            <span class="loader"></span>
+        </div>
+    </div>
     <input id="search-input" type="text" placeholder="Search output..." />
     <button id="clear-button">Clear Output</button>
-  </div>
+</div>
   <div id="output-container">
     <div id="loading" hidden>
         <span class="loader"></span>
