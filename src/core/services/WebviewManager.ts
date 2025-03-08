@@ -25,6 +25,21 @@ export class WebviewManager {
      * @param isRunning Whether script is currently running.
      */
     public updateWebView(content: string, isError: boolean = false, isRunning: boolean = false) {
+        
+        this.createOutputPanel();
+        const appendOutput = Config.getInstance().get<boolean>('appendOutput');
+
+        // ✅ Send message to WebView to update content and show/hide controls
+        this.outputPanel.webview.postMessage({ command: 'updateOutput', content, isError, isRunning, appendOutput });
+    }
+
+    public sendScriptStartedMessage() {
+        this.createOutputPanel();
+        this.outputPanel.webview.postMessage({ command: 'scriptStarted' });
+
+    }
+
+    public createOutputPanel() {
         if (!this.outputPanel) {
             this.outputPanel = vscode.window.createWebviewPanel(
                 'tinkerOutput',
@@ -39,11 +54,6 @@ export class WebviewManager {
                 this.outputPanel = null;
             });
         }
-
-        const appendOutput = Config.getInstance().get<boolean>('appendOutput');
-
-        // ✅ Send message to WebView to update content and show/hide loader
-        this.outputPanel.webview.postMessage({ command: 'updateOutput', content, isError, isRunning, appendOutput });
     }
 
     /**

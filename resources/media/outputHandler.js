@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const clearButton = document.getElementById('clear-button')
   const searchInput = document.getElementById('search-input')
   const searchBar = searchInput.parentElement // Get the container of search input
-  const loader = document.getElementById('loading')
   const stopButton = document.getElementById('stop-button')
 
   // Initially make the search bar invisible
@@ -23,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })
 
-  const vscode = acquireVsCodeApi(); 
+  const vscode = acquireVsCodeApi()
 
   // ✅ Handle Stop Button Click
   stopButton.addEventListener('click', () => {
@@ -32,30 +31,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ✅ Hide Stop Button & Loader
     stopButton.style.display = 'none'
-    loader.style.display = 'none'
   })
 
   // ✅ Handle Messages from VS Code Extension
   window.addEventListener('message', (event) => {
     const message = event.data
 
+    if (message.command === 'scriptStarted') {
+      stopButton.style.display = 'inline-block'
+    }
+
     if (message.command === 'updateOutput') {
+      stopButton.style.display = message.isRunning ? 'inline-block' : 'none'
+
       updateOutput(
         message.content,
         message.isError,
         message.isRunning,
         message.appendOutput,
       )
-    } else if (message.command === 'clearOutput') {
-      outputContainer.innerHTML = ''
-      searchBar.style.visibility = 'hidden'
-    } else if (message.command === 'focusSearchBar') {
-      searchInput.focus()
     }
 
-    // ✅ Show/hide Stop Button and Loader together
-    stopButton.style.display = message.isRunning ? 'inline-block' : 'none'
-    loader.style.display = message.isRunning ? 'flex' : 'none'
+    if (message.command === 'clearOutput') {
+      outputContainer.innerHTML = ''
+      searchBar.style.visibility = 'hidden'
+    }
+
+    if (message.command === 'focusSearchBar') {
+      searchInput.focus()
+    }
   })
 
   // ✅ Ensure Search Bar Shortcut Works
@@ -90,13 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
    * @param {boolean} isRunning - Whether script is currently running
    */
   function updateOutput(content, isError, isRunning, appendOutput) {
-    if (isRunning) {
-      loader.style.display = 'flex'
-      return
-    }
-
-    loader.style.display = 'none'
-
     // ✅ Check if this is the first output
     // loading component counts as one child of outputContainer. Clear output clears that child too, hence child count 0
     const isFirstOutput = outputContainer.children.length < 2

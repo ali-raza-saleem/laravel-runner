@@ -1,42 +1,32 @@
 body {
-    font-family: Consolas, 'Courier New', monospace;
-    background: #1e1e1e;
-    color: #ffffff;
-    padding: 1em;
-    margin: 0;
-    overflow: hidden;
-  }
-  
-  #controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5em;
-    background: #252526;
+  font-family: Consolas, 'Courier New', monospace;
+  background: #1e1e1e;
+  color: #ffffff;
+  padding: 1em;
+  margin: 0;
+  overflow: hidden;
 }
 
+#controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5em;
+  background: #252526;
+}
+
+/* Left side (Search) */
 #left-controls {
   display: flex;
   align-items: center;
-  gap: 0.5em; /* Adds spacing between button & loader */
+  gap: 0.5em;
 }
 
-#stop-button {
-  background-color: #d32f2f;
-  color: white;
-  border: none;
-  padding: 0.5em 1em;
-  border-radius: 3px;
-  cursor: pointer;
-}
-  
-#clear-button {
-  background-color: #673ab7;
-  color: #f5f5f5;
-  border: none;
-  padding: 0.5em 1em;
-  border-radius: 3px;
-  cursor: pointer;
+/* Right side (Loader + Buttons) */
+#right-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 #search-input {
@@ -45,6 +35,65 @@ body {
   border: 1px solid #444;
   background: #1e1e1e;
   color: #ffffff;
+}
+
+/* Remove background from buttons and let the icon color stand out */
+button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5em;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Color each icon individually */
+/* Default Stop Button Styling */
+#stop-button {
+  border: 1.5px solid #777; /* Darker gray border for better contrast */
+  background: transparent;
+  cursor: pointer;
+  padding: 0.6em; /* Balanced padding for square shape */
+  border-radius: 6px; /* Slightly rounded edges */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease-in-out, background 0.3s ease-in-out;
+  width: 40px; /* Ensures square shape */
+  height: 40px;
+}
+
+/* Default Icon Color */
+#stop-button .icon {
+  color: #d32f2f; /* Default red */
+  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+#stop-button:hover {
+  border-color: #ff5252; /* Lighter red on hover */
+}
+
+#stop-button:hover .icon {
+  color: #ff5252; /* Lighter red */
+}
+
+
+#clear-button .icon {
+  color: #d3cfcf;
+}
+
+#clear-button:hover .icon {
+  color: #d32f2f; /* Red */
+}
+
+/* Common icon sizing; fill is "currentColor" from the color property above */
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
 #output-container {
@@ -73,22 +122,25 @@ code {
 }
 
 #loading {
-  display: none;
+  display: none; /* Hidden by default; shown dynamically when needed */
   align-items: center;
   justify-content: center;
 }
 
 .loader {
-    border: 5px solid rgba(255, 255, 255, 0.3);
-    border-top: 5px solid white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 1s linear infinite;
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-top: 5px solid white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
 }
-  
+
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
-  

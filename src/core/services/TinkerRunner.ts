@@ -59,36 +59,8 @@ export class TinkerRunner {
             return;
         }
 
-        // ✅ Send "Running..." message to WebView
-        this.webviewManager.updateWebView("Running...", false, true);
-        // IMPORTANT: Must be registered after the WebView is updated/created (first time) 
-        // since it is attached on outputPanel webview, latter is null before
-
-        this.registerStopExecutionListener();
-
         // ✅ Execute the Tinker script
         this.currentProcess = this.evalScript('php', [tinkerScriptPathInLaravelVendorDir, phpFileRelativePath], workspaceRoot);
-    }
-
-    public registerStopExecutionListener() {
-        const outputPanel = this.webviewManager.outputPanel;
-        if (!outputPanel) { 
-            this.registeredStopExecutionListener = false;
-            return;
-        }
-
-        if (this.registeredStopExecutionListener) {
-            return;
-        }
-
-        this.webviewManager.outputPanel?.webview.onDidReceiveMessage((message) => {        
-            if (message.command === "stopExecution") {
-                this.stopExecution();
-            }
-        });
-
-        this.registeredStopExecutionListener = true;
-        
     }
 
     /**
@@ -131,6 +103,13 @@ export class TinkerRunner {
      * @param cwd The working directory for the command.
      */
     private evalScript(command: string, args: string[], cwd: string): ChildProcess {
+
+         this.webviewManager.sendScriptStartedMessage();
+         // IMPORTANT: Must be registered after the WebView is created (only first time) 
+         // since it is attached on outputPanel webview, latter is null before
+ 
+         this.registerStopExecutionListener();
+
         const process = spawn(command, args, { cwd });
 
         let output = '';
@@ -162,6 +141,26 @@ export class TinkerRunner {
 
 
         return process;
+    }
+
+    public registerStopExecutionListener() {
+        const outputPanel = this.webviewManager.outputPanel;
+        if (!outputPanel) { 
+            this.webviewManager.createOutputPanel();
+        }
+
+        if (this.registeredStopExecutionListener) {
+            return;
+        }
+
+        this.webviewManager.outputPanel?.webview.onDidReceiveMessage((message) => {        
+            if (message.command === "stopExecution") {
+                this.stopExecution();
+            }
+        });
+
+        this.registeredStopExecutionListener = true;
+        
     }
 
 
