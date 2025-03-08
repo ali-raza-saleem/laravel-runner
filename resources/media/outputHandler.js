@@ -27,10 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // ✅ Handle Stop Button Click
   stopButton.addEventListener('click', () => {
     vscode.postMessage({ command: 'stopExecution' })
-    console.log('Execution Stopped')
-
-    // ✅ Hide Stop Button & Loader
-    stopButton.style.display = 'none'
+    stopButton.style.visibility = 'hidden'
   })
 
   // ✅ Handle Messages from VS Code Extension
@@ -38,11 +35,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const message = event.data
 
     if (message.command === 'scriptStarted') {
-      stopButton.style.display = 'inline-block'
+      stopButton.style.visibility = 'visible'
     }
 
     if (message.command === 'updateOutput') {
-      stopButton.style.display = message.isRunning ? 'inline-block' : 'none'
+      stopButton.style.visibility = message.isRunning ? 'visible' : 'hidden'
 
       updateOutput(
         message.content,

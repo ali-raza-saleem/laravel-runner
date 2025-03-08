@@ -52,17 +52,15 @@ button {
 /* Color each icon individually */
 /* Default Stop Button Styling */
 #stop-button {
-  border: 1.5px solid #777; /* Darker gray border for better contrast */
-  background: transparent;
+  border: 1.5px solid #444; /* Darker gray border for better contrast */
+  background-color: #444;
   cursor: pointer;
   padding: 0.6em; /* Balanced padding for square shape */
   border-radius: 6px; /* Slightly rounded edges */
-  display: flex;
   align-items: center;
   justify-content: center;
   transition: border-color 0.3s ease-in-out, background 0.3s ease-in-out;
-  width: 40px; /* Ensures square shape */
-  height: 40px;
+  
 }
 
 /* Default Icon Color */
@@ -73,6 +71,7 @@ button {
 
 /* Hover Effect */
 #stop-button:hover {
+  background-color: #313030;
   border-color: #ff5252; /* Lighter red on hover */
 }
 
@@ -134,6 +133,29 @@ code {
   width: 20px;
   height: 20px;
   animation: spin 1s linear infinite;
+}
+
+/* Ensure controls remain at the top */
+#controls {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: #252526; /* Background so content does not overlap */
+  padding: 0.5em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow to separate from content */
+}
+
+/* Prevent layout shift when new output is added */
+#output-container {
+  height: calc(100vh - 60px); /* Adjust based on actual header height */
+  overflow-y: auto; /* Enables scrolling without pushing layout */
+  padding: 1em;
+  background: #1e1e1e;
 }
 
 @keyframes spin {
