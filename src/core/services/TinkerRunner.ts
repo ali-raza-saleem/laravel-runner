@@ -1,9 +1,9 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
-import { spawn, ChildProcess } from 'child_process';
-import { WebviewManager } from './WebviewManager';
-import { Config } from '../utils/Config';
-import { PathUtils } from '../utils/PathUtils';
+import * as vscode from "vscode";
+import * as path from "path";
+import { spawn, ChildProcess } from "child_process";
+import { WebviewManager } from "./WebviewManager";
+import { Config } from "../utils/Config";
+import { PathUtils } from "../utils/PathUtils";
 
 export class TinkerRunner {
     private currentProcess: ChildProcess | null = null;
@@ -25,7 +25,7 @@ export class TinkerRunner {
         PathUtils.init(this.config); // Initialize PathUtils singleton
         this.pathUtils = PathUtils.getInstance();
         
-        this.tinkerScriptPath = this.config.get('customConfig.tinkerScriptPath');
+        this.tinkerScriptPath = this.config.get("customConfig.tinkerScriptPath");
 
     }
 
@@ -46,10 +46,10 @@ export class TinkerRunner {
             return;
         }
 
-        const phpFileRelativePath = path.relative(workspaceRoot, phpFileUri.fsPath).replace(/\\/g, '/');
+        const phpFileRelativePath = path.relative(workspaceRoot, phpFileUri.fsPath).replace(/\\/g, "/");
         const tinkerScriptAbsolutePath = path.join(this.extensionUri.fsPath, this.tinkerScriptPath);
 
-        this.currentProcess = this.evalScript('php', [tinkerScriptAbsolutePath, phpFileRelativePath, workspaceRoot], workspaceRoot);
+        this.currentProcess = this.evalScript("php", [tinkerScriptAbsolutePath, phpFileRelativePath, workspaceRoot], workspaceRoot);
     }
 
     /**
@@ -58,11 +58,11 @@ export class TinkerRunner {
      */
     private getPhpFileUri(): vscode.Uri | null {
         const activeEditor = vscode.window.activeTextEditor;
-        if (activeEditor && activeEditor.document.languageId === 'php') {
+        if (activeEditor && activeEditor.document.languageId === "php") {
             return activeEditor.document.uri;
         }
 
-        vscode.window.showErrorMessage('No PHP file selected to run.');
+        vscode.window.showErrorMessage("No PHP file selected to run.");
         return null;
     }
 
@@ -78,7 +78,7 @@ export class TinkerRunner {
         }
 
         if (!this.pathUtils.fileIsInsideTinkerPlayground(workspaceRoot, phpFileUri)) {
-            vscode.window.showErrorMessage('This command can only be run on PHP files inside a Laravel project.');
+            vscode.window.showErrorMessage("This command can only be run on PHP files inside a Laravel project.");
             return false;
         }
 
@@ -101,12 +101,12 @@ export class TinkerRunner {
 
         const process = spawn(command, args, { cwd });
 
-        let output = '';
-        process.stdout.on('data', (data) => {
+        let output = "";
+        process.stdout.on("data", (data) => {
             output += data.toString();
         });
 
-        process.on('close', (code) => {
+        process.on("close", (code) => {
             this.currentProcess = null;
 
             if (code !== 0) {
@@ -116,7 +116,7 @@ export class TinkerRunner {
             }
         });
 
-        process.on('error', (err) => {
+        process.on("error", (err) => {
             this.webviewManager.updateWebView(output || `Error running script: ${err.message}`, true, false);
             this.currentProcess = null;
             vscode.window.showErrorMessage(`Error running script: ${err.message}`);
@@ -152,7 +152,7 @@ export class TinkerRunner {
     public stopExecution(): void {
         
         if (this.currentProcess) {
-            this.currentProcess.kill('SIGTERM'); // ✅ Terminate the process gracefully
+            this.currentProcess.kill("SIGTERM"); // ✅ Terminate the process gracefully
             this.currentProcess = null;
                         
             // ✅ Update WebView to hide loader & stop button

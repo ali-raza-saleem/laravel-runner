@@ -1,7 +1,7 @@
-import * as vscode from 'vscode';
-import { WebviewManager } from './core/services/WebviewManager';
-import { CodeLensProvider } from './core/providers/CodeLensProvider';
-import { TinkerRunner } from './core/services/TinkerRunner';
+import * as vscode from "vscode";
+import { WebviewManager } from "./core/services/WebviewManager";
+import { CodeLensProvider } from "./core/providers/CodeLensProvider";
+import { TinkerRunner } from "./core/services/TinkerRunner";
 
 export class ExtensionManager {
     private webviewManager: WebviewManager;
@@ -18,8 +18,6 @@ export class ExtensionManager {
      * Activates the extension and registers commands & providers.
      */
     public activate() {
-        console.log("🚀 Laravel Tinker extension activated!");
-
         this.registerProviders();
         this.registerCommands();
     }
@@ -30,7 +28,7 @@ export class ExtensionManager {
     private registerProviders() {
         const provider = new CodeLensProvider();
         const providerRegistration = vscode.languages.registerCodeLensProvider(
-            { language: 'php', scheme: 'file' },
+            { language: "php", scheme: "file" },
             provider
         );
         this.context.subscriptions.push(providerRegistration);
@@ -40,15 +38,15 @@ export class ExtensionManager {
      * Registers VSCode commands for the extension.
      */
     private registerCommands() {
-        const runPhpFileCommand = vscode.commands.registerCommand('myExtension.runPhpFile', (fileUri?: vscode.Uri) => {
+        const runPhpFileCommand = vscode.commands.registerCommand("myExtension.runPhpFile", () => {
             this.tinkerRunner.runPhpFile();
         });
 
-        const clearOutputCommand = vscode.commands.registerCommand('myExtension.clearOutput', () => {
+        const clearOutputCommand = vscode.commands.registerCommand("myExtension.clearOutput", () => {
             if (this.webviewManager.outputPanel) {
-                this.webviewManager.outputPanel.webview.postMessage({ command: 'clearOutput' });
+                this.webviewManager.outputPanel.webview.postMessage({ command: "clearOutput" });
             } else {
-                vscode.window.showInformationMessage('No output to clear.');
+                vscode.window.showInformationMessage("No output to clear.");
             }
         });
 

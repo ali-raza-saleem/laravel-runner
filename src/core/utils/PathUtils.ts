@@ -1,7 +1,7 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
-import { Config } from './Config';
+import * as vscode from "vscode";
+import * as path from "path";
+import * as fs from "fs";
+import { Config } from "./Config";
 
 export class PathUtils {
     private static instance: PathUtils | null = null;
@@ -41,7 +41,7 @@ export class PathUtils {
      * @returns boolean
      */
     public isLaravelProjectDir(workspaceRootFolder: string): boolean { 
-        const artisanPath = path.join(workspaceRootFolder, 'artisan');
+        const artisanPath = path.join(workspaceRootFolder, "artisan");
         return fs.existsSync(artisanPath);
     }
 
@@ -57,7 +57,7 @@ export class PathUtils {
             return false; // Not inside a Laravel project
         }
         
-        const playgroundFolder = this.config.get<string>('playgroundFolder');
+        const playgroundFolder = this.config.get<string>("playgroundFolder");
         const tinkerPlaygroundPath = path.join(workspaceRootFolder, playgroundFolder);
         
         return fileUri.fsPath.startsWith(tinkerPlaygroundPath + path.sep);

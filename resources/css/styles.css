@@ -175,7 +175,6 @@ code {
 .output-wrapper pre code {
   background: transparent;
   color: #ff5555;
-  font-family: monospace; 
 }
 
 /* "Show Log Details" button at bottom-right of .output-wrapper */
@@ -211,7 +210,7 @@ code {
   display: block;
 }
 .modal-content {
-  background: #1e1e1e;  /* Matches non-error output background */
+  background: #252526; 
   color: #e5c07b;  /* Matches syntax-highlighted text */
   width: 80%;
   max-width: 600px;
@@ -221,6 +220,7 @@ code {
   position: relative;
   padding: 1rem;
   border-radius: 4px;
+  line-height: 1.5;
 }
 .modal-close {
   position: absolute;
@@ -261,7 +261,7 @@ code {
 .output-wrapper pre code {
   background: transparent;
   color: #ff5555;
-  font-family: monospace; 
+  line-height: 1.5;
 }
 
 /* "Show Log Details" button at bottom-right of the .output-wrapper */

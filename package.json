@@ -66,34 +66,37 @@
         "when": "editorLangId == php || webviewFocus"
       }
     ],
-      "menus": {},
-      "configuration": {
-        "title": "Laravel Tinker Runner",
-        "properties": {
-          "tinkerRunner.playgroundFolder": {
-            "type": "string",
-            "default": "tinker-playground",
-            "description": "The folder inside the Laravel project where PHP files can be executed."
-          },
-          "tinkerRunner.appendOutput": {
-            "type": "boolean",
-            "default": true,
-            "description": "If true appends new output to existing output, else replaces old output with new."
-          }
+    "menus": {},
+    "configuration": {
+      "title": "Laravel Tinker Runner",
+      "properties": {
+        "tinkerRunner.playgroundFolder": {
+          "type": "string",
+          "default": "tinker-playground",
+          "description": "The folder inside the Laravel project where PHP files can be executed."
+        },
+        "tinkerRunner.appendOutput": {
+          "type": "boolean",
+          "default": true,
+          "description": "If true appends new output to existing output, else replaces old output with new."
         }
       }
+    }
   },
   "customConfig": {
     "tinkerScriptPath": "./resources/tinker.php"
   },
   "scripts": {
-    "compile": "tsc -p ./"
+    "compile": "tsc -p ./",
+    "lint": "eslint src --ext .ts,.js"
   },
   "devDependencies": {
     "@types/node": "^16.0.0",
     "@types/vscode": "^1.70.0",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
     "@vscode/test-electron": "^2.4.1",
-    "eslint": "^9.21.0",
+    "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-prettier": "^5.2.3",
     "prettier": "^3.5.3",

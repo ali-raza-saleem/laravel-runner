@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 export class Config {
     private static instance: Config | null = null;
@@ -14,7 +14,7 @@ export class Config {
         this.loadConfig();
 
         vscode.workspace.onDidChangeConfiguration((event) => {
-            if (event.affectsConfiguration('tinkerRunner')) {
+            if (event.affectsConfiguration("tinkerRunner")) {
                 this.loadConfig();
             }
         });
@@ -47,9 +47,9 @@ export class Config {
      * Loads user configuration from `settings.json` (VS Code workspace settings).
      */
     private loadConfig() {
-        const config = vscode.workspace.getConfiguration('tinkerRunner');
-        this.playgroundFolder = config.get<string>('playgroundFolder', 'tinker-playground');
-        this.appendOutput = config.get<boolean>('appendOutput');
+        const config = vscode.workspace.getConfiguration("tinkerRunner");
+        this.playgroundFolder = config.get<string>("playgroundFolder", "tinker-playground");
+        this.appendOutput = config.get<boolean>("appendOutput");
     }
 
     /**
@@ -63,7 +63,7 @@ export class Config {
             return classPropertyValue;
         }
 
-        const keys = key.split('.'); // Support for nested keys like "customConfig.someKey"
+        const keys = key.split("."); // Support for nested keys like "customConfig.someKey"
         let value: any = this.packageJson;
 
         for (const k of keys) {
