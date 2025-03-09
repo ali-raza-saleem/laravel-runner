@@ -59,14 +59,17 @@ button {
   border-radius: 6px; /* Slightly rounded edges */
   align-items: center;
   justify-content: center;
-  transition: border-color 0.3s ease-in-out, background 0.3s ease-in-out;
-  
+  transition:
+    border-color 0.3s ease-in-out,
+    background 0.3s ease-in-out;
 }
 
 /* Default Icon Color */
 #stop-button .icon {
   color: #d32f2f; /* Default red */
-  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+  transition:
+    color 0.3s ease-in-out,
+    border-color 0.3s ease-in-out;
 }
 
 /* Hover Effect */
@@ -78,7 +81,6 @@ button {
 #stop-button:hover .icon {
   color: #ff5252; /* Lighter red */
 }
-
 
 #clear-button .icon {
   color: #d3cfcf;
@@ -160,15 +162,15 @@ code {
 
 /* ============ OUTPUT WINDOW ============ */
 .output-wrapper {
-  background: #1e1e1e !important;  /* Match non-error output background */
-  color: #ff5555;  
+  background: #1e1e1e !important; /* Match non-error output background */
+  color: #ff5555;
   padding: 1rem;
   margin: 1rem 0;
   border-radius: 4px;
-  display: inline-block;   
+  display: inline-block;
   position: relative;
   max-width: 100%;
-  padding-bottom: 3rem;  
+  padding-bottom: 3rem;
 }
 
 /* Ensure the code inside the error output is red */
@@ -210,12 +212,12 @@ code {
   display: block;
 }
 .modal-content {
-  background: #252526; 
-  color: #e5c07b;  /* Matches syntax-highlighted text */
+  background: #252526;
+  color: #e5c07b; /* Matches syntax-highlighted text */
   width: 80%;
   max-width: 600px;
-  max-height: 80vh;  /* Limits modal height */
-  overflow-y: auto;  /* Enables vertical scrolling if content is too long */
+  max-height: 80vh; /* Limits modal height */
+  overflow-y: auto; /* Enables vertical scrolling if content is too long */
   margin: 3rem auto;
   position: relative;
   padding: 1rem;
@@ -246,15 +248,15 @@ code {
 .output-wrapper {
   /* Dark background, red text */
   background: #2b2b2b;
-  color: #ff5555;   
+  color: #ff5555;
   padding: 1rem;
   margin: 1rem 0;
   border-radius: 4px;
 
-  display: inline-block;   /* so it fits content, not entire page width */
-  position: relative;      /* for absolutely positioned button */
+  display: inline-block; /* so it fits content, not entire page width */
+  position: relative; /* for absolutely positioned button */
   max-width: 100%;
-  padding-bottom: 3rem;    /* space so text doesn't overlap button */
+  padding-bottom: 3rem; /* space so text doesn't overlap button */
 }
 
 /* Make sure the <code> block is also red within errors */
@@ -280,9 +282,6 @@ code {
 .show-log-btn:hover {
   background-color: #555;
 }
-
-
-
 
 @keyframes spin {
   0% {
