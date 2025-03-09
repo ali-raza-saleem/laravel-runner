@@ -152,7 +152,7 @@ code {
 
 /* Prevent layout shift when new output is added */
 #output-container {
-  height: calc(100vh - 60px); /* Adjust based on actual header height */
+  height: calc(100vh - 100px); /* Adjust based on actual header height */
   overflow-y: auto; /* Enables scrolling without pushing layout */
   padding: 1em;
   background: #1e1e1e;
