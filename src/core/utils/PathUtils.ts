@@ -1,14 +1,14 @@
-import * as vscode from 'vscode'
-import * as path from 'path'
-import * as fs from 'fs'
-import { Config } from './Config'
+import * as vscode from "vscode";
+import * as path from "path";
+import * as fs from "fs";
+import { Config } from "./Config";
 
 export class PathUtils {
-  private static instance: PathUtils | null = null
-  private config: Config
+  private static instance: PathUtils | null = null;
+  private config: Config;
 
   private constructor(config: Config) {
-    this.config = config
+    this.config = config;
   }
 
   /**
@@ -18,7 +18,7 @@ export class PathUtils {
    */
   public static init(config: Config): void {
     if (!this.instance) {
-      this.instance = new PathUtils(config)
+      this.instance = new PathUtils(config);
     }
   }
 
@@ -31,10 +31,10 @@ export class PathUtils {
   public static getInstance(): PathUtils {
     if (!this.instance) {
       throw new Error(
-        'PathUtils has not been initialized. Call PathUtils.init(config) first.',
-      )
+        "PathUtils has not been initialized. Call PathUtils.init(config) first.",
+      );
     }
-    return this.instance
+    return this.instance;
   }
 
   /**
@@ -43,8 +43,8 @@ export class PathUtils {
    * @returns boolean
    */
   public isLaravelProjectDir(workspaceRootFolder: string): boolean {
-    const artisanPath = path.join(workspaceRootFolder, 'artisan')
-    return fs.existsSync(artisanPath)
+    const artisanPath = path.join(workspaceRootFolder, "artisan");
+    return fs.existsSync(artisanPath);
   }
 
   /**
@@ -57,18 +57,18 @@ export class PathUtils {
     workspaceRootFolder: string,
     fileUri: vscode.Uri,
   ): boolean {
-    const workspaceRoot = this.getWorkspaceRoot(fileUri)
+    const workspaceRoot = this.getWorkspaceRoot(fileUri);
     if (!workspaceRoot || !this.isLaravelProjectDir(workspaceRoot)) {
-      return false // Not inside a Laravel project
+      return false; // Not inside a Laravel project
     }
 
-    const playgroundFolder = this.config.get<string>('playgroundFolder')
+    const playgroundFolder = this.config.get<string>("playgroundFolder");
     const tinkerPlaygroundPath = path.join(
       workspaceRootFolder,
       playgroundFolder,
-    )
+    );
 
-    return fileUri.fsPath.startsWith(tinkerPlaygroundPath + path.sep)
+    return fileUri.fsPath.startsWith(tinkerPlaygroundPath + path.sep);
   }
 
   /**
@@ -77,14 +77,14 @@ export class PathUtils {
    * @returns The root path of the workspace if found, otherwise null.
    */
   public getWorkspaceRoot(fileUri: vscode.Uri): string | null {
-    const workspaceFolders = vscode.workspace.workspaceFolders
+    const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders) {
-      return null
+      return null;
     }
 
     const workspace = workspaceFolders.find((folder) =>
       fileUri.fsPath.startsWith(folder.uri.fsPath),
-    )
-    return workspace ? workspace.uri.fsPath : null
+    );
+    return workspace ? workspace.uri.fsPath : null;
   }
 }

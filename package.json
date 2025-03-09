@@ -88,7 +88,7 @@
   },
   "scripts": {
     "compile": "tsc -p ./",
-    "lint": "eslint src --ext .ts,.js",
+    "lint": "eslint src resources/js/ --ext .ts,.js --fix",
     "format": "prettier --write src resources/js/ resources/css/ "
   },
   "devDependencies": {

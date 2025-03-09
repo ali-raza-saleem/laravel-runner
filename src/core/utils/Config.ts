@@ -1,23 +1,23 @@
-import * as vscode from 'vscode'
+import * as vscode from "vscode";
 
 export class Config {
-  private static instance: Config | null = null
-  private packageJson: any
-  private playgroundFolder: string
-  private appendOutput: boolean
-  private extensionId: string
+  private static instance: Config | null = null;
+  private packageJson: any;
+  private playgroundFolder: string;
+  private appendOutput: boolean;
+  private extensionId: string;
 
   private constructor(context: vscode.ExtensionContext) {
-    this.packageJson = context.extension.packageJSON
-    this.extensionId = `${this.packageJson.publisher}.${this.packageJson.name}`
+    this.packageJson = context.extension.packageJSON;
+    this.extensionId = `${this.packageJson.publisher}.${this.packageJson.name}`;
 
-    this.loadConfig()
+    this.loadConfig();
 
     vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration('tinkerRunner')) {
-        this.loadConfig()
+      if (event.affectsConfiguration("tinkerRunner")) {
+        this.loadConfig();
       }
-    })
+    });
   }
 
   /**
@@ -27,7 +27,7 @@ export class Config {
    */
   public static init(context: vscode.ExtensionContext): void {
     if (!this.instance) {
-      this.instance = new Config(context)
+      this.instance = new Config(context);
     }
   }
 
@@ -39,22 +39,22 @@ export class Config {
   public static getInstance(): Config {
     if (!this.instance) {
       throw new Error(
-        'Config has not been initialized. Call Config.init(context) first.',
-      )
+        "Config has not been initialized. Call Config.init(context) first.",
+      );
     }
-    return this.instance
+    return this.instance;
   }
 
   /**
    * Loads user configuration from `settings.json` (VS Code workspace settings).
    */
   private loadConfig() {
-    const config = vscode.workspace.getConfiguration('tinkerRunner')
+    const config = vscode.workspace.getConfiguration("tinkerRunner");
     this.playgroundFolder = config.get<string>(
-      'playgroundFolder',
-      'tinker-playground',
-    )
-    this.appendOutput = config.get<boolean>('appendOutput')
+      "playgroundFolder",
+      "tinker-playground",
+    );
+    this.appendOutput = config.get<boolean>("appendOutput");
   }
 
   /**
@@ -63,22 +63,22 @@ export class Config {
    * @returns The value or `undefined` if not found.
    */
   public get<T>(key: string): T | undefined {
-    const classPropertyValue = (this as any)[key]
+    const classPropertyValue = (this as any)[key];
     if (classPropertyValue) {
-      return classPropertyValue
+      return classPropertyValue;
     }
 
-    const keys = key.split('.') // Support for nested keys like "customConfig.someKey"
-    let value: any = this.packageJson
+    const keys = key.split("."); // Support for nested keys like "customConfig.someKey"
+    let value: any = this.packageJson;
 
     for (const k of keys) {
       if (value?.[k] !== undefined) {
-        value = value[k]
+        value = value[k];
       } else {
-        return undefined // Return undefined if key is not found
+        return undefined; // Return undefined if key is not found
       }
     }
 
-    return value as T
+    return value as T;
   }
 }

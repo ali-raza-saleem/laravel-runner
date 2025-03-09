@@ -1,4 +1,4 @@
-import * as vscode from 'vscode'
+import * as vscode from "vscode";
 
 export class CodeLensProvider implements vscode.CodeLensProvider {
   /**
@@ -12,12 +12,12 @@ export class CodeLensProvider implements vscode.CodeLensProvider {
     document: vscode.TextDocument,
     token: vscode.CancellationToken,
   ): vscode.CodeLens[] {
-    const range = new vscode.Range(0, 0, 0, 0)
+    const range = new vscode.Range(0, 0, 0, 0);
     const command: vscode.Command = {
-      title: '▶ Run PHP File (Laravel Tinker)',
-      command: 'myExtension.runPhpFile',
+      title: "▶ Run PHP File (Laravel Tinker)",
+      command: "myExtension.runPhpFile",
       arguments: [document.uri],
-    }
-    return [new vscode.CodeLens(range, command)]
+    };
+    return [new vscode.CodeLens(range, command)];
   }
 }
