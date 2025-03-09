@@ -1,208 +1,216 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const outputContainer = document.getElementById('output-container')
-  const clearButton = document.getElementById('clear-button')
-  const searchInput = document.getElementById('search-input')
-  const searchBar = searchInput.parentElement
-  const stopButton = document.getElementById('stop-button')
+document.addEventListener('alpine:init', () => {
+  Alpine.data('outputHandler', () => ({
+      outputContainer: null,
+      clearButton: null,
+      searchInput: null,
+      searchBar: null,
+      searchBarVisible: false,
+      showStopButton: false,
+      vscode: null,
+      errorModal: null,
+      errorModalClose: null,
+      errorModalLog: null,
 
-  // (Added) References to modal elements:
-  const errorModal = document.getElementById('error-modal')
-  const errorModalClose = document.getElementById('error-modal-close')
-  const errorModalLog = document.getElementById('error-modal-log')
+      init() {
+          // ✅ Assign Alpine.js refs
+          this.outputContainer = this.$refs.outputContainer;
+          this.clearButton = this.$refs.clearButton;
+          this.searchInput = this.$refs.searchInput;
+          this.searchBar = this.searchInput.parentElement;
+          this.stopButton = this.$refs.stopButton;
+          this.errorModal = this.$refs.errorModal;
+          this.errorModalClose = this.$refs.errorModalClose;
+          this.errorModalLog = this.$refs.errorModalLog;
 
-  // Initially make the search bar invisible
-  searchBar.style.visibility = 'hidden'
+          // ✅ Default states
+          this.searchBarVisible = false;
+          this.showStopButton = false;
+          this.vscode = acquireVsCodeApi();
 
-  // ✅ Keyboard Shortcuts in WebView
-  document.addEventListener('keydown', (event) => {
-    if (event.ctrlKey && event.altKey) {
-      const key = event.key.toLowerCase()
-      event.preventDefault()
+          this.clearButton.addEventListener('click', () => {
+              this.outputContainer.innerHTML = '';
+              this.searchBarVisible = false;
+          });
 
-      if (key === 'c') {
-        vscode.postMessage({ command: 'clearOutput' })
-      } else if (key === 'f') {
-        searchInput.focus()
-      }
-    }
-  })
+          this.stopButton.addEventListener('click', () => {
+              this.stopExecution();
+          });
 
-  const vscode = acquireVsCodeApi()
+          // ✅ Listen for messages from VS Code extension
+          window.addEventListener('message', (event) => {
+              const message = event.data;
 
-  // ✅ Handle Stop Button Click
-  stopButton.addEventListener('click', () => {
-    vscode.postMessage({ command: 'stopExecution' })
-    stopButton.style.visibility = 'hidden'
-  })
+              if (message.command === 'scriptStarted') {
+                  this.showStopButton = true;
+              }
 
-  // ✅ Handle Messages from VS Code Extension
-  window.addEventListener('message', (event) => {
-    const message = event.data
+              if (message.command === 'updateOutput') {
+                  this.showStopButton = message.isRunning;
 
-    if (message.command === 'scriptStarted') {
-      stopButton.style.visibility = 'visible'
-    }
+                  this.updateOutput(
+                      message.content,
+                      message.isError,
+                      message.isRunning,
+                      message.appendOutput,
+                  );
+              }
 
-    if (message.command === 'updateOutput') {
-      stopButton.style.visibility = message.isRunning ? 'visible' : 'hidden'
+              if (message.command === 'clearOutput') {
+                  this.outputContainer.innerHTML = '';
+                  this.searchBarVisible = false;
+              }
 
-      updateOutput(
-        message.content,
-        message.isError,
-        message.isRunning,
-        message.appendOutput,
-      )
-    }
+              if (message.command === 'focusSearchBar') {
+                  this.searchInput.focus();
+              }
+          });
 
-    if (message.command === 'clearOutput') {
-      outputContainer.innerHTML = ''
-      searchBar.style.visibility = 'hidden'
-    }
+          // ✅ Keyboard Shortcuts
+          document.addEventListener('keydown', (event) => {
+              if (event.ctrlKey && event.altKey) {
+                  const key = event.key.toLowerCase();
+                  event.preventDefault();
 
-    if (message.command === 'focusSearchBar') {
-      searchInput.focus()
-    }
-  })
+                  if (key === 'c') {
+                      this.vscode.postMessage({ command: 'clearOutput' });
+                  } else if (key === 'f') {
+                      this.searchInput.focus();
+                  }
+              }
+          });
 
-  // ✅ Search Bar Shortcut
-  document.addEventListener('keydown', (event) => {
-    if (event.ctrlKey && event.altKey && event.key.toLowerCase() === 'f') {
-      event.preventDefault()
-      searchInput.focus()
-    }
-  })
+          // ✅ Handle Search Input Changes
+          this.searchInput.addEventListener('input', () => {
+              this.highlightSearch(this.searchInput.value);
+          });
 
-  // ✅ Handle Clear Button Click
-  clearButton.addEventListener('click', () => {
-    outputContainer.innerHTML = ''
-    searchBar.style.visibility = 'hidden'
-  })
+          // ✅ Close Modal on Click
+          this.errorModalClose.addEventListener('click', () => {
+              this.errorModal.classList.remove('show');
+          });
+      },
 
-  // ✅ Handle Search Input Changes
-  searchInput.addEventListener('input', () => {
-    highlightSearch(searchInput.value)
-  })
+      /**
+       * ✅ Update Output Without Removing UI Elements
+       * @param {string} content - Output content to display
+       * @param {boolean} isError - Whether it's an error message
+       * @param {boolean} isRunning - Whether script is currently running
+       * @param {boolean} appendOutput - If false, clear previous output
+       */
+      updateOutput(content, isError, isRunning, appendOutput) {
+          const isFirstOutput = this.outputContainer.children.length < 2;
 
-  /**
-   * ✅ Update Output Without Removing UI Elements
-   * @param {string} content - Output content to display
-   * @param {boolean} isError - Whether it's an error message
-   * @param {boolean} isRunning - Whether script is currently running
-   * @param {boolean} appendOutput - If false, clear previous output
-   */
-  function updateOutput(content, isError, isRunning, appendOutput) {
-    const isFirstOutput = outputContainer.children.length < 2
-
-    // ✅ Clear output if appendOutput is false
-    if (!appendOutput) {
-      outputContainer.innerHTML = ''
-    }
-
-    // ✅ If error, remove old errors to prevent duplicates
-    if (isError) {
-      const parsedContent = content.split('[Tinker Runner Exception]:')
-
-      if (parsedContent.length == 2) {
-        minimalContent = parsedContent[0]
-        fullContent = parsedContent[1]
-      } else {
-        minimalContent = content
-        fullContent = content
-      }
-
-      // const parsedContent = JSON.parse(content);
-
-      const existingErrors = outputContainer.querySelectorAll('.output-wrapper')
-      existingErrors.forEach((errorBlock) => errorBlock.remove()) // Remove all old errors
-
-      // Create the wrapper
-      const wrapper = document.createElement('div')
-      wrapper.classList.add('output-wrapper')
-
-      // Create pre/code
-      const pre = document.createElement('pre')
-      const code = document.createElement('code')
-      code.textContent = minimalContent
-      code.style.color = '#ff5555' // Extra guarantee it's red
-      pre.appendChild(code)
-
-      // "Show Log Details" button
-      const showLogButton = document.createElement('button')
-      showLogButton.innerText = 'Show Log Details'
-      showLogButton.classList.add('show-log-btn')
-
-      showLogButton.addEventListener('click', () => {
-        // Put full error text in modal
-        errorModalLog.textContent = fullContent
-        // Show modal
-        errorModal.classList.add('show')
-      })
-
-      // Append everything
-      wrapper.appendChild(pre)
-      if (parsedContent.length == 2) {
-        wrapper.appendChild(showLogButton)
-      }
-      outputContainer.appendChild(wrapper)
-    } else {
-      // ✅ Original logic for non-error outputs
-      const pre = document.createElement('pre')
-      const code = document.createElement('code')
-      code.textContent = content
-
-      code.classList.add('language-php') // Syntax highlighting for normal outputs
-      pre.appendChild(code)
-
-      // Append to container
-      outputContainer.appendChild(pre)
-
-      // ✅ Syntax highlighting
-      setTimeout(() => {
-        window.hljs.highlightElement(code)
-      }, 0)
-    }
-
-    // ✅ Make search bar visible
-    searchBar.style.visibility = 'visible'
-
-    // ✅ Highlight search term if any
-    if (searchInput.value) {
-      highlightSearch(searchInput.value)
-    }
-
-    // ✅ Scroll only if it's not the first output
-    if (appendOutput && !isFirstOutput) {
-      // Find the last child
-      const lastChild = outputContainer.lastElementChild
-      setTimeout(() => {
-        lastChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-      }, 50)
-    }
-  }
-
-  /**
-   * ✅ Highlight Search Terms Without Removing Syntax Highlighting
-   * @param {string} query - Search term to highlight
-   */
-  function highlightSearch(query) {
-    const codeBlocks = outputContainer.querySelectorAll('pre code')
-    codeBlocks.forEach((code) => {
-      const instance = new Mark(code)
-      instance.unmark({
-        done: function () {
-          if (query) {
-            instance.mark(query, {
-              separateWordSearch: false,
-              className: 'highlight',
-            })
+          // ✅ Clear output if appendOutput is false
+          if (!appendOutput) {
+              this.outputContainer.innerHTML = '';
           }
-        },
-      })
-    })
-  }
 
-  // (Added) Close the modal when clicking the “×” icon
-  errorModalClose.addEventListener('click', () => {
-    errorModal.classList.remove('show')
-  })
-})
+          // ✅ If error, remove old errors to prevent duplicates
+          if (isError) {
+              const parsedContent = content.split('[Tinker Runner Exception]:');
+
+              let minimalContent, fullContent;
+              if (parsedContent.length === 2) {
+                  minimalContent = parsedContent[0];
+                  fullContent = parsedContent[1];
+              } else {
+                  minimalContent = content;
+                  fullContent = content;
+              }
+
+              const existingErrors = this.outputContainer.querySelectorAll('.output-wrapper');
+              existingErrors.forEach((errorBlock) => errorBlock.remove());
+
+              // ✅ Create the wrapper
+              const wrapper = document.createElement('div');
+              wrapper.classList.add('output-wrapper');
+
+              // ✅ Create pre/code
+              const pre = document.createElement('pre');
+              const code = document.createElement('code');
+              code.textContent = minimalContent;
+              code.style.color = '#ff5555'; // Force error color
+              pre.appendChild(code);
+
+              // ✅ "Show Log Details" button
+              const showLogButton = document.createElement('button');
+              showLogButton.innerText = 'Show Log Details';
+              showLogButton.classList.add('show-log-btn');
+
+              showLogButton.addEventListener('click', () => {
+                  // Put full error text in modal
+                  this.errorModalLog.textContent = fullContent;
+                  this.errorModal.classList.add('show');
+              });
+
+              // ✅ Append everything
+              wrapper.appendChild(pre);
+              if (parsedContent.length === 2) {
+                  wrapper.appendChild(showLogButton);
+              }
+              this.outputContainer.appendChild(wrapper);
+          } else {
+              // ✅ Original logic for non-error outputs
+              const pre = document.createElement('pre');
+              const code = document.createElement('code');
+              code.textContent = content;
+              code.classList.add('language-php'); // Syntax highlighting
+              pre.appendChild(code);
+
+              // ✅ Append to container
+              this.outputContainer.appendChild(pre);
+
+              // ✅ Syntax highlighting
+              setTimeout(() => {
+                  window.hljs.highlightElement(code);
+              }, 0);
+          }
+
+          // ✅ Make search bar visible
+          this.searchBarVisible = true;
+
+          // ✅ Highlight search term if any
+          if (this.searchInput.value) {
+              this.highlightSearch(this.searchInput.value);
+          }
+
+          // ✅ Scroll only if it's not the first output
+          if (appendOutput && !isFirstOutput) {
+              const lastChild = this.outputContainer.lastElementChild;
+              setTimeout(() => {
+                  lastChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }, 50);
+          }
+      },
+
+      /**
+       * ✅ Highlight Search Terms Without Removing Syntax Highlighting
+       * @param {string} query - Search term to highlight
+       */
+      highlightSearch(query) {
+          const codeBlocks = this.outputContainer.querySelectorAll('pre code');
+          codeBlocks.forEach((code) => {
+              const instance = new Mark(code);
+              instance.unmark({
+                  done: function () {
+                      if (query) {
+                          instance.mark(query, {
+                              separateWordSearch: false,
+                              className: 'highlight',
+                          });
+                      }
+                  },
+              });
+          });
+      },
+
+      stopExecution() {
+        if (this.vscode) {
+            this.vscode.postMessage({ command: 'stopExecution' });  // ✅ Send stop message to VS Code
+            this.showStopButton = false;  // ✅ Hide button after stopping
+        } else {
+            console.error('VSCode API is not available.');
+        }
+      },
+  }));
+});

@@ -281,6 +281,11 @@ code {
   background-color: #555;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
+
 
 
 

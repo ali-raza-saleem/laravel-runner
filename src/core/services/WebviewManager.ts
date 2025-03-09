@@ -72,6 +72,7 @@ export class WebviewManager {
         const htmlPath = path.join(this.extensionUri.fsPath, 'resources/media', 'index.html');
 
         this.cachedHtml =  fs.readFileSync(htmlPath, 'utf8')
+            .replace(/\{\{alineJsUrl\}\}/g, getResourceUri('resources/media/alpine.min.js').toString())
             .replace(/\{\{highlightCssUri\}\}/g, getResourceUri('resources/media/atom-one-dark.css').toString())
             .replace(/\{\{highlightJsUri\}\}/g, getResourceUri('resources/media/highlight.min.js').toString())
             .replace(/\{\{markJsUri\}\}/g, getResourceUri('resources/media/mark.min.js').toString())
