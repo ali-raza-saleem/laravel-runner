@@ -84,7 +84,7 @@
       }
   },
   "customConfig": {
-    "tinkerScriptName": "tinker.php"
+    "tinkerScriptPath": "./resources/tinker.php"
   },
   "scripts": {
     "compile": "tsc -p ./"

@@ -77,27 +77,4 @@ export class PathUtils {
         const workspace = workspaceFolders.find(folder => fileUri.fsPath.startsWith(folder.uri.fsPath));
         return workspace ? workspace.uri.fsPath : null;
     }
-
-    /**
-     * Gets the vendor extension directory path inside a Laravel workspace.
-     * @param laravelWorkspaceRoot The root of the Laravel project.
-     * @returns The full path to the extension's vendor directory.
-     */
-    public laravelVendorExtensionDirectoryPath(laravelWorkspaceRoot: string): string {
-        const publisher = this.config.get<string>('publisher');
-        const extensionName = this.config.get<string>('name');
-        
-        return path.join(laravelWorkspaceRoot, 'vendor', publisher, extensionName);
-    }
-
-    /**
-     * Gets the path to the Tinker script inside the Laravel vendor directory.
-     * @param laravelWorkspaceRoot The root of the Laravel project.
-     * @returns The full path to the Tinker script.
-     */
-    public tinkerScriptPathInLaravelVendorDir(laravelWorkspaceRoot: string): string {
-        const tinkerScriptName = this.config.get<string>('customConfig.tinkerScriptName');
-        
-        return path.join(this.laravelVendorExtensionDirectoryPath(laravelWorkspaceRoot), tinkerScriptName);
-    }
 }

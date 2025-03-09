@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as fs from 'fs';
 import { spawn, ChildProcess } from 'child_process';
 import { WebviewManager } from './WebviewManager';
 import { Config } from '../utils/Config';
@@ -12,7 +11,7 @@ export class TinkerRunner {
     private webviewManager: WebviewManager;
     private config: Config;
     private pathUtils: PathUtils;
-    private tinkerScriptName: string;
+    private tinkerScriptPath: string;
     private registeredStopExecutionListener: boolean = false;
 
     constructor(context: vscode.ExtensionContext, webviewManager: WebviewManager) {
@@ -26,7 +25,7 @@ export class TinkerRunner {
         PathUtils.init(this.config); // Initialize PathUtils singleton
         this.pathUtils = PathUtils.getInstance();
         
-        this.tinkerScriptName = this.config.get('customConfig.tinkerScriptName');
+        this.tinkerScriptPath = this.config.get('customConfig.tinkerScriptPath');
 
     }
 
@@ -48,15 +47,9 @@ export class TinkerRunner {
         }
 
         const phpFileRelativePath = path.relative(workspaceRoot, phpFileUri.fsPath).replace(/\\/g, '/');
-        const tinkerScriptPathInLaravelVendorDir = this.pathUtils.tinkerScriptPathInLaravelVendorDir(workspaceRoot);
+        const tinkerScriptAbsolutePath = path.join(this.extensionUri.fsPath, this.tinkerScriptPath);
 
-        if (!fs.existsSync(tinkerScriptPathInLaravelVendorDir)) {
-            vscode.window.showErrorMessage("Laravel Tinker Runner is missing. Please reload your project.");
-            return;
-        }
-
-        // ✅ Execute the Tinker script
-        this.currentProcess = this.evalScript('php', [tinkerScriptPathInLaravelVendorDir, phpFileRelativePath], workspaceRoot);
+        this.currentProcess = this.evalScript('php', [tinkerScriptAbsolutePath, phpFileRelativePath, workspaceRoot], workspaceRoot);
     }
 
     /**
@@ -153,8 +146,6 @@ export class TinkerRunner {
         
     }
 
-
-
     /**
      * Stops the currently running PHP process.
      */
@@ -167,39 +158,6 @@ export class TinkerRunner {
             // ✅ Update WebView to hide loader & stop button
             this.webviewManager.updateWebView("Execution Stopped", true, false);
         }
-    }
-
-
-    /**
-     * Copies the tinker.php script to the Laravel project's vendor directory if it does not exist.
-     */
-    public copyTinkerScriptToLaravel(): void {
-        const workspaceFolders = vscode.workspace.workspaceFolders;
-        if (!workspaceFolders) {
-            vscode.window.showErrorMessage("No workspace opened! Open a Laravel project.");
-            return;
-        }
-
-        workspaceFolders.forEach((folder) => {
-            if (!this.pathUtils.isLaravelProjectDir(folder.uri.fsPath)) {
-                return;
-            }
-            
-            const laravelWorkspaceRoot = folder.uri.fsPath;
-            const tinkerScriptPathInLaravelVendorDir = this.pathUtils.tinkerScriptPathInLaravelVendorDir(laravelWorkspaceRoot);
-            const laravelVendorExtensionDirectoryPath = this.pathUtils.laravelVendorExtensionDirectoryPath(laravelWorkspaceRoot);
-
-            const tinkerScriptPathInExtension = path.join(this.extensionUri.fsPath, 'resources', this.tinkerScriptName);
-
-            if (!fs.existsSync(laravelVendorExtensionDirectoryPath)) {
-                fs.mkdirSync(laravelVendorExtensionDirectoryPath, { recursive: true });
-            }
-
-            if (!fs.existsSync(tinkerScriptPathInLaravelVendorDir)) {
-                fs.copyFileSync(tinkerScriptPathInExtension, tinkerScriptPathInLaravelVendorDir);
-                vscode.window.showInformationMessage("✅ Laravel Tinker Runner installed successfully.");
-            }
-        });
     }
 
 }

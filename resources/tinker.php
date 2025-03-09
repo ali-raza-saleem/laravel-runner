@@ -3,15 +3,24 @@
 
 use Illuminate\Contracts\Console\Kernel;
 
+
 define('LARAVEL_START', microtime(true));
 
-// Assuming we are in vendor/ali-raza-saleem/laravel-tinker-runner directory
-$larvalRootDirectory = __DIR__ . '/../../..';
+$phpFileArg = $argv[1] ?? null;
+$laravelRootDirectory = $argv[2] ?? null;
 
-require $larvalRootDirectory . '/vendor/autoload.php';
+if (!$phpFileArg) {
+    die("Usage: php tinker.php <script-file> <laravel-root>\n");
+}
+
+if (!$laravelRootDirectory) {
+    die("No Laravel root directory specified.\n");
+}
+
+require $laravelRootDirectory . '/vendor/autoload.php';
 
 // Boot the Laravel application
-$app = require_once $larvalRootDirectory . '/bootstrap/app.php';
+$app = require_once $laravelRootDirectory . '/bootstrap/app.php';
 
 // Run Laravel's Kernel
 $kernel = $app->make(Kernel::class);

@@ -1,11 +1,8 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
 import { WebviewManager } from './core/services/WebviewManager';
 import { CodeLensProvider } from './core/providers/CodeLensProvider';
 import { TinkerRunner } from './core/services/TinkerRunner';
 import { Config } from './core/utils/Config';
-import { PathUtils } from './core/utils/PathUtils';
 
 export class ExtensionManager {
     private webviewManager: WebviewManager;
@@ -28,7 +25,6 @@ export class ExtensionManager {
     public activate() {
         console.log("🚀 Laravel Tinker extension activated!");
 
-        this.tinkerRunner.copyTinkerScriptToLaravel();
         this.registerProviders();
         this.registerCommands();
     }
@@ -77,29 +73,6 @@ export class ExtensionManager {
 
         this.context.subscriptions.push(...commands);
     }
-
-    /**
-     * Cleans up the extension when it is deactivated.
-     */
-    public deactivate() {
-        this.removeTinkerRunner();
-    }
-
-    /**
-     * Removes Laravel Tinker Runner files when the extension is uninstalled.
-     */
-    private removeTinkerRunner() {
-        const workspaceFolders = vscode.workspace.workspaceFolders;
-        if (!workspaceFolders) return;
-
-        const projectRoot = workspaceFolders[0].uri.fsPath;
-        const extensionPublisherDirInLaravelVendor = path.join(projectRoot, 'vendor', this.config.get('publisher'));
-
-        if (fs.existsSync(extensionPublisherDirInLaravelVendor)) {
-            fs.rmSync(extensionPublisherDirInLaravelVendor, { recursive: true, force: true });
-            vscode.window.showInformationMessage("❌ Laravel Tinker Runner has been removed from your Laravel project");
-        }
-    }
 }
 
 /**
@@ -114,6 +87,5 @@ export function activate(context: vscode.ExtensionContext) {
  * Called when the extension is deactivated.
  */
 export function deactivate() {
-    const extensionManager = new ExtensionManager({} as vscode.ExtensionContext);
-    extensionManager.deactivate();
+    //
 }
