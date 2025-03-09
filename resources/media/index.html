@@ -1,53 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<html>
+  <head>
+    <meta charset="UTF-8" />
     <link rel="stylesheet" href="{{highlightCssUri}}" />
     <link rel="stylesheet" href="{{styleUri}}" />
-    <script src="{{alineJsUrl}}" defer></script>
-</head>
-<body x-data="outputHandler">
+  </head>
+  <body>
     <div id="controls">
-        <!-- Left side: Search bar -->
-        <div id="left-controls" :class="{ 'hidden': !searchBarVisible }">
-          <input id="search-input" x-ref="searchInput" type="text" placeholder="Search output..." />
+      <!-- Left side: Search bar -->
+      <div id="left-controls">
+        <input id="search-input" type="text" placeholder="Search output..." />
       </div>
 
-        <!-- Right side: Stop and Clear buttons -->
-        <div id="right-controls">
-            <!-- Stop Button -->
-            <button id="stop-button" x-ref="stopButton" x-show="showStopButton" aria-label="Stop Execution" title="Stop Execution">
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                    <path fill="currentColor" d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z" />
-                </svg>
-            </button>
+      <!-- Right side: Loading spinner, Stop and Clear buttons -->
+      <div id="right-controls">
+        <!-- Stop Button (unchanged shape, but color is applied via CSS) -->
+        <button
+          id="stop-button"
+          style="visibility: hidden"
+          aria-label="Stop Execution"
+          title="Stop Execution"
+        >
+          <svg
+            class="icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 384 512"
+          >
+            <path
+              fill="currentColor"
+              d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 
+                   64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7
+                   -64-64V128z"
+            />
+          </svg>
+        </button>
 
-            <!-- Clear Button -->
-            <button id="clear-button" x-ref="clearButton" aria-label="Clear Output" title="Clear Output">
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                    <path fill="currentColor" d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                </svg>
-            </button>
-        </div>
+        <!-- Clear Button with FA “Regular” Trash Can icon -->
+        <button
+          id="clear-button"
+          aria-label="Clear Output"
+          title="Clear Output"
+        >
+          <svg
+            class="icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+          >
+            <path
+              fill="currentColor"
+              d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
 
-    <!-- Output Container -->
-    <div id="output-container" x-ref="outputContainer"></div>
+    <div id="output-container"></div>
 
     <!-- Modal -->
-    <div id="error-modal" class="modal" x-ref="errorModal">
+    <div id="error-modal" class="modal">
       <div class="modal-content">
-          <!-- Close (×) button at top-right -->
-          <button id="error-modal-close" class="modal-close" x-ref="errorModalClose">&times;</button>
-          <!-- Preformatted error text, no syntax highlighting -->
-          <pre id="error-modal-log" class="modal-log-text" x-ref="errorModalLog"></pre>
+        <!-- Close (×) button at top-right -->
+        <button id="error-modal-close" class="modal-close">&times;</button>
+        <!-- Preformatted error text, no syntax highlighting -->
+        <pre id="error-modal-log" class="modal-log-text"></pre>
       </div>
-  </div>
+    </div>
 
     <!-- Load external JS files -->
     <script src="{{highlightJsUri}}"></script>
     <script src="{{markJsUri}}"></script>
     <script src="{{utilsJsUri}}"></script>
     <script src="{{outputHandlerUri}}"></script>
-</body>
+  </body>
 </html>
