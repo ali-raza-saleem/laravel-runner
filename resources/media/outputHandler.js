@@ -43,6 +43,10 @@ document.addEventListener('DOMContentLoaded', function () {
       stopButton.style.visibility = 'visible'
     }
 
+    if (message.command === 'scriptKilled') {
+      stopButton.style.visibility = 'hidden'
+    }
+
     if (message.command === 'updateOutput') {
       stopButton.style.visibility = message.isRunning ? 'visible' : 'hidden'
 

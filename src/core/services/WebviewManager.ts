@@ -39,6 +39,12 @@ export class WebviewManager {
 
     }
 
+    public sendScriptKilledMessage() {
+        this.createOutputPanel();
+        this.outputPanel.webview.postMessage({ command: 'scriptKilled' });
+
+    }
+
     public createOutputPanel() {
         if (!this.outputPanel) {
             this.outputPanel = vscode.window.createWebviewPanel(

@@ -156,7 +156,7 @@ export class TinkerRunner {
             this.currentProcess = null;
                         
             // ✅ Update WebView to hide loader & stop button
-            this.webviewManager.updateWebView("Execution Stopped", true, false);
+            this.webviewManager.sendScriptKilledMessage();
         }
     }
 
