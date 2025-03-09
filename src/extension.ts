@@ -2,21 +2,16 @@ import * as vscode from 'vscode';
 import { WebviewManager } from './core/services/WebviewManager';
 import { CodeLensProvider } from './core/providers/CodeLensProvider';
 import { TinkerRunner } from './core/services/TinkerRunner';
-import { Config } from './core/utils/Config';
 
 export class ExtensionManager {
     private webviewManager: WebviewManager;
     private tinkerRunner: TinkerRunner;
     private context: vscode.ExtensionContext;
-    private config: Config;
 
     constructor(context: vscode.ExtensionContext) {
         this.context = context;
         this.webviewManager = new WebviewManager(context);
         this.tinkerRunner = new TinkerRunner(context, this.webviewManager);
-
-        Config.init(context); // Initialize Config singleton
-        this.config = Config.getInstance();
     }
 
     /**

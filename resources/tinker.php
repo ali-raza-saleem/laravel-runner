@@ -2,6 +2,8 @@
 <?php
 
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 
 define('LARAVEL_START', microtime(true));
@@ -62,7 +64,19 @@ try {
 
     exit(0);
 } catch (\Throwable $e) {
-    die("Error executing file: " . $e->getMessage() . "\n");
+    flush(); // Forces output to be sent immediately
+    ob_flush(); // Ensures the buffer is cleared
+    
+    Log::error("[Tinker Runner Exception]: " . $e->getMessage(), [
+        'exception' => $e,
+        'file' => $filePath,
+    ]);
+
+    $output = new ConsoleOutput();
+    $output->writeln("<error>{$e->getMessage()}</error>");
+    $output->writeln("<comment>File: {$e->getFile()}</comment>");
+
+    exit(1);
 }
 
 
@@ -97,7 +111,8 @@ function transformCode($code)
     // Remove comments and Nop statements
     $traverser = new \PhpParser\NodeTraverser();
     $traverser->addVisitor(new class extends \PhpParser\NodeVisitorAbstract {
-        public function beforeTraverse(array $nodes) {
+        public function beforeTraverse(array $nodes)
+        {
             // Remove comments from nodes
             foreach ($nodes as $node) {
                 $node->setAttribute('comments', []);
@@ -105,7 +120,8 @@ function transformCode($code)
             return $nodes;
         }
 
-        public function leaveNode(\PhpParser\Node $node) {
+        public function leaveNode(\PhpParser\Node $node)
+        {
             // Remove Nop statements
             if ($node instanceof \PhpParser\Node\Stmt\Nop) {
                 return \PhpParser\NodeTraverser::REMOVE_NODE;

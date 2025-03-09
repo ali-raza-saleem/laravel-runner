@@ -35,7 +35,11 @@
         </button>
 
         <!-- Clear Button with FA “Regular” Trash Can icon -->
-        <button id="clear-button" aria-label="Clear Output" title="Clear Output">
+        <button
+          id="clear-button"
+          aria-label="Clear Output"
+          title="Clear Output"
+        >
           <svg
             class="icon"
             xmlns="http://www.w3.org/2000/svg"
@@ -50,8 +54,15 @@
       </div>
     </div>
 
-    <div id="output-container">
-      <div>
+    <div id="output-container"></div>
+
+    <!-- Modal -->
+    <div id="error-modal" class="modal">
+      <div class="modal-content">
+        <!-- Close (×) button at top-right -->
+        <button id="error-modal-close" class="modal-close">&times;</button>
+        <!-- Preformatted error text, no syntax highlighting -->
+        <pre id="error-modal-log" class="modal-log-text"></pre>
       </div>
     </div>
 
