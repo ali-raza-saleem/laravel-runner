@@ -91,94 +91,90 @@ document.addEventListener('DOMContentLoaded', function () {
    * @param {boolean} appendOutput - If false, clear previous output
    */
   function updateOutput(content, isError, isRunning, appendOutput) {
-    const isFirstOutput = outputContainer.children.length < 2
+    const isFirstOutput = outputContainer.children.length == 0;
 
     // ✅ Clear output if appendOutput is false
     if (!appendOutput) {
-      outputContainer.innerHTML = ''
+        outputContainer.innerHTML = '';
     }
 
-    // ✅ If error, remove old errors to prevent duplicates
     if (isError) {
-      const parsedContent = content.split('[Tinker Runner Exception]:')
+        const parsedContent = content.split('[Tinker Runner Exception]:');
 
-      if (parsedContent.length == 2) {
-        minimalContent = parsedContent[0]
-        fullContent = parsedContent[1]
-      } else {
-        minimalContent = content
-        fullContent = content
-      }
+        let minimalContent, fullContent;
+        if (parsedContent.length == 2) {
+            minimalContent = parsedContent[0];
+            fullContent = parsedContent[1];
+        } else {
+            minimalContent = content;
+            fullContent = content;
+        }
 
-      // const parsedContent = JSON.parse(content);
+        // 🚀 Don't remove existing errors when appending
+        if (!appendOutput) {
+            const existingErrors = outputContainer.querySelectorAll('.output-wrapper');
+            existingErrors.forEach((errorBlock) => errorBlock.remove());
+        }
 
-      const existingErrors = outputContainer.querySelectorAll('.output-wrapper')
-      existingErrors.forEach((errorBlock) => errorBlock.remove()) // Remove all old errors
+        // Create the wrapper
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('output-wrapper');
 
-      // Create the wrapper
-      const wrapper = document.createElement('div')
-      wrapper.classList.add('output-wrapper')
+        // Create pre/code
+        const pre = document.createElement('pre');
+        const code = document.createElement('code');
+        code.textContent = minimalContent;
+        code.style.color = '#ff5555'; // Extra guarantee it's red
+        pre.appendChild(code);
 
-      // Create pre/code
-      const pre = document.createElement('pre')
-      const code = document.createElement('code')
-      code.textContent = minimalContent
-      code.style.color = '#ff5555' // Extra guarantee it's red
-      pre.appendChild(code)
+        // "Show Log Details" button
+        if (parsedContent.length == 2) {
+            const showLogButton = document.createElement('button');
+            showLogButton.innerText = 'Show Log Details';
+            showLogButton.classList.add('show-log-btn');
 
-      // "Show Log Details" button
-      const showLogButton = document.createElement('button')
-      showLogButton.innerText = 'Show Log Details'
-      showLogButton.classList.add('show-log-btn')
+            showLogButton.addEventListener('click', () => {
+                errorModalLog.textContent = fullContent;
+                errorModal.classList.add('show');
+            });
 
-      showLogButton.addEventListener('click', () => {
-        // Put full error text in modal
-        errorModalLog.textContent = fullContent
-        // Show modal
-        errorModal.classList.add('show')
-      })
+            wrapper.appendChild(showLogButton);
+        }
 
-      // Append everything
-      wrapper.appendChild(pre)
-      if (parsedContent.length == 2) {
-        wrapper.appendChild(showLogButton)
-      }
-      outputContainer.appendChild(wrapper)
+        wrapper.appendChild(pre);
+        outputContainer.appendChild(wrapper);
     } else {
-      // ✅ Original logic for non-error outputs
-      const pre = document.createElement('pre')
-      const code = document.createElement('code')
-      code.textContent = content
+        // ✅ Append non-error messages normally
+        const pre = document.createElement('pre');
+        const code = document.createElement('code');
+        code.textContent = content;
+        code.classList.add('language-php'); // Syntax highlighting for normal outputs
+        pre.appendChild(code);
+        outputContainer.appendChild(pre);
 
-      code.classList.add('language-php') // Syntax highlighting for normal outputs
-      pre.appendChild(code)
-
-      // Append to container
-      outputContainer.appendChild(pre)
-
-      // ✅ Syntax highlighting
-      setTimeout(() => {
-        window.hljs.highlightElement(code)
-      }, 0)
+        // ✅ Syntax highlighting
+        setTimeout(() => {
+            window.hljs.highlightElement(code);
+        }, 0);
     }
 
     // ✅ Make search bar visible
-    searchBar.style.visibility = 'visible'
+    searchBar.style.visibility = 'visible';
 
     // ✅ Highlight search term if any
     if (searchInput.value) {
-      highlightSearch(searchInput.value)
+        highlightSearch(searchInput.value);
     }
 
-    // ✅ Scroll only if it's not the first output
+    // ✅ Scroll to last appended element
     if (appendOutput && !isFirstOutput) {
-      // Find the last child
-      const lastChild = outputContainer.lastElementChild
-      setTimeout(() => {
-        lastChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-      }, 50)
+        const lastChild = outputContainer.lastElementChild;
+        setTimeout(() => {
+            lastChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 50);
     }
-  }
+}
+
 
   /**
    * ✅ Highlight Search Terms Without Removing Syntax Highlighting
