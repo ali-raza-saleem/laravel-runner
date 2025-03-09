@@ -66,15 +66,21 @@ try {
 } catch (\Throwable $e) {
     flush(); // Forces output to be sent immediately
     ob_flush(); // Ensures the buffer is cleared
-    
+
     Log::error("[Tinker Runner Exception]: " . $e->getMessage(), [
         'exception' => $e,
         'file' => $filePath,
     ]);
 
-    $output = new ConsoleOutput();
-    $output->writeln("<error>{$e->getMessage()}</error>");
-    $output->writeln("<comment>File: {$e->getFile()}</comment>");
+    // Capture minimal error output
+    $minimalError = "{$e->getMessage()}\nFile: {$e->getFile()}";
+
+    // Capture full error details for the modal
+    $fullErrorLog = $e->getMessage() . "\n" .
+        "File: {$e->getFile()} ({$e->getLine()})\n" .
+        "Stack Trace:\n" . $e->getTraceAsString();
+
+    echo $minimalError . "[Tinker Runner Exception]:" . $fullErrorLog . $fullErrorLog . $fullErrorLog . $fullErrorLog . $fullErrorLog . "\n";
 
     exit(1);
 }

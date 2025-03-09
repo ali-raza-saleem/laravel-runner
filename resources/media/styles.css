@@ -211,11 +211,13 @@ code {
   display: block;
 }
 .modal-content {
-  background: #2b2b2b;
-  color: #ff5555;          /* match error color for modal text */
+  background: #1e1e1e;  /* Matches non-error output background */
+  color: #e5c07b;  /* Matches syntax-highlighted text */
   width: 80%;
   max-width: 600px;
-  margin: 3rem auto;       /* center horizontally */
+  max-height: 80vh;  /* Limits modal height */
+  overflow-y: auto;  /* Enables vertical scrolling if content is too long */
+  margin: 3rem auto;
   position: relative;
   padding: 1rem;
   border-radius: 4px;
@@ -233,10 +235,9 @@ code {
 }
 .modal-log-text {
   background: transparent;
-  margin: 1rem 0;          /* balanced spacing */
-  white-space: pre-wrap;   /* preserve newlines but wrap if long */
-  max-width: 100%;         /* prevent extra right space */
-  color: #e5c07b;
+  margin: 1rem 0;
+  white-space: pre-wrap;
+  max-width: 100%;
 }
 
 /* =====================
