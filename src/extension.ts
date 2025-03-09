@@ -50,7 +50,7 @@ export class ExtensionManager {
      */
     private registerCommands() {
         const runPhpFileCommand = vscode.commands.registerCommand('myExtension.runPhpFile', (fileUri?: vscode.Uri) => {
-            this.tinkerRunner.runPhpFile(fileUri);
+            this.tinkerRunner.runPhpFile();
         });
 
         const clearOutputCommand = vscode.commands.registerCommand('myExtension.clearOutput', () => {

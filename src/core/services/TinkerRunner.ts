@@ -7,7 +7,6 @@ import { Config } from '../utils/Config';
 import { PathUtils } from '../utils/PathUtils';
 
 export class TinkerRunner {
-    private isRunning: boolean = false;
     private currentProcess: ChildProcess | null = null;
     private extensionUri: vscode.Uri;
     private webviewManager: WebviewManager;
@@ -35,18 +34,16 @@ export class TinkerRunner {
      * Runs the given PHP file using the Tinker script and captures all output.
      * @param fileUri The URI of the PHP file to run.
      */
-    public runPhpFile(fileUri?: vscode.Uri): void {
-        if (this.isRunning) {
+    public runPhpFile(): void {
+        if (this.currentProcess) {
             vscode.window.showWarningMessage("Query in progress. Please wait...");
             return;
         }
-        this.isRunning = true;
 
-        const phpFileUri = fileUri ?? this.getPhpFileUri();
+        const phpFileUri = this.getPhpFileUri();
         const workspaceRoot = this.pathUtils.getWorkspaceRoot(phpFileUri);
 
         if (!this.canRunPhpFile(workspaceRoot, phpFileUri)) {
-            this.isRunning = false;
             return;
         }
 
@@ -55,7 +52,6 @@ export class TinkerRunner {
 
         if (!fs.existsSync(tinkerScriptPathInLaravelVendorDir)) {
             vscode.window.showErrorMessage("Laravel Tinker Runner is missing. Please reload your project.");
-            this.isRunning = false;
             return;
         }
 
@@ -117,12 +113,7 @@ export class TinkerRunner {
             output += data.toString();
         });
 
-        process.stderr.on('data', (data) => {
-            output += data.toString();
-        });
-
         process.on('close', (code) => {
-            this.isRunning = false;
             this.currentProcess = null;
 
             if (code !== 0) {
@@ -134,7 +125,6 @@ export class TinkerRunner {
 
         process.on('error', (err) => {
             this.webviewManager.updateWebView(output || `Error running script: ${err.message}`, true, false);
-            this.isRunning = false;
             this.currentProcess = null;
             vscode.window.showErrorMessage(`Error running script: ${err.message}`);
         });
@@ -173,7 +163,6 @@ export class TinkerRunner {
         if (this.currentProcess) {
             this.currentProcess.kill('SIGTERM'); // ✅ Terminate the process gracefully
             this.currentProcess = null;
-            this.isRunning = false;
                         
             // ✅ Update WebView to hide loader & stop button
             this.webviewManager.updateWebView("Execution Stopped", true, false);
