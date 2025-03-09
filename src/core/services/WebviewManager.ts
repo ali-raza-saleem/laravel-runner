@@ -81,8 +81,8 @@ export class WebviewManager {
             .replace(/\{\{highlightCssUri\}\}/g, getResourceUri('resources/media/atom-one-dark.css').toString())
             .replace(/\{\{highlightJsUri\}\}/g, getResourceUri('resources/media/highlight.min.js').toString())
             .replace(/\{\{markJsUri\}\}/g, getResourceUri('resources/media/mark.min.js').toString())
-            .replace(/\{\{outputHandlerUri\}\}/g, getResourceUri('resources/media/outputHandler.js').toString())
-            .replace(/\{\{styleUri\}\}/g, getResourceUri('resources/media/styles.css').toString())
+            .replace(/\{\{outputHandlerUri\}\}/g, getResourceUri('resources/js/outputHandler.js').toString())
+            .replace(/\{\{styleUri\}\}/g, getResourceUri('resources/css/styles.css').toString())
             .replace(/\{\{utilsJsUri\}\}/g, getResourceUri('resources/media/utils.js').toString());
 
         return this.cachedHtml;
