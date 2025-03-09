@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
   /*** Event Listeners ***/
   elements.clearButton.addEventListener('click', clearOutput);
   elements.stopButton.addEventListener('click', stopExecution);
-  elements.searchInput.addEventListener('input', () => highlightSearch(elements.searchInput.value));
-  elements.errorModalClose.addEventListener('click', () => elements.errorModal.classList.remove('show'));
+  elements.searchInput.addEventListener('input', () => { highlightSearch(elements.searchInput.value); });
+  elements.errorModalClose.addEventListener('click', () => { elements.errorModal.classList.remove('show'); });
   
   document.addEventListener('keydown', handleKeyboardShortcuts);
   window.addEventListener('message', handleVSCodeMessages);
@@ -30,8 +30,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (event.ctrlKey && event.altKey) {
           event.preventDefault();
           const key = event.key.toLowerCase();
-          if (key === 'c') clearOutput();
-          else if (key === 'f') elements.searchInput.focus();
+          if (key === 'c') {
+              clearOutput();
+          }
+          if (key === 'f') {
+              elements.searchInput.focus();
+          }
       }
   }
 
@@ -40,22 +44,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
       elements.stopButton.style.visibility = message.isRunning ? 'visible' : 'hidden';
 
-      switch (message.command) {
-          case 'scriptStarted':
-              toggleStopButton(true);
-              break;
-          case 'scriptKilled':
-              toggleStopButton(false);
-              break;
-          case 'updateOutput':
-              updateOutput(message.content, message.isError, message.isRunning, message.appendOutput);
-              break;
-          case 'clearOutput':
-              clearOutput();
-              break;
-          case 'focusSearchBar':
-              elements.searchInput.focus();
-              break;
+      if (message.command === 'scriptStarted') {
+          toggleStopButton(true);
+      }
+      if (message.command === 'scriptKilled') {
+          toggleStopButton(false);
+      }
+      if (message.command === 'updateOutput') {
+          updateOutput(message.content, message.isError, message.isRunning, message.appendOutput);
+      }
+      if (message.command === 'clearOutput') {
+          clearOutput();
+      }
+      if (message.command === 'focusSearchBar') {
+          elements.searchInput.focus();
       }
   }
 
@@ -74,14 +76,18 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateOutput(content, isError, isRunning, appendOutput) {
-      if (!appendOutput) elements.outputContainer.innerHTML = '';
+      if (!appendOutput) {
+          elements.outputContainer.innerHTML = '';
+      }
 
       $isFirstElement = elements.outputContainer.children.length === 0;
       
       const newElement = isError ? appendErrorOutput(content) : appendNormalOutput(content);
       
       elements.searchBar.style.visibility = 'visible';
-      if (elements.searchInput.value) highlightSearch(elements.searchInput.value);
+      if (elements.searchInput.value) {
+          highlightSearch(elements.searchInput.value);
+      }
 
       // Scroll to the start of the new appended element
       if (newElement && !$isFirstElement) {
@@ -129,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
       pre.appendChild(code);
       elements.outputContainer.appendChild(pre);
 
-      setTimeout(() => window.hljs.highlightElement(code), 0);
+      setTimeout(() => { window.hljs.highlightElement(code); }, 0);
       return pre;
   }
 
@@ -138,7 +144,11 @@ document.addEventListener('DOMContentLoaded', function () {
       codeBlocks.forEach((code) => {
           const instance = new Mark(code);
           instance.unmark({
-              done: () => query && instance.mark(query, { separateWordSearch: false, className: 'highlight' })
+              done: () => {
+                  if (query) {
+                      instance.mark(query, { separateWordSearch: false, className: 'highlight' });
+                  }
+              }
           });
       });
   }
