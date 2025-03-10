@@ -84,31 +84,37 @@ export class WebviewManager {
 
     const htmlPath = path.join(
       this.extensionUri.fsPath,
-      "resources/media",
+      "resources/html",
       "index.html",
     );
 
     this.cachedHtml = fs
       .readFileSync(htmlPath, "utf8")
       .replace(
-        /\{\{highlightCssUri\}\}/g,
-        getResourceUri("resources/media/atom-one-dark.css").toString(),
+
+      // App
+      
+        /\{\{appJsUri\}\}/g,
+        getResourceUri("dist/app.min.js").toString(),
       )
       .replace(
+        /\{\{appCssUri\}\}/g,
+        getResourceUri("dist/app.min.css").toString(),
+      )
+
+      //Assets
+      
+      .replace(
         /\{\{highlightJsUri\}\}/g,
-        getResourceUri("resources/media/highlight.min.js").toString(),
+        getResourceUri("assets/js/highlight.min.js").toString(),
       )
       .replace(
         /\{\{markJsUri\}\}/g,
-        getResourceUri("resources/media/mark.min.js").toString(),
+        getResourceUri("assets/js/mark.min.js").toString(),
       )
       .replace(
-        /\{\{outputHandlerUri\}\}/g,
-        getResourceUri("resources/js/outputHandler.js").toString(),
-      )
-      .replace(
-        /\{\{styleUri\}\}/g,
-        getResourceUri("resources/css/styles.css").toString(),
+        /\{\{highlightCssUri\}\}/g,
+        getResourceUri("assets/css/atom-one-dark.min.css").toString(),
       );
 
     return this.cachedHtml;

@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
     errorModal: document.getElementById("error-modal"),
     errorModalClose: document.getElementById("error-modal-close"),
     errorModalLog: document.getElementById("error-modal-log"),
+    errorModalCopy: document.getElementById("error-modal-copy")
+
   };
 
   /*** Initialize ***/
@@ -25,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
   elements.errorModalClose.addEventListener("click", () => {
     elements.errorModal.classList.remove("show");
   });
+
+  elements.errorModalCopy.addEventListener("click", copyErrorLog);
 
   document.addEventListener("keydown", handleKeyboardShortcuts);
   window.addEventListener("message", handleVSCodeMessages);
@@ -154,6 +158,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 0);
     return pre;
   }
+
+  function copyErrorLog() {
+    let logText = elements.errorModalLog.textContent.trim();
+  
+    if (!logText) {
+      console.warn("No text to copy");
+      return;
+    }
+  
+    navigator.clipboard.writeText(logText)
+      .then(() => {
+  
+        // Change text to "Copied"
+        elements.errorModalCopy.querySelector("span").textContent = "Copied";
+        elements.errorModalCopy.classList.add("copied");
+  
+        // Revert after 1.5 seconds
+        setTimeout(() => {
+          elements.errorModalCopy.classList.remove("copied");
+          elements.errorModalCopy.querySelector("span").textContent = "Copy";
+        }, 1500);
+      })
+      .catch(err => {
+        console.error("Clipboard API failed:", err);
+      });
+  }
+  
+  
 
   function highlightSearch(query) {
     const codeBlocks = elements.outputContainer.querySelectorAll("pre code");

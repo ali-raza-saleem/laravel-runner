@@ -214,15 +214,11 @@ code {
 .modal-content {
   background: #252526;
   color: #e5c07b; /* Matches syntax-highlighted text */
-  width: 80%;
-  max-width: 600px;
-  max-height: 80vh; /* Limits modal height */
   overflow-y: auto; /* Enables vertical scrolling if content is too long */
-  margin: 3rem auto;
   position: relative;
-  padding: 1rem;
   border-radius: 4px;
   line-height: 1.5;
+  height: 100%;
 }
 .modal-close {
   position: absolute;
@@ -240,7 +236,78 @@ code {
   margin: 1rem 0;
   white-space: pre-wrap;
   max-width: 100%;
+  padding: 0rem 1.5rem;
 }
+
+/* Sticky header inside modal */
+.modal-header {
+  position: sticky;
+  top: 0;
+  background: #252526; /* Match modal background */
+  display: flex;
+  justify-content: space-between; /* Space between buttons */
+  align-items: center;
+  padding: 10px;
+  z-index: 20; /* Ensure it stays above scroll */
+  border-bottom: 1px solid #3a3a3a; /* Slight border for visibility */
+}
+
+/* Copy Button */
+.modal-copy {
+  background: #3a3a3a;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.modal-copy svg {
+  width: 16px;
+  height: 16px;
+  fill: #ccc;
+  transition: fill 0.3s ease-in-out;
+}
+
+.modal-copy:hover {
+  background: #505050;
+  color: #fff;
+}
+
+.modal-copy:hover svg {
+  fill: #fff;
+}
+
+.modal-copy.copied {
+  background: #d18a07 !important;
+  color: #fff !important;
+}
+
+.modal-copy.copied svg {
+  fill: #fff !important;
+}
+
+/* Close Button */
+.modal-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+  color: #ff5252;
+}
+
 
 /* =====================
    ERROR OUTPUT WRAPPER
