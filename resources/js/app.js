@@ -171,24 +171,37 @@ document.addEventListener("alpine:init", () => {
       this.stopCodeExecutionButtonVisibility = false;
     },
 
+    escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    },
+
     highlightSearchedText() {
       const outputContainer = this.$refs.outputContainer;
-      if (!outputContainer) return; // Avoid errors if the container is not available
+      if (!outputContainer) return;
 
       const instance = new Mark(outputContainer);
 
       // Unmark previous highlights before applying new ones
       instance.unmark({
         done: () => {
-          instance.mark(this.searchText, {
-            separateWordSearch: false,
+          if (!this.searchText) return;
+
+          // 1) Escape any regex-relevant characters in the search string
+          const escapedSearch = this.escapeRegExp(this.searchText);
+
+          // 2) Build a global, case-insensitive regular expression
+          const regex = new RegExp(escapedSearch, "gi");
+
+          // 3) Highlight the regex in the output container
+          instance.markRegExp(regex, {
             className: "highlight",
+            accuracy: "exactly",
+            separateWordSearch: false,
+            acrossElements: true, // <-- Important for code blocks
             done: () => {
-              // Find all highlighted elements in one go
+              // 4) Scroll to first highlight once marking is done
               const highlightedElements =
                 outputContainer.querySelectorAll(".highlight");
-
-              // Scroll to the first highlighted element, if found
               if (highlightedElements.length > 0) {
                 setTimeout(() => {
                   highlightedElements[0].scrollIntoView({
