@@ -1,206 +1,192 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const vscode = acquireVsCodeApi();
-
-  /*** Element References ***/
-  const elements = {
-    outputContainer: document.getElementById("output-container"),
-    clearButton: document.getElementById("clear-button"),
-    searchInput: document.getElementById("search-input"),
-    searchBar: document.getElementById("search-input").parentElement,
-    stopButton: document.getElementById("stop-button"),
-    errorModal: document.getElementById("error-modal"),
-    errorModalClose: document.getElementById("error-modal-close"),
-    errorModalLog: document.getElementById("error-modal-log"),
-    errorModalCopy: document.getElementById("error-modal-copy")
-
-  };
-
-  /*** Initialize ***/
-  elements.searchBar.style.visibility = "hidden";
-
-  /*** Event Listeners ***/
-  elements.clearButton.addEventListener("click", clearOutput);
-  elements.stopButton.addEventListener("click", stopExecution);
-  elements.searchInput.addEventListener("input", () => {
-    highlightSearch(elements.searchInput.value);
-  });
-  elements.errorModalClose.addEventListener("click", () => {
-    elements.errorModal.classList.remove("show");
-  });
-
-  elements.errorModalCopy.addEventListener("click", copyErrorLog);
-
-  document.addEventListener("keydown", handleKeyboardShortcuts);
-  window.addEventListener("message", handleVSCodeMessages);
-
-  /*** Function Definitions ***/
-  function handleKeyboardShortcuts(event) {
-    if (event.ctrlKey && event.altKey) {
-      event.preventDefault();
-      const key = event.key.toLowerCase();
-      if (key === "c") {
-        clearOutput();
-      }
-      if (key === "f") {
-        elements.searchInput.focus();
-      }
-    }
-  }
-
-  function handleVSCodeMessages(event) {
-    const message = event.data;
-
-    elements.stopButton.style.visibility = message.isRunning
-      ? "visible"
-      : "hidden";
-
-    if (message.command === "scriptStarted") {
-      toggleStopButton(true);
-    }
-    if (message.command === "scriptKilled") {
-      toggleStopButton(false);
-    }
-    if (message.command === "updateOutput") {
-      updateOutput(
-        message.content,
-        message.isError,
-        message.isRunning,
-        message.appendOutput,
+document.addEventListener("alpine:init", () => {
+  Alpine.data("root", () => ({
+    init() {
+      this.vscode = acquireVsCodeApi();
+      document.addEventListener("keydown", (event) =>
+        this.handleKeyboardShortcuts(event),
       );
-    }
-    if (message.command === "clearOutput") {
-      clearOutput();
-    }
-    if (message.command === "focusSearchBar") {
-      elements.searchInput.focus();
-    }
-  }
+      window.addEventListener("message", (event) =>
+        this.handleVSCodeMessages(event),
+      );
 
-  function stopExecution() {
-    vscode.postMessage({ command: "stopExecution" });
-    toggleStopButton(false);
-  }
+      this.showSearchBar = false;
 
-  function clearOutput() {
-    elements.outputContainer.innerHTML = "";
-    elements.searchBar.style.visibility = "hidden";
-  }
+      this.$watch("outputs", () => {
+        this.$nextTick(() => {
+          this.searchText = "";
 
-  function toggleStopButton(visible) {
-    elements.stopButton.style.visibility = visible ? "visible" : "hidden";
-  }
+          const oldOutputElementsCount = this.outputElements.length;
+          this.outputElements = Array.from(
+            this.$refs.outputContainer.querySelectorAll(".output-element"),
+          );
 
-  function updateOutput(content, isError, isRunning, appendOutput) {
-    if (!appendOutput) {
-      elements.outputContainer.innerHTML = "";
-    }
+          if (
+            !this.outputElements.length ||
+            oldOutputElementsCount === this.outputElements.length
+          ) {
+            return;
+          }
 
-    $isFirstElement = elements.outputContainer.children.length === 0;
+          const isFirstElement = this.outputElements.length === 1;
+          let lastElement = this.outputElements[this.outputElements.length - 1];
 
-    const newElement = isError
-      ? appendErrorOutput(content)
-      : appendNormalOutput(content);
+          const lastOutput = this.outputs[this.outputs.length - 1];
+          lastOutput["element"] = lastElement;
 
-    elements.searchBar.style.visibility = "visible";
-    if (elements.searchInput.value) {
-      highlightSearch(elements.searchInput.value);
-    }
+          const highlightLanguage = lastOutput.isError ? "accessLog" : "php";
 
-    // Scroll to the start of the new appended element
-    if (newElement && !$isFirstElement) {
-      setTimeout(() => {
-        newElement.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 50);
-    }
-  }
+          window.hljs.highlightElement(
+            lastElement.querySelector("code"),
+            { language: highlightLanguage },
+          );
 
-  function appendErrorOutput(content) {
-    const parsedContent = content.split("[Tinker Runner Exception]:");
-    const minimalContent =
-      parsedContent.length === 2 ? parsedContent[0] : content;
-    const fullContent = parsedContent.length === 2 ? parsedContent[1] : content;
+          // We don't want to scroll to the first element
+          if (isFirstElement) {
+            return;
+          }
 
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("output-wrapper");
+          setTimeout(() => {
+            lastElement.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 50);
 
-    const pre = document.createElement("pre");
-    const code = document.createElement("code");
-    code.textContent = minimalContent;
-    code.style.color = "#ff5555";
-    pre.appendChild(code);
-    wrapper.appendChild(pre);
-
-    if (parsedContent.length === 2) {
-      const showLogButton = document.createElement("button");
-      showLogButton.innerText = "Show Log Details";
-      showLogButton.classList.add("show-log-btn");
-      showLogButton.addEventListener("click", () => {
-        elements.errorModalLog.textContent = fullContent;
-        elements.errorModal.classList.add("show");
+        });
       });
-      wrapper.appendChild(showLogButton);
-    }
+    },
 
-    elements.outputContainer.appendChild(wrapper);
-    return wrapper;
-  }
+    vscode: null,
+    codeIsRunning: false,
+    stopCodeExecutionButtonVisibility: false,
+    showSearchBar: false,
+    outputs: [],
+    outputElements: {},
+    showDetailLogs: false,
+    searchText: "",
 
-  function appendNormalOutput(content) {
-    const pre = document.createElement("pre");
-    const code = document.createElement("code");
-    code.textContent = content;
-    code.classList.add("language-php");
-    pre.appendChild(code);
-    elements.outputContainer.appendChild(pre);
-
-    setTimeout(() => {
-      window.hljs.highlightElement(code);
-    }, 0);
-    return pre;
-  }
-
-  function copyErrorLog() {
-    let logText = elements.errorModalLog.textContent.trim();
-  
-    if (!logText) {
-      console.warn("No text to copy");
-      return;
-    }
-  
-    navigator.clipboard.writeText(logText)
-      .then(() => {
-  
-        // Change text to "Copied"
-        elements.errorModalCopy.querySelector("span").textContent = "Copied";
-        elements.errorModalCopy.classList.add("copied");
-  
-        // Revert after 1.5 seconds
-        setTimeout(() => {
-          elements.errorModalCopy.classList.remove("copied");
-          elements.errorModalCopy.querySelector("span").textContent = "Copy";
-        }, 1500);
-      })
-      .catch(err => {
-        console.error("Clipboard API failed:", err);
+    collectOutputElements(el, index) {
+      this.$nextTick(() => {
+        this.outputElements[index] = el;
       });
-  }
-  
-  
+    },
 
-  function highlightSearch(query) {
-    const codeBlocks = elements.outputContainer.querySelectorAll("pre code");
-    codeBlocks.forEach((code) => {
-      const instance = new Mark(code);
-      instance.unmark({
-        done: () => {
-          if (query) {
-            instance.mark(query, {
+    clearOutput() {
+      this.outputs = [];
+      this.outputElements = [];
+      this.showSearchBar = false;
+    },
+
+    stopCodeExecution() {
+      this.vscode.postMessage({ command: "stopExecution" });
+      this.stopCodeExecutionButtonVisibility = false;
+    },
+
+    handleVSCodeMessages(event) {
+      const message = event.data;
+
+      this.stopCodeExecutionButtonVisibility = message.isRunning;
+
+      if (message.command === "scriptStarted") {
+        this.stopCodeExecutionButtonVisibility = true;
+      }
+      if (message.command === "scriptKilled") {
+        this.stopCodeExecutionButtonVisibility = false;
+      }
+      if (message.command === "updateOutput") {
+        this.updateOutput(
+          message.content,
+          message.isError,
+          message.appendOutput,
+        );
+      }
+      if (message.command === "clearOutput") {
+        this.clearOutput();
+      }
+      if (message.command === "focusSearchBar") {
+        this.$refs.searchInput.focus();
+      }
+    },
+
+    handleKeyboardShortcuts(event) {
+      if (event.ctrlKey && event.altKey) {
+        event.preventDefault();
+        const key = event.key.toLowerCase();
+        if (key === "c") {
+          this.clearOutput();
+        }
+        if (key === "f") {
+          this.$refs.searchInput.focus();
+        }
+      }
+    },
+
+    updateOutput(content, isError, appendOutput) {
+      if (!appendOutput) {
+        this.clearOutput();
+      }
+
+      const output = {
+        content: content,
+        isError: isError,
+        appendOutput: appendOutput,
+      };
+
+      this.showSearchBar = true;
+
+      // IMPORTANT: We wait for outputs to clear in next DOM update
+      this.$nextTick(() => {
+        this.outputs.push(output);
+      });
+    },
+
+    highlightSearchedText() {
+
+      const codeBlocks = this.$refs.outputContainer.querySelectorAll("pre code");
+      codeBlocks.forEach((code) => {
+        const instance = new Mark(code);
+        instance.unmark({
+          done: () => {
+            instance.mark(this.searchText, {
               separateWordSearch: false,
               className: "highlight",
             });
-          }
-        },
+          },
+        });
       });
-    });
-  }
+    },
+
+    highlightLog(output) {
+      if (output["logHighlighted"]) {
+        return;
+      }
+
+      this.$nextTick(() => {
+        const code = output.element.querySelector(".log-text");
+        window.hljs.highlightElement(code, { language: "accessLog" });
+
+        this.output["logHighlighted"] = true;
+      });
+    },
+
+    copyOutput(output) {
+      const logText = output.content;
+
+      if (!logText) {
+        console.warn("No text to copy");
+        return;
+      }
+
+      navigator.clipboard
+        .writeText(logText)
+        .then(() => {
+          output.outputCopied = true;
+
+          // Revert after 1.5 seconds
+          setTimeout(() => {
+            output.outputCopied = false;
+          }, 1500);
+        })
+        .catch((err) => {
+          console.error("Clipboard API failed:", err);
+        });
+    },
+  }));
 });

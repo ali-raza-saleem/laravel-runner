@@ -2,7 +2,7 @@
   "name": "laravel-tinker-runner",
   "displayName": "Laravel Tinker Runner",
   "description": "Run PHP/Laravel Scripts directly from VS Code.",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "publisher": "ali-raza-saleem",
   "repository": {
     "type": "git",
@@ -92,7 +92,11 @@
     "lint": "eslint src resources/js/ --ext .ts,.js --fix",
     "format": "prettier --write src resources/js/ resources/css/ ",
     "fix-style": "npm run lint && npm run format",
-    "package": "npm run build && vsce package --out ./packages/"
+    "package": "npm run build && vsce package --out ./packages/",
+    "package-patch": "npm version patch && npm run package",
+    "package-minor": "npm version minor && npm run package",
+    "package-major": "npm version major && npm run package"
+
   },
   "devDependencies": {
     "@types/node": "^22.13.10",
@@ -104,6 +108,8 @@
     "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.2",
+    "esbuild": "^0.25.1",
+    "esbuild-loader": "^4.3.0",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.3",
@@ -111,6 +117,7 @@
     "glob": "^11.0.1",
     "prettier": "^3.5.3",
     "style-loader": "^4.0.0",
+    "thread-loader": "^4.0.4",
     "ts-loader": "^9.5.2",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1"

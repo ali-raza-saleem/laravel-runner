@@ -22,7 +22,7 @@ module.exports = [
       rules: [
         {
           test: /\.ts$/,
-          use: "ts-loader",
+          use: "esbuild-loader",
           exclude: /node_modules/,
         },
       ],
@@ -42,7 +42,7 @@ module.exports = [
   {
     entry: {
       app: [
-        ...glob.sync("./resources/js/**/*.js").map(file => path.resolve(__dirname, file)), // Combines all JS files
+        "./resources/js/app.js",
         "./resources/css/app.css",
       ],
     },
@@ -59,12 +59,19 @@ module.exports = [
           test: /\.css$/i,
           use: [MiniCssExtractPlugin.loader, "css-loader"],
         },
+        {
+          test: /\.js$/,
+          use: [
+            "thread-loader", // Enables multi-threading
+            "babel-loader",
+          ],
+        },
       ],
     },
     mode: "production",
     optimization: {
       minimize: true,
-      minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
+      minimizer: [new TerserPlugin({parallel: true}), new CssMinimizerPlugin()],
     },
     plugins: [
       new MiniCssExtractPlugin({
