@@ -13,42 +13,7 @@ document.addEventListener("alpine:init", () => {
 
       this.$watch("outputs", () => {
         this.$nextTick(() => {
-          this.searchText = "";
-
-          const oldOutputElementsCount = this.outputElements.length;
-          this.outputElements = Array.from(
-            this.$refs.outputContainer.querySelectorAll(".output-element"),
-          );
-
-          if (
-            !this.outputElements.length ||
-            oldOutputElementsCount === this.outputElements.length
-          ) {
-            return;
-          }
-
-          const isFirstElement = this.outputElements.length === 1;
-          let lastElement = this.outputElements[this.outputElements.length - 1];
-
-          const lastOutput = this.outputs[this.outputs.length - 1];
-          lastOutput["element"] = lastElement;
-
-          const highlightLanguage = lastOutput.isError ? "accessLog" : "php";
-
-          window.hljs.highlightElement(
-            lastElement.querySelector("code"),
-            { language: highlightLanguage },
-          );
-
-          // We don't want to scroll to the first element
-          if (isFirstElement) {
-            return;
-          }
-
-          setTimeout(() => {
-            lastElement.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 50);
-
+          this.handleNewOutputAddedEvent();
         });
       });
     },
@@ -58,25 +23,14 @@ document.addEventListener("alpine:init", () => {
     stopCodeExecutionButtonVisibility: false,
     showSearchBar: false,
     outputs: [],
-    outputElements: {},
+    outputElements: [],
     showDetailLogs: false,
     searchText: "",
 
-    collectOutputElements(el, index) {
-      this.$nextTick(() => {
-        this.outputElements[index] = el;
-      });
-    },
-
-    clearOutput() {
-      this.outputs = [];
-      this.outputElements = [];
-      this.showSearchBar = false;
-    },
-
-    stopCodeExecution() {
-      this.vscode.postMessage({ command: "stopExecution" });
-      this.stopCodeExecutionButtonVisibility = false;
+    syncOutputElements() {
+      this.outputElements = Array.from(
+        this.$refs.outputContainer.querySelectorAll(".output-element"),
+      );
     },
 
     handleVSCodeMessages(event) {
@@ -91,7 +45,7 @@ document.addEventListener("alpine:init", () => {
         this.stopCodeExecutionButtonVisibility = false;
       }
       if (message.command === "updateOutput") {
-        this.updateOutput(
+        this.addNewOutput(
           message.content,
           message.isError,
           message.appendOutput,
@@ -118,7 +72,7 @@ document.addEventListener("alpine:init", () => {
       }
     },
 
-    updateOutput(content, isError, appendOutput) {
+    addNewOutput(content, isError, appendOutput) {
       if (!appendOutput) {
         this.clearOutput();
       }
@@ -137,33 +91,30 @@ document.addEventListener("alpine:init", () => {
       });
     },
 
-    highlightSearchedText() {
+    handleNewOutputAddedEvent() {
+      this.searchText = "";
 
-      const codeBlocks = this.$refs.outputContainer.querySelectorAll("pre code");
-      codeBlocks.forEach((code) => {
-        const instance = new Mark(code);
-        instance.unmark({
-          done: () => {
-            instance.mark(this.searchText, {
-              separateWordSearch: false,
-              className: "highlight",
-            });
-          },
-        });
-      });
-    },
+      this.syncOutputElements();
 
-    highlightLog(output) {
-      if (output["logHighlighted"]) {
+      const lastElement = this.outputElements[this.outputElements.length - 1];
+      const lastOutput = this.outputs[this.outputs.length - 1];
+      lastOutput["element"] = lastElement;
+
+      this.highlightOutput(lastOutput);
+
+      // We don't want to scroll to the first element
+      const isFirstElement = this.outputElements.length === 1;
+      if (isFirstElement) {
         return;
       }
 
-      this.$nextTick(() => {
-        const code = output.element.querySelector(".log-text");
-        window.hljs.highlightElement(code, { language: "accessLog" });
+      this.scrollToOutput(lastOutput);
+    },
 
-        this.output["logHighlighted"] = true;
-      });
+    clearOutput() {
+      this.outputs = [];
+      this.outputElements = [];
+      this.showSearchBar = false;
     },
 
     copyOutput(output) {
@@ -187,6 +138,40 @@ document.addEventListener("alpine:init", () => {
         .catch((err) => {
           console.error("Clipboard API failed:", err);
         });
+    },
+
+    scrollToOutput(output) {
+      setTimeout(() => {
+        output.element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    },
+
+    highlightOutput(output) {
+      const highlightLanguage = output.isError ? "accessLog" : "php";
+
+      window.hljs.highlightElement(output.element.querySelector("code"), {
+        language: highlightLanguage,
+      });
+    },
+
+    stopCodeExecution() {
+      this.vscode.postMessage({ command: "stopExecution" });
+      this.stopCodeExecutionButtonVisibility = false;
+    },
+
+    highlightSearchedText() {
+      const codeBlocks = this.$refs.outputContainer.querySelectorAll("pre code");
+      codeBlocks.forEach((code) => {
+        const instance = new Mark(code);
+        instance.unmark({
+          done: () => {
+            instance.mark(this.searchText, {
+              separateWordSearch: false,
+              className: "highlight",
+            });
+          },
+        });
+      });
     },
   }));
 });
