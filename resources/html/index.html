@@ -1,73 +1,108 @@
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{{appCssUri}}" />
+    <link rel="stylesheet" href="{{highlightCssUri}}" />
+    <script defer src="{{alpineJsUri}}"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="stylesheet" href="{{appCssUri}}" />
-  <link rel="stylesheet" href="{{highlightCssUri}}" />
-</head>
+  <body>
+    <div x-data="root">
+      <div id="controls">
+        <!-- Left side: Search bar -->
+        <div id="left-controls">
+          <input
+            class="search-input"
+            x-show="showSearchBar"
+            x-ref="searchInput"
+            x-model="searchText"
+            @input="highlightSearchedText()"
+            type="text"
+            placeholder="Search output..."
+          />
+        </div>
 
-<body>
-  <div id="controls">
-    <!-- Left side: Search bar -->
-    <div id="left-controls">
-      <input id="search-input" type="text" placeholder="Search output..." />
+        <!-- Right side: Loading spinner, Stop and Clear buttons -->
+        <div id="right-controls">
+          <!-- Stop Button (unchanged shape, but color is applied via CSS) -->
+          <button
+            class="stop-button"
+            :style="{ visibility: stopCodeExecutionButtonVisibility ? 'visible' : 'hidden' }"
+            title="Stop Execution"
+            @click="stopCodeExecution()"
+          >
+            <svg
+              class="icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 384 512"
+            >
+              <path
+                fill="currentColor"
+                d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 
+                     64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7
+                     -64-64V128z"
+              />
+            </svg>
+          </button>
+
+          <!-- Clear Button with FA “Regular” Trash Can icon -->
+          <button
+            class="clear-button"
+            @click="clearOutput()"
+            title="Clear Output"
+          >
+            <svg
+              class="icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+            >
+              <path
+                fill="currentColor"
+                d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div x-ref="outputContainer" class="output-container">
+        <template x-for="(output, index) in outputs" :key="index">
+          <div>
+            <div class="output-element">
+              <pre>
+                <button
+                    class="copy-output"
+                    :class="{ 'copied' : output.outputCopied }"
+                    title="Copy to clipboard"
+                    @click.stop="copyOutput(output)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                      class="icon"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M384 336l-192 0c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l140.1 0L400 115.9 400 320c0 8.8-7.2 16-16 16zM192 384l192 0c35.3 0 64-28.7 64-64l0-204.1c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1L192 0c-35.3 0-64 28.7-64 64l0 256c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-32-48 0 0 32c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l32 0 0-48-32 0z"
+                      />
+                    </svg>
+                    <span
+                      x-text="output.outputCopied ? 'Copied' : 'Copy' "
+                    ></span>
+                  </button>
+                <code :class="{'error': output.isError}" class="output-element-content" x-text="output.content">
+                </code>
+                
+              </pre>
+            </div>
+          </div>
+        </template>
+      </div>
     </div>
 
-    <!-- Right side: Loading spinner, Stop and Clear buttons -->
-    <div id="right-controls">
-      <!-- Stop Button (unchanged shape, but color is applied via CSS) -->
-      <button id="stop-button" style="visibility: hidden" aria-label="Stop Execution" title="Stop Execution">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-          <path fill="currentColor" d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 
-                   64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7
-                   -64-64V128z" />
-        </svg>
-      </button>
-
-      <!-- Clear Button with FA “Regular” Trash Can icon -->
-      <button id="clear-button" aria-label="Clear Output" title="Clear Output">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-          <path fill="currentColor"
-            d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z" />
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <div id="output-container"></div>
-
-  <!-- Modal -->
-  <!-- Modal -->
-<div id="error-modal" class="modal">
-  <div class="modal-content">
-    
-    <!-- Sticky Header with Copy and Close Buttons -->
-    <div class="modal-header">
-      <!-- Copy Button -->
-      <button id="error-modal-copy" class="modal-copy" title="Copy to clipboard">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon">
-          <path fill="currentColor"
-            d="M384 336l-192 0c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l140.1 0L400 115.9 400 320c0 8.8-7.2 16-16 16zM192 384l192 0c35.3 0 64-28.7 64-64l0-204.1c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1L192 0c-35.3 0-64 28.7-64 64l0 256c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-32-48 0 0 32c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l32 0 0-48-32 0z" />
-        </svg>
-        <span>Copy</span>
-      </button>
-
-      <!-- Close Button -->
-      <button id="error-modal-close" class="modal-close" title="Close">
-        &times;
-      </button>
-    </div>
-
-    <!-- Preformatted error text -->
-    <pre id="error-modal-log" class="modal-log-text"></pre>
-  </div>
-</div>
-
-
-  <!-- Load external JS files -->
-  <script src="{{highlightJsUri}}"></script>
-  <script src="{{markJsUri}}"></script>
-  <script src="{{appJsUri}}"></script>
-</body>
-
+    <!-- Load external JS files -->
+    <script src="{{highlightJsUri}}"></script>
+    <script src="{{markJsUri}}"></script>
+    <script src="{{appJsUri}}"></script>
+  </body>
 </html>

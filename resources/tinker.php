@@ -80,7 +80,7 @@ try {
         "File: {$e->getFile()} ({$e->getLine()})\n" .
         "Stack Trace:\n" . $e->getTraceAsString();
 
-    echo $minimalError . "[Tinker Runner Exception]:" . $fullErrorLog . $fullErrorLog . $fullErrorLog . $fullErrorLog . $fullErrorLog . "\n";
+    echo $fullErrorLog . "\n";
 
     exit(1);
 }

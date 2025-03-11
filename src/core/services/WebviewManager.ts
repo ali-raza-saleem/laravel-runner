@@ -115,6 +115,12 @@ export class WebviewManager {
       .replace(
         /\{\{highlightCssUri\}\}/g,
         getResourceUri("assets/css/atom-one-dark.min.css").toString(),
+      
+      )
+      .replace(
+        /\{\{alpineJsUri\}\}/g,
+        getResourceUri("assets/js/alpine.min.js").toString(),
+      
       );
 
     return this.cachedHtml;

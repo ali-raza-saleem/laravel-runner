@@ -29,7 +29,7 @@ body {
   gap: 0.5em;
 }
 
-#search-input {
+.search-input {
   padding: 0.5em;
   border-radius: 3px;
   border: 1px solid #444;
@@ -51,7 +51,7 @@ button {
 
 /* Color each icon individually */
 /* Default Stop Button Styling */
-#stop-button {
+.stop-button {
   border: 1.5px solid #444; /* Darker gray border for better contrast */
   background-color: #444;
   cursor: pointer;
@@ -65,7 +65,7 @@ button {
 }
 
 /* Default Icon Color */
-#stop-button .icon {
+.stop-button .icon {
   color: #d32f2f; /* Default red */
   transition:
     color 0.3s ease-in-out,
@@ -73,20 +73,20 @@ button {
 }
 
 /* Hover Effect */
-#stop-button:hover {
+.stop-button:hover {
   background-color: #313030;
   border-color: #ff5252; /* Lighter red on hover */
 }
 
-#stop-button:hover .icon {
+.stop-button:hover .icon {
   color: #ff5252; /* Lighter red */
 }
 
-#clear-button .icon {
+.clear-button .icon {
   color: #d3cfcf;
 }
 
-#clear-button:hover .icon {
+.clear-button:hover .icon {
   color: #d32f2f; /* Red */
 }
 
@@ -97,7 +97,7 @@ button {
   fill: currentColor;
 }
 
-#output-container {
+.output-container {
   padding: 1em;
   background: #1e1e1e;
   height: calc(100vh - 70px);
@@ -107,8 +107,6 @@ button {
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
-  background: #252526;
-  padding: 1em;
   border-radius: 5px;
   margin-bottom: 1em;
 }
@@ -120,21 +118,6 @@ code {
 .highlight {
   background-color: #673ab7;
   color: #f5f5f5;
-}
-
-#loading {
-  display: none; /* Hidden by default; shown dynamically when needed */
-  align-items: center;
-  justify-content: center;
-}
-
-.loader {
-  border: 5px solid rgba(255, 255, 255, 0.3);
-  border-top: 5px solid white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  animation: spin 1s linear infinite;
 }
 
 /* Ensure controls remain at the top */
@@ -150,33 +133,6 @@ code {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow to separate from content */
-}
-
-/* Prevent layout shift when new output is added */
-#output-container {
-  height: calc(100vh - 100px); /* Adjust based on actual header height */
-  overflow-y: auto; /* Enables scrolling without pushing layout */
-  padding: 1em;
-  background: #1e1e1e;
-}
-
-/* ============ OUTPUT WINDOW ============ */
-.output-wrapper {
-  background: #1e1e1e !important; /* Match non-error output background */
-  color: #ff5555;
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 4px;
-  display: inline-block;
-  position: relative;
-  max-width: 100%;
-  padding-bottom: 3rem;
-}
-
-/* Ensure the code inside the error output is red */
-.output-wrapper pre code {
-  background: transparent;
-  color: #ff5555;
 }
 
 /* "Show Log Details" button at bottom-right of .output-wrapper */
@@ -195,65 +151,12 @@ code {
   background-color: #555;
 }
 
-/* =====================
-   MODAL OVERLAY & CONTENT
-===================== */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9999;
-}
-.modal.show {
-  display: block;
-}
-.modal-content {
-  background: #252526;
-  color: #e5c07b; /* Matches syntax-highlighted text */
-  overflow-y: auto; /* Enables vertical scrolling if content is too long */
-  position: relative;
-  border-radius: 4px;
-  line-height: 1.5;
-  height: 100%;
-}
-.modal-close {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-}
-.modal-log-text {
-  background: transparent;
-  margin: 1rem 0;
-  white-space: pre-wrap;
-  max-width: 100%;
-  padding: 0rem 1.5rem;
-}
-
-/* Sticky header inside modal */
-.modal-header {
-  position: sticky;
-  top: 0;
-  background: #252526; /* Match modal background */
-  display: flex;
-  justify-content: space-between; /* Space between buttons */
-  align-items: center;
-  padding: 10px;
-  z-index: 20; /* Ensure it stays above scroll */
-  border-bottom: 1px solid #3a3a3a; /* Slight border for visibility */
-}
 
 /* Copy Button */
-.modal-copy {
+.copy-output {
+  position: absolute;
+  top: 0;
+  right: 0;
   background: #3a3a3a;
   border: none;
   border-radius: 8px;
@@ -265,89 +168,55 @@ code {
   color: #ccc;
   font-size: 14px;
   font-weight: 500;
-  transition: background 0.3s ease, color 0.3s ease;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 }
 
-.modal-copy svg {
+
+.output-element:hover .copy-output {
+  opacity: 1;
+}
+
+.copy-output svg {
   width: 16px;
   height: 16px;
   fill: #ccc;
   transition: fill 0.3s ease-in-out;
 }
 
-.modal-copy:hover {
+.copy-output:hover {
   background: #505050;
   color: #fff;
 }
 
-.modal-copy:hover svg {
+.copy-output:hover svg {
   fill: #fff;
 }
 
-.modal-copy.copied {
+.copy-output.copied {
   background: #d18a07 !important;
   color: #fff !important;
 }
 
-.modal-copy.copied svg {
+.copy-output.copied svg {
   fill: #fff !important;
 }
 
-/* Close Button */
-.modal-close {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 6px 10px;
-  transition: color 0.3s ease;
+.error {
+  color: #f87171 !important;
 }
 
-.modal-close:hover {
-  color: #ff5252;
+.error .hljs-comment {
+  color: #abb2bf !important;
+
 }
 
-
-/* =====================
-   ERROR OUTPUT WRAPPER
-===================== */
-.output-wrapper {
-  /* Dark background, red text */
-  background: #2b2b2b;
-  color: #ff5555;
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 4px;
-
-  display: inline-block; /* so it fits content, not entire page width */
-  position: relative; /* for absolutely positioned button */
-  max-width: 100%;
-  padding-bottom: 3rem; /* space so text doesn't overlap button */
-}
-
-/* Make sure the <code> block is also red within errors */
-.output-wrapper pre code {
-  background: transparent;
-  color: #ff5555;
-  line-height: 1.5;
-}
-
-/* "Show Log Details" button at bottom-right of the .output-wrapper */
-.show-log-btn {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  background-color: #444;
-  color: #eee;
-  border: none;
-  padding: 0.5rem 0.75rem;
-  cursor: pointer;
-  border-radius: 3px;
-  font-size: 0.9rem;
-}
-.show-log-btn:hover {
-  background-color: #555;
+pre {
+  background: #282c34;
+  position: relative;
+  padding-left: 1em;
+  padding-right: 1em;
+  
 }
 
 @keyframes spin {
