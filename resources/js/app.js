@@ -16,6 +16,13 @@ document.addEventListener("alpine:init", () => {
           this.handleNewOutputAddedEvent();
         });
       });
+
+      this.$watch("searchText", () => {
+        this.debouncedSearch();
+      });
+
+      this.debouncedSearch = this.debounce(() => this.highlightSearchedText(), this.debouncedSearchDelayInMilliSeconds);
+
     },
 
     vscode: null,
@@ -26,6 +33,9 @@ document.addEventListener("alpine:init", () => {
     outputElements: [],
     showDetailLogs: false,
     searchText: "",
+    debouncedSearch: null,
+    debouncedSearchDelayInMilliSeconds: 200,
+
 
     syncOutputElements() {
       this.outputElements = Array.from(
@@ -115,6 +125,7 @@ document.addEventListener("alpine:init", () => {
       this.outputs = [];
       this.outputElements = [];
       this.showSearchBar = false;
+      this.searchText = "";
     },
 
     copyOutput(output) {
@@ -158,20 +169,45 @@ document.addEventListener("alpine:init", () => {
       this.vscode.postMessage({ command: "stopExecution" });
       this.stopCodeExecutionButtonVisibility = false;
     },
+    
 
     highlightSearchedText() {
-      const codeBlocks = this.$refs.outputContainer.querySelectorAll("pre code");
-      codeBlocks.forEach((code) => {
-        const instance = new Mark(code);
-        instance.unmark({
-          done: () => {
-            instance.mark(this.searchText, {
-              separateWordSearch: false,
-              className: "highlight",
-            });
-          },
-        });
+    
+      const outputContainer = this.$refs.outputContainer;
+      if (!outputContainer) return; // Avoid errors if the container is not available
+    
+      const instance = new Mark(outputContainer);
+    
+      // Unmark previous highlights before applying new ones
+      instance.unmark({
+        done: () => {
+          instance.mark(this.searchText, {
+            separateWordSearch: false,
+            className: "highlight",
+            done: () => {
+              // Find all highlighted elements in one go
+              const highlightedElements = outputContainer.querySelectorAll(".highlight");
+    
+              // Scroll to the first highlighted element, if found
+              if (highlightedElements.length > 0) {
+                setTimeout(() => {
+                  highlightedElements[0].scrollIntoView({ behavior: "smooth", block: "center" });
+                }, 50);
+              }
+            },
+          });
+        },
       });
     },
+
+    debounce(func, delay) {
+      let timeout;
+      return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+    
+    
   }));
 });
