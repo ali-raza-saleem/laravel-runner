@@ -98,11 +98,14 @@
     "package-major": "npm version major && npm run package"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.9",
+    "@babel/preset-env": "^7.26.9",
     "@types/node": "^22.13.10",
     "@types/vscode": "^1.70.0",
     "@typescript-eslint/eslint-plugin": "^8.26.0",
     "@typescript-eslint/parser": "^8.26.0",
     "@vscode/test-electron": "^2.4.1",
+    "babel-loader": "^10.0.0",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.2",
@@ -114,6 +117,7 @@
     "eslint-plugin-prettier": "^5.2.3",
     "file-loader": "^6.2.0",
     "glob": "^11.0.1",
+    "mini-css-extract-plugin": "^2.9.2",
     "prettier": "^3.5.3",
     "style-loader": "^4.0.0",
     "thread-loader": "^4.0.4",
