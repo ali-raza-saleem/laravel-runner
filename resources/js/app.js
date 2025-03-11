@@ -36,7 +36,7 @@ document.addEventListener('alpine:init', () => {
           const highlightLanguage = lastOutput.isError ? 'accessLog' : 'php'
 
           window.hljs.highlightElement(
-            lastElement.querySelector('.output-element-content'),
+            lastElement.querySelector('code'),
             { language: highlightLanguage },
           )
 
@@ -45,7 +45,10 @@ document.addEventListener('alpine:init', () => {
             return
           }
 
-          lastElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          setTimeout(() => {
+            lastElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 50);
+
         })
       })
     },
