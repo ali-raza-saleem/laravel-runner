@@ -150,7 +150,6 @@ code {
   background-color: #555;
 }
 
-
 /* Copy Button */
 .copy-output {
   position: absolute;
@@ -170,7 +169,6 @@ code {
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
-
 
 .output-element:hover .copy-output {
   opacity: 1;
@@ -207,7 +205,6 @@ code {
 
 .error .hljs-comment {
   color: #abb2bf !important;
-
 }
 
 pre {
@@ -215,7 +212,6 @@ pre {
   position: relative;
   padding-left: 1em;
   padding-right: 1em;
-  
 }
 
 .output-element {

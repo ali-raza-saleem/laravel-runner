@@ -21,8 +21,10 @@ document.addEventListener("alpine:init", () => {
         this.debouncedSearch();
       });
 
-      this.debouncedSearch = this.debounce(() => this.highlightSearchedText(), this.debouncedSearchDelayInMilliSeconds);
-
+      this.debouncedSearch = this.debounce(
+        () => this.highlightSearchedText(),
+        this.debouncedSearchDelayInMilliSeconds,
+      );
     },
 
     vscode: null,
@@ -35,7 +37,6 @@ document.addEventListener("alpine:init", () => {
     searchText: "",
     debouncedSearch: null,
     debouncedSearchDelayInMilliSeconds: 200,
-
 
     syncOutputElements() {
       this.outputElements = Array.from(
@@ -169,15 +170,13 @@ document.addEventListener("alpine:init", () => {
       this.vscode.postMessage({ command: "stopExecution" });
       this.stopCodeExecutionButtonVisibility = false;
     },
-    
 
     highlightSearchedText() {
-    
       const outputContainer = this.$refs.outputContainer;
       if (!outputContainer) return; // Avoid errors if the container is not available
-    
+
       const instance = new Mark(outputContainer);
-    
+
       // Unmark previous highlights before applying new ones
       instance.unmark({
         done: () => {
@@ -186,12 +185,16 @@ document.addEventListener("alpine:init", () => {
             className: "highlight",
             done: () => {
               // Find all highlighted elements in one go
-              const highlightedElements = outputContainer.querySelectorAll(".highlight");
-    
+              const highlightedElements =
+                outputContainer.querySelectorAll(".highlight");
+
               // Scroll to the first highlighted element, if found
               if (highlightedElements.length > 0) {
                 setTimeout(() => {
-                  highlightedElements[0].scrollIntoView({ behavior: "smooth", block: "center" });
+                  highlightedElements[0].scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
                 }, 50);
               }
             },
@@ -206,8 +209,6 @@ document.addEventListener("alpine:init", () => {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), delay);
       };
-    }
-    
-    
+    },
   }));
 });

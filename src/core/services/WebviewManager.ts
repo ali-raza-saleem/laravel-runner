@@ -91,9 +91,8 @@ export class WebviewManager {
     this.cachedHtml = fs
       .readFileSync(htmlPath, "utf8")
       .replace(
+        // App
 
-      // App
-      
         /\{\{appJsUri\}\}/g,
         getResourceUri("dist/app.min.js").toString(),
       )
@@ -103,7 +102,7 @@ export class WebviewManager {
       )
 
       //Assets
-      
+
       .replace(
         /\{\{highlightJsUri\}\}/g,
         getResourceUri("assets/js/highlight.min.js").toString(),
@@ -115,12 +114,10 @@ export class WebviewManager {
       .replace(
         /\{\{highlightCssUri\}\}/g,
         getResourceUri("assets/css/atom-one-dark.min.css").toString(),
-      
       )
       .replace(
         /\{\{alpineJsUri\}\}/g,
         getResourceUri("assets/js/alpine.min.js").toString(),
-      
       );
 
     return this.cachedHtml;

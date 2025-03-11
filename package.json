@@ -91,7 +91,7 @@
     "build": "webpack --mode production",
     "lint": "eslint src resources/js/ --ext .ts,.js --fix",
     "format": "prettier --write src resources/js/ resources/css/ ",
-    "fix-style": "npm run lint && npm run format",
+    "fix-style": "npm run format && npm run lint",
     "package": "npm run build && vsce package --out ./packages/",
     "package-patch": "npm version patch && npm run package",
     "package-minor": "npm version minor && npm run package",
