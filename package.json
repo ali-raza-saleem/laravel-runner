@@ -92,7 +92,11 @@
     "lint": "eslint src resources/js/ --ext .ts,.js --fix",
     "format": "prettier --write src resources/js/ resources/css/ ",
     "fix-style": "npm run lint && npm run format",
-    "package": "npm run build && vsce package --out ./packages/"
+    "package": "npm run build && vsce package --out ./packages/",
+    "package-patch": "npm version patch && npm run package",
+    "package-minor": "npm version minor && npm run package",
+    "package-major": "npm version major && npm run package"
+
   },
   "devDependencies": {
     "@types/node": "^22.13.10",
