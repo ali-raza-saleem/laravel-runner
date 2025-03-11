@@ -2,17 +2,75 @@ body {
   font-family: Consolas, 'Courier New', monospace;
   background: #1e1e1e;
   color: #ffffff;
-  padding: 1em;
+  padding: 0em 0em;
   margin: 0;
   overflow: hidden;
 }
 
+.output-container {
+  background: #1e1e1e;
+  height: calc(100vh - 4em);
+  overflow-y: auto;
+  padding: 0em 1em;
+}
+
+.default-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 14rem;
+  text-align: center;
+}
+
+.typing {
+  font-size: 1.8rem;
+  white-space: nowrap;
+  border-right: 3px solid;
+  display: inline-block;
+  overflow: hidden;
+  text-align: left;
+  width: 0ch; /* Start from 0 characters */
+  animation:
+    typing 3s steps(22, end) forwards,
+    blink 0.8s infinite;
+}
+
+/* Typing Animation */
+@keyframes typing {
+  from {
+    width: 0ch;
+  } /* Start with no characters visible */
+  to {
+    width: 21ch;
+  } /* Adjust this value based on text length */
+}
+
+/* Cursor Blink Effect */
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.shortcut {
+  margin-top: 20px;
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+/* Ensure controls remain at the top */
 #controls {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background: #252526; /* Background so content does not overlap */
+  padding: 0.5em;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5em;
-  background: #252526;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow to separate from content */
 }
 
 /* Left side (Search) */
@@ -97,12 +155,6 @@ button {
   fill: currentColor;
 }
 
-.output-container {
-  background: #1e1e1e;
-  height: calc(100vh - 4em);
-  overflow-y: auto;
-}
-
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -118,22 +170,6 @@ code {
   background-color: rgb(103, 58, 183, 0.5);
   color: #f5f5f5;
 }
-
-/* Ensure controls remain at the top */
-#controls {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;
-  background: #252526; /* Background so content does not overlap */
-  padding: 0.5em;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow to separate from content */
-}
-
 /* "Show Log Details" button at bottom-right of .output-wrapper */
 .show-log-btn {
   position: absolute;
