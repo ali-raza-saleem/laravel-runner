@@ -47,6 +47,13 @@ export class TinkerRunner {
       return;
     }
 
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+      editor.document.save();
+    } else {
+      vscode.window.showInformationMessage("No active editor found.");
+    }
+
     const phpFileRelativePath = path
       .relative(workspaceRoot, phpFileUri.fsPath)
       .replace(/\\/g, "/");

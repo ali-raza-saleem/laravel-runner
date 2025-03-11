@@ -96,8 +96,7 @@ document.addEventListener("alpine:init", () => {
         this.$nextTick(() => {
           setTimeout(() => {
             this.handleNewOutputAddedEvent();
-          }
-          , 0);
+          }, 0);
         });
       });
     },
