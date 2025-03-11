@@ -11,9 +11,14 @@ document.addEventListener("alpine:init", () => {
 
       this.showSearchBar = false;
 
-      this.$watch("outputs", () => {
+      this.$watch("outputs", (value, oldValue) => {
         this.$nextTick(() => {
+          // $watch in Alpine deep watched an object/array, thus we need to skip property changes
+          if (this.currentOutputIndex === value.length) {
+            return;
+          }
           this.handleNewOutputAddedEvent();
+          this.currentOutputIndex = value.length;
         });
       });
 
@@ -37,6 +42,7 @@ document.addEventListener("alpine:init", () => {
     searchText: "",
     debouncedSearch: null,
     debouncedSearchDelayInMilliSeconds: 200,
+    currentOutputIndex: 0,
 
     syncOutputElements() {
       this.outputElements = Array.from(
