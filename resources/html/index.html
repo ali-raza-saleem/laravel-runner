@@ -3,7 +3,6 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="{{appCssUri}}" />
     <link rel="stylesheet" href="{{highlightCssUri}}" />
-    <script defer src="{{alpineJsUri}}"></script>
   </head>
 
   <body>
@@ -114,8 +113,6 @@
     </div>
 
     <!-- Load external JS files -->
-    <script src="{{highlightJsUri}}"></script>
-    <script src="{{markJsUri}}"></script>
-    <script src="{{appJsUri}}"></script>
+    <script src="{{appJsUri}}" defer></script>
   </body>
 </html>

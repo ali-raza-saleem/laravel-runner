@@ -101,23 +101,9 @@ export class WebviewManager {
         getResourceUri("dist/app.min.css").toString(),
       )
 
-      //Assets
-
-      .replace(
-        /\{\{highlightJsUri\}\}/g,
-        getResourceUri("assets/js/highlight.min.js").toString(),
-      )
-      .replace(
-        /\{\{markJsUri\}\}/g,
-        getResourceUri("assets/js/mark.min.js").toString(),
-      )
       .replace(
         /\{\{highlightCssUri\}\}/g,
         getResourceUri("assets/css/atom-one-dark.min.css").toString(),
-      )
-      .replace(
-        /\{\{alpineJsUri\}\}/g,
-        getResourceUri("assets/js/alpine.min.js").toString(),
       );
 
     return this.cachedHtml;

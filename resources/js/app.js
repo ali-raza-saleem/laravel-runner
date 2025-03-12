@@ -1,3 +1,12 @@
+import Alpine from "alpinejs";
+window.Alpine = Alpine;
+
+import Mark from "mark.js";
+
+import hljs from "highlight.js/lib/core";
+import php from "highlight.js/lib/languages/php";
+hljs.registerLanguage("php", php);
+
 document.addEventListener("alpine:init", () => {
   Alpine.data("root", () => ({
     init() {
@@ -158,10 +167,8 @@ document.addEventListener("alpine:init", () => {
     },
 
     highlightOutput(output) {
-      const highlightLanguage = output.isError ? "accessLog" : "php";
-
-      window.hljs.highlightElement(output.element.querySelector("code"), {
-        language: highlightLanguage,
+      hljs.highlightElement(output.element.querySelector("code"), {
+        language: "php",
       });
     },
 
@@ -224,3 +231,6 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 });
+
+// Start Alpine AFTER defining components
+Alpine.start();

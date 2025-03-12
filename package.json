@@ -117,6 +117,7 @@
     "eslint-plugin-prettier": "^5.2.3",
     "file-loader": "^6.2.0",
     "glob": "^11.0.1",
+    "mark.js": "^8.11.1",
     "mini-css-extract-plugin": "^2.9.2",
     "prettier": "^3.5.3",
     "style-loader": "^4.0.0",
@@ -124,5 +125,9 @@
     "ts-loader": "^9.5.2",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "alpinejs": "^3.14.8",
+    "highlight.js": "^11.11.1"
   }
 }
