@@ -2,7 +2,7 @@
   "name": "laravel-tinker-runner",
   "displayName": "Laravel Tinker Runner",
   "description": "Run PHP/Laravel Scripts directly from VS Code.",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "publisher": "AliRazaSaleem",
   "repository": {
     "type": "git",
