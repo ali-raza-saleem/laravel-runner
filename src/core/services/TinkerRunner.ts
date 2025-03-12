@@ -143,11 +143,7 @@ export class TinkerRunner {
           false,
         );
       } else {
-        this.webviewManager.updateWebView(
-          output || "No output returned by script.",
-          false,
-          false,
-        );
+        this.webviewManager.updateWebView(output || "null", false, false);
       }
     });
 
