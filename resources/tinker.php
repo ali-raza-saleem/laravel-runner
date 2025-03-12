@@ -165,22 +165,7 @@ function transformCode($code)
  */
 function prettyPrint($value)
 {
-    // If the value is an Eloquent model, use Symfony VarDumper.
-    if ($value instanceof \Illuminate\Database\Eloquent\Model) {
-        // Capture the output of VarDumper.
-        ob_start();
-        \Symfony\Component\VarDumper\VarDumper::dump($value);
-        return ob_get_clean();
-    }
-
-    // For arrays or generic objects, try pretty-printing as JSON.
-    if (is_array($value) || is_object($value)) {
-        $json = json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        if ($json !== false) {
-            return $json;
-        }
-    }
-
-    // For scalar types, fallback to print_r.
-    return print_r($value, true);
+    ob_start();
+    \Symfony\Component\VarDumper\VarDumper::dump($value);
+    return ob_get_clean();
 }
