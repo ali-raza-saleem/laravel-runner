@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/ali-raza-saleem/laravel-tinker-runner.git"
   },
-  "license": "GPL-3.0",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.70.0"
   },
@@ -28,7 +28,7 @@
     "assets",
     "resources/",
     "package.json",
-    "README.md",
+    "docs/README.marketplace.md",
     "LICENSE"
   ],
   "contributes": {
