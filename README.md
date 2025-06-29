@@ -48,9 +48,7 @@ Save and run — that’s it.
 
 ## 🎬 Demo
 
-See it in action:
-
-![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/main/demo/laravel-playground.gif)
+![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/main/demo/setup.gif)
 
 ---
 
