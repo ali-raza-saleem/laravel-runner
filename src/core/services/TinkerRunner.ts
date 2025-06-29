@@ -191,4 +191,12 @@ export class TinkerRunner {
       this.webviewManager.sendScriptKilledMessage();
     }
   }
+
+  public getConfig() {
+    return this.config;
+  }
+
+  public getPathUtils() {
+    return this.pathUtils;
+  }
 }

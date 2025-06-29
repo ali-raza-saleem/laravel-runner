@@ -15,7 +15,6 @@
   "engines": {
     "vscode": "^1.90.0"
   },
-
   "categories": [
     "Programming Languages",
     "Debuggers"
@@ -35,7 +34,8 @@
     "onLanguage:php",
     "onCommand:myExtension.runPhpFile",
     "onCommand:myExtension.clearOutput",
-    "onCommand:myExtension.focusSearchBar"
+    "onCommand:myExtension.focusSearchBar",
+    "onCommand:myExtension.installPlayground"
   ],
   "main": "./dist/extension.min.js",
   "files": [
@@ -59,6 +59,10 @@
       {
         "command": "myExtension.focusSearchBar",
         "title": "Focus Search Bar"
+      },
+      {
+        "command": "myExtension.installPlayground",
+        "title": "Laravel Playground: Install"
       }
     ],
     "keybindings": [
@@ -78,9 +82,17 @@
         "when": "editorLangId == php || webviewFocus"
       }
     ],
-    "menus": {},
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "myExtension.installPlayground",
+          "when": "workspaceFolderCount > 0",
+          "group": "navigation"
+        }
+      ]
+    },
     "configuration": {
-      "title": "Laravel Tinker Runner",
+      "title": "Laravel Playground",
       "properties": {
         "tinkerRunner.playgroundFolder": {
           "type": "string",
