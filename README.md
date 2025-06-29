@@ -50,7 +50,7 @@ Save and run — that’s it.
 
 See it in action:
 
-Coming soon..
+![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/main/demo/laravel-playground.gif)
 
 ---
 

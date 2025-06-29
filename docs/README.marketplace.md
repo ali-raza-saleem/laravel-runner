@@ -51,7 +51,7 @@ $name = 'VS Code';
 
 Below you can see the flow – create, run, stop, repeat – all in one place.
 
-Coming soon..
+![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/main/demo/laravel-playground.gif)
 
 ---
 
