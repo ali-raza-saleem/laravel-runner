@@ -108,6 +108,6 @@ npm install
 
 ## ⭐ Support
 
-If this helped you, **star the repo** and leave a review on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=AliRazaSaleem.laravel-playground).
+If this helped you, **star the repo** and leave a review on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ali-raza-saleem.laravel-playground).
 
 Happy tinkering! 🛠️
