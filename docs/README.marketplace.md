@@ -8,8 +8,6 @@ Drop **any PHP file** into `.playground/` folder, hit **Run** — then search an
 
 ## Demo
 
-Below you can see the flow – create, run, stop, repeat – all in one place.
-
 ![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/master/demo/setup.gif)
 
 ---
@@ -76,6 +74,6 @@ Find these in **Settings › Extensions › Laravel Playground**.
 
 ---
 
-Liked it? **Star the repo and drop a review** – it helps more devs discover the extension.
+If this helped you, [Star the Repo](https://github.com/ali-raza-saleem/laravel-playground) and leave a review on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ali-raza-saleem.laravel-playground&ssr=false#review-details). – it helps more devs discover the extension.
 
 Happy tinkering! 🛠️
