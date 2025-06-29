@@ -2,7 +2,7 @@
 
 **Run Laravel PHP code instantly—right where you write it.**
 
-Laravel Playground is a Visual Studio Code extension that lets you run Laravel-flavored PHP files directly inside the editor. Write your snippet in a `.playground/` folder and hit **Run** — no terminal, no boilerplate.
+Laravel Playground lets you run and debug Laravel-flavored PHP right inside VS Code — just drop your snippet into **.playground/**, hit ▶ Run, and dive into beautiful, color-coded output in the sidebar.
 
 ---
 
@@ -50,7 +50,7 @@ Save and run — that’s it.
 
 See it in action:
 
-![Laravel Playground Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/main/.github/demo.gif)
+Coming soon..
 
 ---
 

@@ -1,9 +1,10 @@
 {
   "name": "laravel-playground",
   "displayName": "Laravel Playground",
-  "description": "Run PHP/Laravel Scripts directly in VS Code and see live, color-coded output inside VS Code.",
+  "description": "Run Laravel code with color-coded results — all in your editor.",
   "version": "2.4.0",
   "publisher": "ali-raza-saleem",
+  "icon": "resources/icons/logo.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/ali-raza-saleem/laravel-playground.git"

@@ -2,7 +2,7 @@
 
 **Run Laravel PHP code instantly—right where you write it.**
 
-Drop **any PHP file** into `.playground/` folder, hit **Run**, and watch colour‑coded output stream live in the side panel.
+Drop **any PHP file** into `.playground/` folder, hit **Run** — then search and debug beautifully color-coded output, right in the sidebar.
 
 ---
 
@@ -51,7 +51,7 @@ $name = 'VS Code';
 
 Below you can see the flow – create, run, stop, repeat – all in one place.
 
-![Laravel Playground Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/main/.github/demo.gif)
+Coming soon..
 
 ---
 

@@ -1,11 +1,10 @@
 import * as vscode from "vscode";
-import * as path from 'path';
+import * as path from "path";
 import { WebviewManager } from "./core/services/WebviewManager";
 import { CodeLensProvider } from "./core/providers/CodeLensProvider";
 import { TinkerRunner } from "./core/services/TinkerRunner";
 import { register } from "module";
 import { PathUtils } from "./core/utils/PathUtils";
-
 
 export class ExtensionManager {
   private webviewManager: WebviewManager;
@@ -89,12 +88,12 @@ export class ExtensionManager {
 
   private registerInstallPlaygroundCommand() {
     return vscode.commands.registerCommand(
-      'myExtension.installPlayground',
+      "myExtension.installPlayground",
       async () => {
         /* ── Sanity checks ────────────────────────────────────────── */
         const folders = vscode.workspace.workspaceFolders;
         if (!folders?.length) {
-          vscode.window.showWarningMessage('Open a Laravel project first.');
+          vscode.window.showWarningMessage("Open a Laravel project first.");
           return;
         }
 
@@ -102,7 +101,7 @@ export class ExtensionManager {
         const pathUtils = PathUtils.getInstance();
         if (!pathUtils.isLaravelProjectDir(root)) {
           vscode.window.showWarningMessage(
-            'Can only install inside Laravel project',
+            "Can only install inside Laravel project",
           );
           return;
         }
@@ -110,8 +109,8 @@ export class ExtensionManager {
         /* ── Resolve playground path ─────────────────────────────── */
         const playgroundFolder =
           vscode.workspace
-            .getConfiguration('laravelPlayground')
-            .get<string>('playgroundFolder') ?? '.playground';
+            .getConfiguration("laravelPlayground")
+            .get<string>("playgroundFolder") ?? ".playground";
 
         const playgroundPath = path.join(root, playgroundFolder);
         const playgroundUri = vscode.Uri.file(playgroundPath);
@@ -119,8 +118,8 @@ export class ExtensionManager {
         /* ── Resolve stub source folder inside the extension ─────── */
         const stubsPath = path.join(
           this.context.extensionPath,
-          'resources',
-          'stubs',
+          "resources",
+          "stubs",
         );
         const stubsUri = vscode.Uri.file(stubsPath);
 
@@ -132,7 +131,7 @@ export class ExtensionManager {
           const entries = await vscode.workspace.fs.readDirectory(stubsUri);
 
           for (const [name, fileType] of entries) {
-            if (fileType !== vscode.FileType.File || !name.endsWith('.php')) {
+            if (fileType !== vscode.FileType.File || !name.endsWith(".php")) {
               continue; // skip non-files and non-PHP
             }
 
@@ -148,7 +147,9 @@ export class ExtensionManager {
           }
 
           /* 3 ▸ Open hello.php if it was provided */
-          const helloUri = vscode.Uri.file(path.join(playgroundPath, 'hello.php'));
+          const helloUri = vscode.Uri.file(
+            path.join(playgroundPath, "hello.php"),
+          );
           let doc: vscode.TextDocument | undefined;
 
           try {
@@ -156,7 +157,7 @@ export class ExtensionManager {
           } catch {
             /* fallback: open any stub we copied */
             const firstStub = entries.find(
-              ([n, t]) => t === vscode.FileType.File && n.endsWith('.php'),
+              ([n, t]) => t === vscode.FileType.File && n.endsWith(".php"),
             );
             if (firstStub) {
               const fallbackUri = vscode.Uri.file(
@@ -174,17 +175,14 @@ export class ExtensionManager {
             `Playground ready → ${playgroundFolder}/`,
           );
         } catch (err) {
-          console.error(err);
           vscode.window.showErrorMessage(
-            'Could not create the playground – see console for details.',
+            "Could not create the playground – see console for details.",
           );
         }
       },
     );
   }
-
 }
-
 
 /**
  * Called when the extension is activated.

@@ -36,7 +36,9 @@ export class TinkerRunner {
    */
   public runPhpFile(): void {
     if (this.currentProcess) {
-      vscode.window.showWarningMessage("Code is running. Please wait.. If you want to run another code, please stop the current run by pressing Stop button");
+      vscode.window.showWarningMessage(
+        "Code is running. Please wait.. If you want to run another code, please stop the current run by pressing Stop button",
+      );
       return;
     }
 
