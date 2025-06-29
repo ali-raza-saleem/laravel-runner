@@ -1,20 +1,35 @@
 {
-  "name": "laravel-tinker-runner",
-  "displayName": "Laravel Tinker Runner",
-  "description": "Run PHP/Laravel Scripts directly from VS Code.",
+  "name": "laravel-playground",
+  "displayName": "Laravel Playground",
+  "description": "Run PHP/Laravel Scripts directly in VS Code and see live, color-coded output inside VS Code.",
   "version": "2.4.0",
   "publisher": "AliRazaSaleem",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ali-raza-saleem/laravel-tinker-runner.git"
+    "url": "https://github.com/ali-raza-saleem/laravel-playground.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ali-raza-saleem/laravel-playground/issues"
   },
   "license": "MIT",
   "engines": {
-    "vscode": "^1.70.0"
+    "vscode": "^1.90.0"
   },
+
   "categories": [
     "Programming Languages",
     "Debuggers"
+  ],
+  "keywords": [
+    "laravel",
+    "php",
+    "tinker",
+    "code",
+    "runner",
+    "snippet",
+    "play",
+    "playground",
+    "output"
   ],
   "activationEvents": [
     "onLanguage:php",
@@ -44,10 +59,6 @@
       {
         "command": "myExtension.focusSearchBar",
         "title": "Focus Search Bar"
-      },
-      {
-        "command": "laravelTinker.removeCommand",
-        "title": "Remove LaravelTinkerRun Command"
       }
     ],
     "keybindings": [
@@ -73,8 +84,8 @@
       "properties": {
         "tinkerRunner.playgroundFolder": {
           "type": "string",
-          "default": "tinker-playground",
-          "description": "The folder inside the Laravel project where PHP files can be executed."
+          "default": ".playground",
+          "description": "The folder inside the Laravel project where PHP files can be executed. Should be inside laravel project root directory."
         },
         "tinkerRunner.appendOutput": {
           "type": "boolean",

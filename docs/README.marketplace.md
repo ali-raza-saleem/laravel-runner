@@ -1,8 +1,8 @@
-# Laravel Tinker Runner
+# Laravel Playground
 
 **Run Laravel PHP code instantly—right where you write it.**
 
-Skip the terminal. Drop **any PHP file** into `tinker-playground/` folder, hit **Run**, and watch colour‑coded output stream live in the side panel.
+Skip the terminal. Drop **any PHP file** into `.playground/` folder, hit **Run**, and watch colour‑coded output stream live in the side panel.
 
 ---
 
@@ -48,7 +48,7 @@ Below you can see the flow – create, run, stop, repeat – all in one place.
 
 | Setting                                | Default             | What it does                                                                            |
 | -------------------------------------- | ------------------- | --------------------------------------------------------------------------------------- |
-| `laravelTinkerRunner.playgroundFolder` | `tinker-playground` | Folder that holds runnable php files. Rename if you prefer another location.            |
+| `laravelTinkerRunner.playgroundFolder` | `.playground` | Folder that holds runnable php files. Rename if you prefer another location.            |
 | `laravelTinkerRunner.appendOutput`     | `true`              | `true` preserves output of previous runs; `false` clears output of previous runs first. |
 
 Find these in **Settings › Extensions › Laravel Tinker Runner**.

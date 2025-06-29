@@ -1,12 +1,12 @@
 # Laravel Tinker Runner
 
-A developer-focused VS Code extension for Laravel projects that lets you run and inspect any PHP file in a dedicated `tinker-playground/` folder, with real Laravel context. Think of it like `tinker` but GUI-powered, snippet-friendly, and workflow-native.
+A developer-focused VS Code extension for Laravel projects that lets you run and inspect any PHP file in a dedicated `.playground/` folder, with real Laravel context. Think of it like `tinker` but GUI-powered, snippet-friendly, and workflow-native.
 
 ---
 
 ## 🧪 What it does
 
-* Runs any PHP file in `tinker-playground/`, bootstrapped with Laravel.
+* Runs any PHP file in `.playground/`, bootstrapped with Laravel.
 * Shows pretty-printed dumps and streamed output in a dedicated side panel.
 * Adds a clickable **▶ Run PHP File (Laravel Tinker)** CodeLens at the top of each snippet.
 * Includes **Stop**, **Search**, **Clear**, and **Copy** buttons in the output panel.
@@ -35,7 +35,7 @@ Or search **Laravel Tinker Runner** in the VS Code Marketplace.
 ```jsonc
 {
   // Change if you want to use a different folder for snippets
-  "laravelTinkerRunner.playgroundFolder": "tinker-playground",
+  "laravelTinkerRunner.playgroundFolder": ".playground",
 
   // Append output below previous runs instead of replacing it
   "laravelTinkerRunner.appendOutput": true,
