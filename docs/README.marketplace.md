@@ -6,6 +6,14 @@ Drop **any PHP file** into `.playground/` folder, hit **Run** — then search an
 
 ---
 
+## Demo
+
+Below you can see the flow – create, run, stop, repeat – all in one place.
+
+![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/master/demo/setup.gif)
+
+---
+
 ## Why you’ll love it
 
 * ✨ **Colour‑coded output** – Colour‑coded result in the sidebar makes it easily readable.
@@ -44,14 +52,6 @@ $name = 'VS Code';
 
 1. Save the file. 
 2. To Run the file, Click **▶ Run PHP File (Laravel Playground)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
-
----
-
-## Demo
-
-Below you can see the flow – create, run, stop, repeat – all in one place.
-
-![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/master/demo/setup.gif)
 
 ---
 

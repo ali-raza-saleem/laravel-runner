@@ -6,6 +6,12 @@ Laravel Playground lets you run and debug Laravel-flavored PHP right inside VS C
 
 ---
 
+## 🎬 Demo
+
+![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/master/demo/setup.gif)
+
+---
+
 ## ✨ Features
 
 * **Colour-coded output** – Clear and readable results in the sidebar.
@@ -43,12 +49,6 @@ $name = 'VS Code';
 ```
 
 Save and run — that’s it.
-
----
-
-## 🎬 Demo
-
-![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/master/demo/setup.gif)
 
 ---
 
