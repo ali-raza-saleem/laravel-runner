@@ -2,7 +2,7 @@
   "name": "laravel-playground",
   "displayName": "Laravel Playground",
   "description": "Run Laravel code with color-coded results — all in your editor.",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "publisher": "ali-raza-saleem",
   "icon": "resources/icons/logo.png",
   "repository": {
