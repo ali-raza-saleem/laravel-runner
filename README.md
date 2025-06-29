@@ -1,111 +1,113 @@
-# Laravel Tinker Runner
+# Laravel Playground
 
-A developer-focused VS Code extension for Laravel projects that lets you run and inspect any PHP file in a dedicated `.playground/` folder, with real Laravel context. Think of it like `tinker` but GUI-powered, snippet-friendly, and workflow-native.
+**Run Laravel PHP code instantly—right where you write it.**
 
----
-
-## 🧪 What it does
-
-* Runs any PHP file in `.playground/`, bootstrapped with Laravel.
-* Shows pretty-printed dumps and streamed output in a dedicated side panel.
-* Adds a clickable **▶ Run PHP File (Laravel Tinker)** CodeLens at the top of each snippet.
-* Includes **Stop**, **Search**, **Clear**, and **Copy** buttons in the output panel.
-* Automatically wraps the final expression in `return` to simulate REPL-style workflows.
+Laravel Playground is a Visual Studio Code extension that lets you run Laravel-flavored PHP files directly inside the editor. Write your snippet in a `.playground/` folder and hit **Run** — no terminal, no boilerplate.
 
 ---
 
-## 📸 Demo
+## ✨ Features
 
-![Tinker Runner demo](https://raw.githubusercontent.com/ali-raza/laravel-tinker-runner/main/.github/demo.gif)
+* **Colour-coded output** – Clear and readable results in the sidebar.
+* **Searchable console** – Auto-highlighted search as you type.
+* **Panic button** – Hung script? Instantly stop execution.
+* **Zero config** – Just drop in a file and go.
+* **Smart activation** – Only activates inside Laravel projects (auto-detects `artisan`).
+* **Cross-platform** – macOS, Linux, Windows, WSL, SSH — it works.
 
 ---
 
-## 📦 Installation
+## 🚀 Getting Started
+
+You can set up the playground in two ways:
+
+### 🔧 Option A: Use the Command Palette
+
+1. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
+2. Run **Laravel Playground: Install**
+3. This creates a `.playground/hello.php` file with a ready-to-run snippet.
+4. Hit **▶ Run PHP File (Laravel Playground)** or press `Ctrl+Alt+R` / `Cmd+Alt+R`
+
+### 📁 Option B: Create Manually
 
 ```bash
-extension install ali-raza-saleem.laravel-tinker-runner
+laravel-app/
+└─ .playground/
+   └─ hello.php
 ```
 
-Or search **Laravel Tinker Runner** in the VS Code Marketplace.
-
----
-
-## ⚙️ Settings
-
-```jsonc
-{
-  // Change if you want to use a different folder for snippets
-  "laravelTinkerRunner.playgroundFolder": ".playground",
-
-  // Append output below previous runs instead of replacing it
-  "laravelTinkerRunner.appendOutput": true,
-
-  // Optionally point to a custom tinker bootstrap script
-  "laravelTinkerRunner.tinkerScriptPath": "/my/custom/path/tinker.php"
-}
+```php
+<?php
+$name = 'VS Code';
+"Hello, $name!";
 ```
 
-Accessible via **Settings → Extensions → Laravel Tinker Runner**.
+Save and run — that’s it.
 
 ---
 
-## 🛠 Commands
+## 🎬 Demo
 
-| Command ID                           | Title                          | Shortcut |
-| ------------------------------------ | ------------------------------ | -------- |
-| `laravelTinkerRunner.runPhpFile`     | Run PHP File (Laravel Tinker)  | Ctrl/⌘⇧R |
-| `laravelTinkerRunner.clearOutput`    | Clear Tinker Output            | —        |
-| `laravelTinkerRunner.focusSearchBar` | Focus Tinker Output Search Bar | —        |
+See it in action:
+
+![Laravel Playground Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/main/.github/demo.gif)
 
 ---
 
-## 🧩 Architecture
+## ⚙️ Configuration
 
-* Uses a webview-based output panel, streamed via `WebviewManager.ts`.
-* `TinkerRunner.ts` launches a child `php` process with a custom `tinker.php` that boots Laravel and evaluates the file.
-* Return values are wrapped and dumped with Symfony Var-Dumper.
-* Errors are caught and printed inline.
-* `Config.ts` and `PathUtils.ts` manage settings and file validation.
+| Setting                              | Default       | Description                                                                            |
+| ------------------------------------ | ------------- | -------------------------------------------------------------------------------------- |
+| `laravelPlayground.playgroundFolder` | `.playground` | Folder containing runnable PHP files                                                   |
+| `laravelPlayground.appendOutput`     | `true`        | If true, appends new output below existing logs; if false, replaces output on each run |
+
+Access these in **VS Code Settings → Extensions → Laravel Playground**.
 
 ---
 
-## 🧪 Development
+## 💻 Development
+
+### Setup
 
 ```bash
-git clone https://github.com/ali-raza/laravel-tinker-runner.git
-cd laravel-tinker-runner
+git clone https://github.com/ali-raza-saleem/laravel-playground.git
+cd laravel-playground
 npm install
-
-# Launch Extension Host
-devcontainers open .
-# or
-code . && F5
 ```
 
-Use `npm run build` to bundle for production or `vsce package` to generate a `.vsix`.
+### Commands
+
+| Command                 | Description                                 |
+| ----------------------- | ------------------------------------------- |
+| `npm run build`         | Build extension with Webpack for production |
+| `npm run lint`          | Run ESLint on `src/` and `resources/js/`    |
+| `npm run format`        | Format code using Prettier                  |
+| `npm run fix-style`     | Format + lint autofix                       |
+| `npm run package`       | Build and package extension into `.vsix`    |
+| `npm run package-patch` | Bump patch version and package              |
+| `npm run package-minor` | Bump minor version and package              |
+| `npm run package-major` | Bump major version and package              |
+
+### Debugging in VS Code
+
+1. Press `F5` to launch an Extension Development Host
+2. Run **Laravel Playground: Install** or open a `.playground/*.php` file
+3. Click the **▶ Run PHP File** CodeLens to test output
 
 ---
 
-## ✅ Requirements
+## 💬 FAQ
 
-* VS Code 1.90+
-* PHP 8.1+
-* Laravel 8/9/10 (project root must contain `artisan`)
-
----
-
-## 📄 License
-
-MIT © [Ali Raza Saleem](https://github.com/ali-raza)
+| Question                          | Answer                                                                                               |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Will it touch my DB?              | Only if your code tells it to. Otherwise, it’s read-only.                                            |
+| Works on macOS / Linux / Windows? | Yes — including WSL and remote SSH.                                                                  |
+| Having trouble?                   | [Open an issue](https://github.com/ali-raza-saleem/laravel-playground/issues) and we’ll take a look. |
 
 ---
 
-## 🙌 Credits
+## ⭐ Support
 
-* Symfony Var-Dumper
-* Inspired by Laravel's built-in `tinker`
-* Extension scaffolded via `yo code`
+If this helped you, **star the repo** and leave a review on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=AliRazaSaleem.laravel-playground).
 
----
-
-> Want to improve it? PRs welcome. Let’s make Laravel development smoother together.
+Happy tinkering! 🛠️

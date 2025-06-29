@@ -8,13 +8,12 @@ Drop **any PHP file** into `.playground/` folder, hit **Run**, and watch colour�
 
 ## Why you’ll love it
 
-* 🖱 **Click ➜ See result** – A friendly **▶ Run Php File (Laravel Playground)** shows up at the top of every playground file.
 * ✨ **Colour‑coded output** – Colour‑coded result in the sidebar makes it easily readable.
 * 🔍 **Searchable output** – Instantly find variables or values. Matches are auto-highlighted as you type.
 * 🛑 **Panic button ready** – Hung script? Hit **Stop**. Done.
 * 🎒 **Travels light** – No setup. Just create a file in .playground folder and go.
 * 🧘 **Smart Activation** – Only activates in Laravel projects.
-* 💻 **Works anywhere** – Windows, macOS, Linux, WSL, and even remote projects over SSH.
+* 💻 **Works anywhere** – Windows, macOS, Linux, WSL, and remote SSH supported
 
 ---
 
@@ -27,7 +26,7 @@ You can create your playground manually — or let the extension do it for you.
 1. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
 2. Run **Laravel Playground: Install**
 3. The extension will create and open a `.playground/hello.php` file for you with a sample snippet.
-4. To Run the file, Click **▶ Run Php File (Laravel Playground)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
+4. To Run the file, Click **▶ Run PHP File (Laravel Playground)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
 
 ### 📁 Option B: Create manually
 
@@ -44,7 +43,7 @@ $name = 'VS Code';
 ```
 
 1. Save the file. 
-2. To Run the file, Click **▶ Run Php File (Laravel Playground)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
+2. To Run the file, Click **▶ Run PHP File (Laravel Playground)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
 
 ---
 
