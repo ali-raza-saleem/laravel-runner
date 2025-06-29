@@ -2,27 +2,38 @@
 
 **Run Laravel PHP code instantly—right where you write it.**
 
-Skip the terminal. Drop **any PHP file** into `.playground/` folder, hit **Run**, and watch colour‑coded output stream live in the side panel.
+Drop **any PHP file** into `.playground/` folder, hit **Run**, and watch colour‑coded output stream live in the side panel.
 
 ---
 
 ## Why you’ll love it
 
-* 🖱 **Click ➜ See result** – A friendly **▶ Run** shows up at the top of every playground file.
-* ✨ **Instant clarity** – Colour‑coded and live streaming output make it obvious what’s happening.
+* 🖱 **Click ➜ See result** – A friendly **▶ Run Php File (Laravel Playground)** shows up at the top of every playground file.
+* ✨ **Colour‑coded output** – Colour‑coded result in the sidebar makes it easily readable.
 * 🔍 **Searchable output** – Instantly find variables or values. Matches are auto-highlighted as you type.
 * 🛑 **Panic button ready** – Hung script? Hit **Stop**. Done.
-* 🎒 **Travels light** – No setup. Just create a file and go.
-* 🧘 **Stays out of your way** – Only activates in Laravel projects and sleeps when not in use.
+* 🎒 **Travels light** – No setup. Just create a file in .playground folder and go.
+* 🧘 **Smart Activation** – Only activates in Laravel projects.
 * 💻 **Works anywhere** – Windows, macOS, Linux, WSL, and even remote projects over SSH.
 
 ---
 
 ## Quick start (60 seconds)
 
+You can create your playground manually — or let the extension do it for you.
+
+### 🔧 Option A: Use the built-in **Install Playground** command
+
+1. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
+2. Run **Laravel Playground: Install**
+3. The extension will create and open a `.playground/hello.php` file for you with a sample snippet.
+4. To Run the file, Click **▶ Run Php File (Laravel Playground)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
+
+### 📁 Option B: Create manually
+
 ```bash
-my‑laravel‑app/
-└─ tinker‑playground/
+laravel‑app-folder/
+└─ .playground/
    └─ hello.php
 ```
 
@@ -32,7 +43,8 @@ $name = 'VS Code';
 "Hello, $name!";
 ```
 
-1. Save the file. 2. Click **▶ Run** (or press <kbd>Ctrl/⌘ ⇧ R</kbd>). 3. Enjoy the output panel. That’s it.
+1. Save the file. 
+2. To Run the file, Click **▶ Run Php File (Laravel Playground)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
 
 ---
 
@@ -40,18 +52,18 @@ $name = 'VS Code';
 
 Below you can see the flow – create, run, stop, repeat – all in one place.
 
-![Laravel Tinker Runner Demo](https://raw.githubusercontent.com/ali-raza/laravel-tinker-runner/main/.github/demo.gif)
+![Laravel Playground Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/main/.github/demo.gif)
 
 ---
 
 ## Easily Configurable
 
-| Setting                                | Default             | What it does                                                                            |
-| -------------------------------------- | ------------------- | --------------------------------------------------------------------------------------- |
-| `laravelTinkerRunner.playgroundFolder` | `.playground` | Folder that holds runnable php files. Rename if you prefer another location.            |
-| `laravelTinkerRunner.appendOutput`     | `true`              | `true` preserves output of previous runs; `false` clears output of previous runs first. |
+| Setting                                | Default       | What it does                                                                            |
+| -------------------------------------- | ------------- | --------------------------------------------------------------------------------------- |
+| `laravelPlayground.playgroundFolder` | `.playground` | Folder that holds runnable php files. Rename if you prefer another location.            |
+| `laravelPlayground.appendOutput`     | `true`        | `true` preserves output of previous runs on new run; `false` clears output of previous runs. |
 
-Find these in **Settings › Extensions › Laravel Tinker Runner**.
+Find these in **Settings › Extensions › Laravel Playground**.
 
 ---
 
@@ -61,8 +73,7 @@ Find these in **Settings › Extensions › Laravel Tinker Runner**.
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *Will it touch my DB?*            | Only if your code tells it to. Otherwise it’s read‑only.                                                                                                  |
 | *Run on macOS / Linux / Windows?* | Yep – works great on all platforms, including WSL and remote projects over SSH.                                                                           |
-| *Got an error?*                   | Open VS Code in the folder with `artisan`, verify `php -v` works. Still stuck? [Open an issue](https://github.com/ali-raza/laravel-tinker-runner/issues). |
-
+| *Got an error?*                   | [Open an issue](https://github.com/ali-raza-saleem/laravel-playground/issues). |
 
 ---
 

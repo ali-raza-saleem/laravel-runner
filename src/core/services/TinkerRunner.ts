@@ -36,7 +36,7 @@ export class TinkerRunner {
    */
   public runPhpFile(): void {
     if (this.currentProcess) {
-      vscode.window.showWarningMessage("Query in progress. Please wait...");
+      vscode.window.showWarningMessage("Code is running. Please wait.. If you want to run another code, please stop the current run by pressing Stop button");
       return;
     }
 
@@ -183,13 +183,11 @@ export class TinkerRunner {
    * Stops the currently running PHP process.
    */
   public stopExecution(): void {
-    if (this.currentProcess) {
-      this.currentProcess.kill("SIGTERM"); // ✅ Terminate the process gracefully
-      this.currentProcess = null;
+    this.currentProcess.kill("SIGTERM"); // ✅ Terminate the process gracefully
+    this.currentProcess = null;
 
-      // ✅ Update WebView to hide loader & stop button
-      this.webviewManager.sendScriptKilledMessage();
-    }
+    // ✅ Update WebView to hide loader & stop button
+    this.webviewManager.sendScriptKilledMessage();
   }
 
   public getConfig() {

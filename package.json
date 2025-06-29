@@ -94,12 +94,12 @@
     "configuration": {
       "title": "Laravel Playground",
       "properties": {
-        "tinkerRunner.playgroundFolder": {
+        "laravelPlayground.playgroundFolder": {
           "type": "string",
           "default": ".playground",
           "description": "The folder inside the Laravel project where PHP files can be executed. Should be inside laravel project root directory."
         },
-        "tinkerRunner.appendOutput": {
+        "laravelPlayground.appendOutput": {
           "type": "boolean",
           "default": true,
           "description": "If true appends new output to existing output, else replaces old output with new."

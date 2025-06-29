@@ -2,16 +2,16 @@
 
 use App\Models\User;
 
-echo "✨  WELCOME TO LARAVEL PLAYGROUND!…\n";
-
 // Play with this file to see how it works
 // You can run it by clicking the "Run PHP File" at the top of this file or just do Ctrl+Alt+R
 
 $name = 'Laravel Playground';
 $features = [
-    'streaming'  => 'live colour-coded output',
-    'stop'       => 'panic button ready',
-    'append'     => 'stack runs like console history',
+    'colour‑coded output'  => 'makes results easily readable at a glance',
+    'searchable output'    => 'highlighted matches as you type',
+    'stop on demand'       => 'panic button halts long-running scripts',
+    'smart activation'     => 'only loads in Laravel projects',
+    'cross‑platform'       => 'works on Windows, macOS, Linux, WSL, SSH… anywhere',
 ];
 
 

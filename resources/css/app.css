@@ -42,7 +42,7 @@ body {
     width: 0ch;
   } /* Start with no characters visible */
   to {
-    width: 21ch;
+    width: 18ch;
   } /* Adjust this value based on text length */
 }
 
