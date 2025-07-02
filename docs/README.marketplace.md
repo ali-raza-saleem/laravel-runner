@@ -18,7 +18,7 @@
 
 ---
 
-## ✨ Key Features – Run Laravel Snippets in VS Code
+## Key Features
 
 * **💡 IntelliSense & linting** – Real `.php` files with full support from Intelephense, CS Fixer, snippets, and more.  
 * **🎨 Color-coded output** – Errors, dumps, and logs are syntax-highlighted for instant readability.  

@@ -55,8 +55,8 @@ export class WebviewManager {
   public createOutputPanel() {
     if (!this.outputPanel) {
       this.outputPanel = vscode.window.createWebviewPanel(
-        "tinkerOutput",
-        "Laravel Tinker Output",
+        "laraRunOutputPanel",
+        "Lara Run: Output Panel",
         vscode.ViewColumn.Beside,
         { enableScripts: true },
       );
