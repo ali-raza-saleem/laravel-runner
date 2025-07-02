@@ -1,7 +1,7 @@
 {
   "name": "lara-run",
   "displayName": "Lara Run",
-  "description": "Run Laravel code with color-coded results — all in your editor.",
+  "description": " Laravel & PHP runner for VS Code — Instant execution with color output, search & stop",
   "version": "3.4.0",
   "publisher": "ali-raza-saleem",
   "icon": "resources/icons/logo.png",
@@ -17,7 +17,7 @@
     "vscode": "^1.90.0"
   },
   "categories": [
-    "Programming Languages",
+    "PHP",
     "Debuggers"
   ],
   "keywords": [

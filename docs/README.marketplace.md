@@ -1,38 +1,40 @@
-# Lara Run
+# Lara Run – Laravel Code Runner & Tinker for VS Code
 
-**Run Laravel PHP code instantly—right where you write it.**
+**Run and debug Laravel / PHP code with one click — right inside VS Code.**
 
-Drop **any PHP file** into `.playground/` folder, hit **Run** — then search and debug beautifully color-coded output, right in the sidebar.
-
----
-
-## Demo
-
-![Demo](https://raw.githubusercontent.com/ali-raza-saleem/lara-run/master/demo/setup.gif)
+Color-coded, searchable output, plus a handy stop-button.  
+Enjoy full syntax highlighting, IntelliSense, autocompletion, and linting from your existing PHP extensions—because you’re editing real `.php` files.  
+Special formatting for `code`, `errors`, and `logs` speeds up debugging.
 
 ---
 
-## Why you’ll love it
-
-* ✨ **Colour‑coded output** – Colour‑coded result in the sidebar makes it easily readable.
-* 🔍 **Searchable output** – Instantly find variables or values. Matches are auto-highlighted as you type.
-* 🛑 **Panic button ready** – Hung script? Hit **Stop**. Done.
-* 🎒 **Travels light** – No setup. Just create a file in .playground folder and go.
-* 🧘 **Smart Activation** – Only activates in Laravel projects.
-* 💻 **Works anywhere** – Windows, macOS, Linux, WSL, and remote SSH supported
+![Run Laravel code in VS Code – Lara Run demo](https://raw.githubusercontent.com/ali-raza-saleem/lara-run/master/demo/setup.gif)
 
 ---
 
-## Quick start (60 seconds)
+## ✨ Key Features – Run Laravel Snippets in VS Code
 
-You can create your playground manually — or let the extension do it for you.
+| Feature | Description |
+|---------|-------------|
+| 💡 **Full IntelliSense & linting** | Real `.php` files mean extensions like **Intelephense**, **PHP CS Fixer**, and snippets work out of the box. |
+| 🎨 **Color-coded output** | Errors, dumps, and logs are syntax-highlighted for instant readability. |
+| 🔍 **Searchable logs** | Instantly highlight matches as you type. Find variables fast. |
+| 🛑 **Stop button** | Hung or runaway script? Hit **Stop** to cancel execution immediately. |
+| ⚡ **One-click execution** | Press `Ctrl+Alt+R` / `Cmd+Alt+R` or use the **▶ Run PHP File (Lara Run)** action. |
+| 🧘 **Smart activation** | Only activates inside Laravel projects. |
+| 🌍 **Cross-platform support** | macOS, Windows, Linux, WSL, and remote SSH–it all works. |
 
-### 🔧 Option A: Use the built-in **Install Playground** command
+---
+
+## ⚡ Quick Start – How to Run Laravel Code (60 sec)
+
+### 🔧 Option A: Use the built-in **Lara Run: Install** command
 
 1. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
-2. Run **Lara Run: Install**
-3. The extension will create and open a `.playground/hello.php` file for you with a sample snippet.
-4. To Run the file, Click **▶ Run PHP File (Lara Run)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
+2. Select **Lara Run: Install**
+3. It creates and opens `.playground/hello.php` with a sample snippet.
+4. Press **▶ Run PHP File (Lara Run)** or use `Ctrl+Alt+R` / `Cmd+Alt+R`
+
 
 ### 📁 Option B: Create manually
 
@@ -48,32 +50,37 @@ $name = 'VS Code';
 "Hello, $name!";
 ```
 
-1. Save the file. 
-2. To Run the file, Click **▶ Run PHP File (Lara Run)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
+Save → Run → View output in the sidebar panel.
 
 ---
 
-## Easily Configurable
+## ⚙️ Settings & Configuration
+
+(Settings › Extensions › Laravel Playground)
 
 | Setting                                | Default       | What it does                                                                            |
 | -------------------------------------- | ------------- | --------------------------------------------------------------------------------------- |
-| `laraRun.playgroundFolder` | `.playground` | Folder that holds runnable php files. Rename if you prefer another location.            |
-| `laraRun.appendOutput`     | `true`        | `true` preserves output of previous runs on new run; `false` clears output of previous runs. |
+| `laraRun.playgroundFolder` | `.playground` | Change the folder where runnable .php files live.            |
+| `laraRun.appendOutput`     | `true`        | `true` Keeps output from previous runs; `false` clears output of previous runs. |
 
-Find these in **Settings › Extensions › Laravel Playground**.
 
 ---
 
-## Quick answers
+## ❓ Quick answers
 
 | Question                          | Answer                                                                                                                                                    |
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| *Will it touch my DB?*            | Only if your code tells it to. Otherwise it’s read‑only.                                                                                                  |
-| *Run on macOS / Linux / Windows?* | Yep – works great on all platforms, including WSL and remote projects over SSH.                                                                           |
-| *Got an error?*                   | [Open an issue](https://github.com/ali-raza-saleem/lara-run/issues). |
+| *Will it touch my DB?*            | Only if your code tells it to—safe by default.                                                                                                  |
+| *Run on macOS / Linux / Windows?* | Yep! Fully supports all platforms, including WSL and remote SSH.                                                                           |
+| *Got an error?*                   | [Open an issue](https://github.com/ali-raza-saleem/lara-run/issues) on GitHub.. |
 
 ---
 
-If this helped you, [Star the Repo](https://github.com/ali-raza-saleem/lara-run) and leave a review on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ali-raza-saleem.lara-run&ssr=false#review-details). – it helps more devs discover the extension.
+## ⭐ Support the Project
+
+If Lara Run saves you time, please:
+
+* ⭐ [Star the GitHub repo](https://github.com/ali-raza-saleem/lara-run)
+* 🧩 [Leave a quick review on the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ali-raza-saleem.lara-run&ssr=false#review-details)
 
 Happy tinkering! 🛠️
