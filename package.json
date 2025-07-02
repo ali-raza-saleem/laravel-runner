@@ -1,5 +1,5 @@
 {
-  "name": "lara run",
+  "name": "lara-run",
   "displayName": "Lara Run",
   "description": "Run Laravel code with color-coded results — all in your editor.",
   "version": "3.2.0",
