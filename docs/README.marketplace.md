@@ -2,9 +2,9 @@
 
 **Run and debug Laravel / PHP code with one click — right inside VS Code.**
 
-Color-coded, searchable output, plus a handy stop-button.  
-Enjoy full syntax highlighting, IntelliSense, autocompletion, and linting from your existing PHP extensions—because you’re editing real `.php` files.  
-Special formatting for `code`, `errors`, and `logs` speeds up debugging.
+- 🖍️ Color-coded, searchable output — plus a handy stop button.  
+- 💡 Full IntelliSense, autocompletion, and linting — powered by your existing PHP extensions.  
+- 🪄 Smart formatting for `code`, `errors`, and `logs` speeds up debugging.
 
 ---
 
