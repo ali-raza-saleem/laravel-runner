@@ -1,4 +1,4 @@
-# Laravel Playground
+# Lara Run
 
 **Run Laravel PHP code instantly—right where you write it.**
 
@@ -8,7 +8,7 @@ Drop **any PHP file** into `.playground/` folder, hit **Run** — then search an
 
 ## Demo
 
-![Demo](https://raw.githubusercontent.com/ali-raza-saleem/laravel-playground/master/demo/setup.gif)
+![Demo](https://raw.githubusercontent.com/ali-raza-saleem/lara-run/master/demo/setup.gif)
 
 ---
 
@@ -30,9 +30,9 @@ You can create your playground manually — or let the extension do it for you.
 ### 🔧 Option A: Use the built-in **Install Playground** command
 
 1. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
-2. Run **Laravel Playground: Install**
+2. Run **Lara Run: Install**
 3. The extension will create and open a `.playground/hello.php` file for you with a sample snippet.
-4. To Run the file, Click **▶ Run PHP File (Laravel Playground)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
+4. To Run the file, Click **▶ Run PHP File (Lara Run)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
 
 ### 📁 Option B: Create manually
 
@@ -49,7 +49,7 @@ $name = 'VS Code';
 ```
 
 1. Save the file. 
-2. To Run the file, Click **▶ Run PHP File (Laravel Playground)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
+2. To Run the file, Click **▶ Run PHP File (Lara Run)** at the top or simply press `Ctrl+Alt+R` / `Cmd+Alt+R`
 
 ---
 
@@ -57,8 +57,8 @@ $name = 'VS Code';
 
 | Setting                                | Default       | What it does                                                                            |
 | -------------------------------------- | ------------- | --------------------------------------------------------------------------------------- |
-| `laravelPlayground.playgroundFolder` | `.playground` | Folder that holds runnable php files. Rename if you prefer another location.            |
-| `laravelPlayground.appendOutput`     | `true`        | `true` preserves output of previous runs on new run; `false` clears output of previous runs. |
+| `laraRun.playgroundFolder` | `.playground` | Folder that holds runnable php files. Rename if you prefer another location.            |
+| `laraRun.appendOutput`     | `true`        | `true` preserves output of previous runs on new run; `false` clears output of previous runs. |
 
 Find these in **Settings › Extensions › Laravel Playground**.
 
@@ -70,10 +70,10 @@ Find these in **Settings › Extensions › Laravel Playground**.
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *Will it touch my DB?*            | Only if your code tells it to. Otherwise it’s read‑only.                                                                                                  |
 | *Run on macOS / Linux / Windows?* | Yep – works great on all platforms, including WSL and remote projects over SSH.                                                                           |
-| *Got an error?*                   | [Open an issue](https://github.com/ali-raza-saleem/laravel-playground/issues). |
+| *Got an error?*                   | [Open an issue](https://github.com/ali-raza-saleem/lara-run/issues). |
 
 ---
 
-If this helped you, [Star the Repo](https://github.com/ali-raza-saleem/laravel-playground) and leave a review on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ali-raza-saleem.laravel-playground&ssr=false#review-details). – it helps more devs discover the extension.
+If this helped you, [Star the Repo](https://github.com/ali-raza-saleem/lara-run) and leave a review on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ali-raza-saleem.lara-run&ssr=false#review-details). – it helps more devs discover the extension.
 
 Happy tinkering! 🛠️

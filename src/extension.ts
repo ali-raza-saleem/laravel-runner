@@ -109,7 +109,7 @@ export class ExtensionManager {
         /* ── Resolve playground path ─────────────────────────────── */
         const playgroundFolder =
           vscode.workspace
-            .getConfiguration("laravelPlayground")
+            .getConfiguration("laraRun")
             .get<string>("playgroundFolder") ?? ".playground";
 
         const playgroundPath = path.join(root, playgroundFolder);

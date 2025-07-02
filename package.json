@@ -1,16 +1,16 @@
 {
-  "name": "laravel-playground",
-  "displayName": "Laravel Playground",
+  "name": "lara run",
+  "displayName": "Lara Run",
   "description": "Run Laravel code with color-coded results — all in your editor.",
   "version": "3.1.1",
   "publisher": "ali-raza-saleem",
   "icon": "resources/icons/logo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ali-raza-saleem/laravel-playground.git"
+    "url": "https://github.com/ali-raza-saleem/lara-run.git"
   },
   "bugs": {
-    "url": "https://github.com/ali-raza-saleem/laravel-playground/issues"
+    "url": "https://github.com/ali-raza-saleem/lara-run/issues"
   },
   "license": "MIT",
   "engines": {
@@ -63,7 +63,7 @@
       },
       {
         "command": "myExtension.installPlayground",
-        "title": "Laravel Playground: Install"
+        "title": "Lara Run: Install"
       }
     ],
     "keybindings": [
@@ -93,14 +93,14 @@
       ]
     },
     "configuration": {
-      "title": "Laravel Playground",
+      "title": "Lara Run",
       "properties": {
-        "laravelPlayground.playgroundFolder": {
+        "laraRun.playgroundFolder": {
           "type": "string",
           "default": ".playground",
           "description": "The folder inside the Laravel project where PHP files can be executed. Should be inside laravel project root directory."
         },
-        "laravelPlayground.appendOutput": {
+        "laraRun.appendOutput": {
           "type": "boolean",
           "default": true,
           "description": "If true appends new output to existing output, else replaces old output with new."

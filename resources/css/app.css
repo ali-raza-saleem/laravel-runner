@@ -32,8 +32,8 @@ body {
   text-align: left;
   width: 0ch; /* Start from 0 characters */
   animation:
-    typing 3s steps(22, end) forwards,
-    blink 0.8s infinite;
+    typing 1s steps(22, end) forwards,
+    blink 1s infinite;
 }
 
 /* Typing Animation */
@@ -42,7 +42,7 @@ body {
     width: 0ch;
   } /* Start with no characters visible */
   to {
-    width: 18ch;
+    width: 8ch;
   } /* Adjust this value based on text length */
 }
 
