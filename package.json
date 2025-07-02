@@ -2,7 +2,7 @@
   "name": "lara-run",
   "displayName": "Lara Run",
   "description": " Laravel & PHP runner for VS Code — Instant execution with color output, search & stop",
-  "version": "3.6.1",
+  "version": "3.7.0",
   "publisher": "ali-raza-saleem",
   "icon": "resources/icons/logo.png",
   "repository": {
