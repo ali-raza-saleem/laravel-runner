@@ -8,7 +8,8 @@ Drop **any PHP file** into `.playground/` folder, hit **Run** — then search an
 
 ## Demo
 
-![Demo](https://raw.githubusercontent.com/ali-raza-saleem/lara-run/master/demo/setup.gif)
+<!-- ![Demo](https://raw.githubusercontent.com/ali-raza-saleem/lara-run/master/demo/setup.gif) -->
+Coming soon...
 
 ---
 

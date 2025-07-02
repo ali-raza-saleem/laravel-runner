@@ -8,7 +8,8 @@ Lara Run lets you run and debug Laravel-flavored PHP right inside VS Code — ju
 
 ## 🎬 Demo
 
-![Demo](https://raw.githubusercontent.com/ali-raza-saleem/lara-run/master/demo/setup.gif)
+<!-- ![Demo](https://raw.githubusercontent.com/ali-raza-saleem/lara-run/master/demo/setup.gif) -->
+Coming Soon...
 
 ---
 
