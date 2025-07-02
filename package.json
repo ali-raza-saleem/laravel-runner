@@ -113,7 +113,7 @@
         "laraRun.appendOutput": {
           "type": "boolean",
           "default": true,
-          "description": "If true appends new output to existing output, else replaces old output with new."
+          "description": "'true' Keeps output from previous runs; 'false' clears output of previous runs."
         }
       }
     }
