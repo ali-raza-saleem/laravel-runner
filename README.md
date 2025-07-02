@@ -20,11 +20,11 @@
 
 ## Key Features
 
-* **💡 IntelliSense & linting** – Real `.php` files with full support from Intelephense, CS Fixer, snippets, and more.  
+* **⚡ One-click execution** – Press `Ctrl+Alt+R` or click **▶ Run PHP File (Lara Run)**.  
 * **🎨 Color-coded output** – Errors, dumps, and logs are syntax-highlighted for instant readability.  
 * **🔍 Searchable logs** – Instantly highlight matches as you type — even across long output.  
 * **🛑 Stop button** – Hung or runaway script? Instantly cancel with a click.  
-* **⚡ One-click execution** – Press `Ctrl+Alt+R` or click **▶ Run PHP File (Lara Run)**.  
+* **💡 IntelliSense & linting** – Real `.php` files with full support from Intelephense, CS Fixer, snippets, and more.  
 * **🧘 Smart activation** – Only loads inside Laravel projects (auto-detects `artisan`).  
 * **🌍 Cross-platform** – Works on macOS, Linux, Windows, WSL, and remote SSH.
 
@@ -106,7 +106,7 @@ Change the folder where PHP files live or choose whether output should persist a
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *Will it touch my DB?*            | Only if your code tells it to—safe by default.                                                                                                  |
 | *Run on macOS / Linux / Windows?* | Yep! Fully supports all platforms, including WSL and remote SSH.                                                                           |
-| *Got an error?*                   | [Open an issue](https://github.com/ali-raza-saleem/lara-run/issues) on GitHub.. |
+| *Got an error?*                   | [Open an issue](https://github.com/ali-raza-saleem/lara-run/issues) on GitHub. |
 
 ---
 
