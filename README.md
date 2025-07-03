@@ -54,7 +54,7 @@ As you type, matches are instantly highlighted — even across multiple lines.
 Hit the stop button (in red) to kill runaway loops or stuck processes — no need to restart VS Code or kill terminals.
 
 <p>
-  <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/stop_code.png" width="500"  alt="Laravel Runner stop button cancels long-running PHP script">
+  <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/stop_code.gif" width="1000"  alt="Laravel Runner stop button cancels long-running PHP script">
 </p>
 
 ### IntelliSense & Autocomplete
@@ -75,27 +75,6 @@ Change the folder where PHP files live or choose whether output should persist a
 <p>
   <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/config.png" width="720" alt="Laravel Runner settings in VS Code: playground folder and append output">
 </p>
-
----
-
-### Development
-
-| Command                 | Description                                 |
-| ----------------------- | ------------------------------------------- |
-| `npm run build`         | Build extension with Webpack for production |
-| `npm run lint`          | Run ESLint on `src/` and `resources/js/`    |
-| `npm run format`        | Format code using Prettier                  |
-| `npm run fix-style`     | Format + lint autofix                       |
-| `npm run package`       | Build and package extension into `.vsix`    |
-| `npm run package-patch` | Bump patch version and package              |
-| `npm run package-minor` | Bump minor version and package              |
-| `npm run package-major` | Bump major version and package              |
-
-### Debugging in VS Code
-
-1. Press `F5` to launch an Extension Development Host
-2. Run **Laravel Runner: Install** or open a `.playground/*.php` file
-3. Click the **▶ Run PHP File** CodeLens to test output
 
 
 ---
