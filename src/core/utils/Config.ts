@@ -14,7 +14,7 @@ export class Config {
     this.loadConfig();
 
     vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration("laraRun")) {
+      if (event.affectsConfiguration("laravelRunner")) {
         this.loadConfig();
       }
     });
@@ -49,7 +49,7 @@ export class Config {
    * Loads user configuration from `settings.json` (VS Code workspace settings).
    */
   private loadConfig() {
-    const config = vscode.workspace.getConfiguration("laraRun");
+    const config = vscode.workspace.getConfiguration("laravelRunner");
     this.playgroundFolder = config.get<string>(
       "playgroundFolder",
       ".playground",

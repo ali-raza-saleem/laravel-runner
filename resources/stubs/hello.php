@@ -5,7 +5,7 @@ use App\Models\User;
 // Play with this file to see how it works
 // You can run it by clicking the "Run PHP File" at the top of this file or just do Ctrl+Alt+R
 
-$name = 'Lara Run';
+$name = 'Laravel Runner';
 $features = [
     'colour‑coded output'  => 'makes results easily readable at a glance',
     'searchable output'    => 'highlighted matches as you type',

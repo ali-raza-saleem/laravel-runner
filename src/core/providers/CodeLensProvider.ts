@@ -21,7 +21,7 @@ export class CodeLensProvider implements vscode.CodeLensProvider {
 
     const range = new vscode.Range(0, 0, 0, 0);
     const command: vscode.Command = {
-      title: "▶ Run PHP File (Lara Run)",
+      title: "▶ Run PHP File (Laravel Runner)",
       command: "myExtension.runPhpFile",
       arguments: [document.uri],
     };

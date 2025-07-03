@@ -1,16 +1,16 @@
 {
-  "name": "lara-run",
-  "displayName": "Lara Run",
+  "name": "laravel-runner",
+  "displayName": "Laravel Runner",
   "description": " Run Laravel & PHP code in VS Code — color-coded output, highlighted search & stop execution. A Laravel playground for developers.",
   "version": "3.8.0",
   "publisher": "ali-raza-saleem",
   "icon": "resources/icons/logo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ali-raza-saleem/lara-run.git"
+    "url": "https://github.com/ali-raza-saleem/laravel-runner.git"
   },
   "bugs": {
-    "url": "https://github.com/ali-raza-saleem/lara-run/issues"
+    "url": "https://github.com/ali-raza-saleem/laravel-runner/issues"
   },
   "license": "MIT",
   "engines": {
@@ -27,7 +27,6 @@
     "tinkerwell",
     "run laravel",
     "laravel tinker",
-    "laravel runner",
     "lara runner",
     "laravel code runner",
     "run laravel code",
@@ -36,7 +35,7 @@
     "run php code",
     "php repl",
     "php runner",
-    "lara run",
+    "laravel runner",
     "artisan tinker"
   ],
   "activationEvents": [
@@ -71,7 +70,7 @@
       },
       {
         "command": "myExtension.installPlayground",
-        "title": "Lara Run: Install"
+        "title": "Laravel Runner: Install"
       }
     ],
     "keybindings": [
@@ -101,14 +100,14 @@
       ]
     },
     "configuration": {
-      "title": "Lara Run",
+      "title": "Laravel Runner",
       "properties": {
-        "laraRun.playgroundFolder": {
+        "laravelRunner.playgroundFolder": {
           "type": "string",
           "default": ".playground",
           "description": "The folder inside the Laravel project where PHP files can be executed. Should be inside laravel project root directory."
         },
-        "laraRun.appendOutput": {
+        "laravelRunner.appendOutput": {
           "type": "boolean",
           "default": true,
           "description": "'true' Keeps output from previous runs; 'false' clears output of previous runs."

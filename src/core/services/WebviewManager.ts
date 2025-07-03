@@ -56,7 +56,7 @@ export class WebviewManager {
     if (!this.outputPanel) {
       this.outputPanel = vscode.window.createWebviewPanel(
         "laraRunOutputPanel",
-        "Lara Run: Output Panel",
+        "Laravel Runner: Output Panel",
         vscode.ViewColumn.Beside,
         { enableScripts: true },
       );
