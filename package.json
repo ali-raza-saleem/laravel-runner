@@ -110,7 +110,7 @@
         "laravelRunner.appendOutput": {
           "type": "boolean",
           "default": true,
-          "description": "'true' Keeps output from previous runs; 'false' clears output of previous runs."
+          "description": "preserve output from previous runs and append new output, else clear output from previous runs."
         }
       }
     }
