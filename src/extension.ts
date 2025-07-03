@@ -178,7 +178,7 @@ export class ExtensionManager {
           }
 
           vscode.window.showInformationMessage(
-            `Playground ready → ${playgroundFolder}/`,
+            `Playground ready → ${playgroundFolder}/hello.php. Click 'Run PHP File'`,
           );
         } catch (err) {
           vscode.window.showErrorMessage(
