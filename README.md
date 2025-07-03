@@ -51,7 +51,7 @@ As you type, matches are instantly highlighted — even across multiple lines.
 </p>
 
 ### Stop Hung Scripts Instantly
-Hit the stop button (in red) to kill runaway loops or stuck processes — no need to restart VS Code or kill terminals.
+Hit the stop button (in red) or `Stop PHP File` (at the top of file) to kill runaway loops or stuck processes — no need to restart VS Code or kill terminals.
 
 <p>
   <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/stop_code.gif" width="1000"  alt="Laravel Runner stop button cancels long-running PHP script">

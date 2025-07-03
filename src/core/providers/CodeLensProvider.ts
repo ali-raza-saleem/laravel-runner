@@ -26,25 +26,24 @@ export class CodeLensProvider implements vscode.CodeLensProvider {
     if (!doc.uri.fsPath.startsWith(path.join(ws.uri.fsPath, ".playground")))
       return [];
 
-    const range  = new vscode.Range(0, 0, 0, 0);
+    const range = new vscode.Range(0, 0, 0, 0);
     const lenses = [];
 
     if (this.running) {
       lenses.push(
         new vscode.CodeLens(range, {
-          title  : "■ Stop PHP File",
+          title: "■ Stop PHP File",
           command: "myExtension.stopPhpFile",
         }),
       );
     } else {
       lenses.push(
         new vscode.CodeLens(range, {
-        title   : "▶ Run PHP File (Laravel Runner)",
-        command : "myExtension.runPhpFile",
-        arguments: [doc.uri],
-      }),
+          title: "▶ Run PHP File (Laravel Runner)",
+          command: "myExtension.runPhpFile",
+          arguments: [doc.uri],
+        }),
       );
-
     }
     return lenses;
   }

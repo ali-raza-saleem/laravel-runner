@@ -203,7 +203,6 @@ export class TinkerRunner {
   public stopExecution(): void {
     this.currentProcess.kill("SIGTERM"); // ✅ Terminate the process gracefully
     this.currentProcess = null;
-    
 
     // ✅ Update WebView to hide loader & stop button
     this.webviewManager.sendScriptKilledMessage();
