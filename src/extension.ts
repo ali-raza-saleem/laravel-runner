@@ -74,10 +74,16 @@ export class ExtensionManager {
       },
     );
 
+    const stopFileCommand = vscode.commands.registerCommand(
+      "myExtension.stopPhpFile",
+      () => this.tinkerRunner.stopExecution(),
+    );
+
     const installPlaygroundCommand = this.registerInstallPlaygroundCommand();
 
     const commands = [
       runPhpFileCommand,
+      stopFileCommand,
       clearOutputCommand,
       focusSearchBarCommand,
       installPlaygroundCommand,

@@ -61,6 +61,10 @@
         "title": "Run PHP File"
       },
       {
+        "command": "myExtension.stopPhpFile",
+        "title": "Stop PHP File"
+      },
+      {
         "command": "myExtension.clearOutput",
         "title": "Clear Output"
       },
@@ -159,6 +163,7 @@
   },
   "dependencies": {
     "alpinejs": "^3.14.8",
-    "highlight.js": "^11.11.1"
+    "highlight.js": "^11.11.1",
+    "mitt": "^3.0.1"
   }
 }

@@ -4,6 +4,7 @@ import { spawn, ChildProcess } from "child_process";
 import { WebviewManager } from "./WebviewManager";
 import { Config } from "../utils/Config";
 import { PathUtils } from "../utils/PathUtils";
+import { eventBus } from "./EventBus";
 
 export class TinkerRunner {
   private currentProcess: ChildProcess | null = null;
@@ -70,6 +71,8 @@ export class TinkerRunner {
       [tinkerScriptAbsolutePath, phpFileRelativePath, workspaceRoot],
       workspaceRoot,
     );
+
+    eventBus.setRunning(true);
   }
 
   /**
@@ -138,6 +141,7 @@ export class TinkerRunner {
 
     process.on("close", (code) => {
       this.currentProcess = null;
+      eventBus.setRunning(false);
 
       if (code !== 0) {
         this.webviewManager.updateWebView(
@@ -157,6 +161,7 @@ export class TinkerRunner {
         false,
       );
       this.currentProcess = null;
+      eventBus.setRunning(false);
       vscode.window.showErrorMessage(`Error running script: ${err.message}`);
     });
 
@@ -198,6 +203,7 @@ export class TinkerRunner {
   public stopExecution(): void {
     this.currentProcess.kill("SIGTERM"); // ✅ Terminate the process gracefully
     this.currentProcess = null;
+    
 
     // ✅ Update WebView to hide loader & stop button
     this.webviewManager.sendScriptKilledMessage();

@@ -53,21 +53,24 @@ export class WebviewManager {
   }
 
   public createOutputPanel() {
-    if (!this.outputPanel) {
-      this.outputPanel = vscode.window.createWebviewPanel(
-        "laraRunOutputPanel",
-        "Laravel Runner: Output Panel",
-        vscode.ViewColumn.Beside,
-        { enableScripts: true },
-      );
+  if (!this.outputPanel) {
+    this.outputPanel = vscode.window.createWebviewPanel(
+      "laraRunOutputPanel",
+      "Laravel Runner: Output Panel",
+      {                                 // ← object, not enum
+        viewColumn: vscode.ViewColumn.Beside,
+        preserveFocus: true,            // ← keep focus in the PHP editor
+      },
+      { enableScripts: true },
+    );
 
-      this.outputPanel.webview.html = this.getContent(this.outputPanel.webview);
+    this.outputPanel.webview.html = this.getContent(this.outputPanel.webview);
 
-      this.outputPanel.onDidDispose(() => {
-        this.outputPanel = null;
-      });
-    }
+    this.outputPanel.onDidDispose(() => {
+      this.outputPanel = null;
+    });
   }
+}
 
   /**
    * Retrieves the WebView content.7
