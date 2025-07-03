@@ -2,7 +2,7 @@
   "name": "laravel-runner",
   "displayName": "Laravel Runner",
   "description": " Run Laravel in VS Code —color-coded output, highlighted search & stop execution. A Laravel playground and tinker for developers.",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "publisher": "ali-raza-saleem",
   "icon": "resources/icons/logo.png",
   "repository": {
