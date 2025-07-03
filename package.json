@@ -51,7 +51,7 @@
     "assets",
     "resources/",
     "package.json",
-    "docs/README.marketplace.md",
+    "README.md",
     "LICENSE"
   ],
   "contributes": {
