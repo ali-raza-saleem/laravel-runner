@@ -174,7 +174,6 @@ document.addEventListener("alpine:init", () => {
 
     stopCodeExecution() {
       this.vscode.postMessage({ command: "stopExecution" });
-      this.stopCodeExecutionButtonVisibility = false;
     },
 
     escapeRegExp(string) {

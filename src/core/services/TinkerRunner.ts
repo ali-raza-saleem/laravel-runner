@@ -13,6 +13,7 @@ export class TinkerRunner {
   private pathUtils: PathUtils;
   private tinkerScriptPath: string;
   private registeredStopExecutionListener: boolean = false;
+  private stopListenerFor: vscode.Webview | null = null;
 
   constructor(
     context: vscode.ExtensionContext,
@@ -163,22 +164,32 @@ export class TinkerRunner {
   }
 
   public registerStopExecutionListener() {
-    const outputPanel = this.webviewManager.outputPanel;
-    if (!outputPanel) {
+    /* always ensure a panel exists */
+    if (!this.webviewManager.outputPanel) {
       this.webviewManager.createOutputPanel();
     }
 
-    if (this.registeredStopExecutionListener) {
-      return;
-    }
+    const panel = this.webviewManager.outputPanel!;
+    const webview = panel.webview;
 
-    this.webviewManager.outputPanel?.webview.onDidReceiveMessage((message) => {
+    /* same webview already wired → nothing to do */
+    if (this.stopListenerFor === webview) return;
+
+    /* new / different webview → attach listener */
+    webview.onDidReceiveMessage((message) => {
       if (message.command === "stopExecution") {
         this.stopExecution();
       }
     });
 
-    this.registeredStopExecutionListener = true;
+    /* when the panel is disposed, forget the reference so we re-wire next time */
+    panel.onDidDispose(() => {
+      if (this.stopListenerFor === webview) {
+        this.stopListenerFor = null;
+      }
+    });
+
+    this.stopListenerFor = webview;
   }
 
   /**
