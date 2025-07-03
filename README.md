@@ -3,7 +3,7 @@
 **Run and debug Laravel / PHP code with one click — right inside VS Code.**
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/setup.gif"
+  <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/usage.gif"
        width="1000"
        alt="Run Laravel code in VS Code – Laravel Runner demo">
 </p>
@@ -54,7 +54,7 @@ As you type, matches are instantly highlighted — even across multiple lines.
 Hit the stop button (in red) to kill runaway loops or stuck processes — no need to restart VS Code or kill terminals.
 
 <p>
-  <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/stop_button.png" width="500"  alt="Laravel Runner stop button cancels long-running PHP script">
+  <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/stop_code.png" width="500"  alt="Laravel Runner stop button cancels long-running PHP script">
 </p>
 
 ### IntelliSense & Autocomplete
