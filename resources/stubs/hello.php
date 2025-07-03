@@ -7,11 +7,11 @@ use App\Models\User;
 
 $name = 'Laravel Runner';
 $features = [
-    'colour‑coded output'  => 'makes results easily readable at a glance',
-    'searchable output'    => 'highlighted matches as you type',
-    'stop on demand'       => 'panic button halts long-running scripts',
-    'smart activation'     => 'only loads in Laravel projects',
-    'cross‑platform'       => 'works on Windows, macOS, Linux, WSL, SSH… anywhere',
+    'colour‑coded output'  => 'readable at a glance',
+    'searchable output'    => 'highlights as you type',
+    'stop on demand'       => 'halt scripts instantly',
+    'smart activation'     => 'only in Laravel projects',
+    'cross‑platform'       => 'works everywhere',
 ];
 
 
