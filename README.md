@@ -61,7 +61,7 @@ Hit the stop button (in red) or `Stop PHP File` (at the top of file) to kill run
 Real `.php` files mean you get full IntelliSense, autocompletion, linting, and Copilot suggestions—powered by your existing PHP extensions like Intelephense or CS Fixer.
 
 <p>
-  <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/powered_by_existing_extensions.png" width="500" alt="Laravel Runner autocomplete with Laravel model and IntelliSense in VS Code">
+  <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/true_php_playground.png" width="500" alt="Laravel Runner autocomplete with Laravel model and IntelliSense in VS Code">
 </p>
 
 ---

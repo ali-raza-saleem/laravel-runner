@@ -5,6 +5,10 @@
   "version": "4.4.0",
   "publisher": "ali-raza-saleem",
   "icon": "resources/icons/logo.png",
+  "galleryBanner": {
+    "color": "#0e1425",
+    "theme": "dark"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ali-raza-saleem/laravel-runner.git"
@@ -13,6 +17,7 @@
     "url": "https://github.com/ali-raza-saleem/laravel-runner/issues"
   },
   "license": "MIT",
+  "homepage": "https://laravelrunner.com",
   "engines": {
     "vscode": "^1.90.0"
   },
