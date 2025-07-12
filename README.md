@@ -1,4 +1,11 @@
 # Laravel Runner – Laravel Code Runner & Tinker for VS Code
+[![Version](https://img.shields.io/badge/version-v4.5.0-2196f3?style=flat-square)](https://github.com/ali-raza-saleem/laravel-runner/releases)
+[![Last Commit](https://img.shields.io/badge/last_commit-1_day_ago-2196f3?style=flat-square)](https://github.com/ali-raza-saleem/laravel-runner/commits)
+[![License](https://img.shields.io/badge/license-MIT-2196f3?style=flat-square)](https://github.com/ali-raza-saleem/laravel-runner/blob/main/LICENSE)
+
+
+
+
 
 **Run and debug Laravel / PHP code with one click — right inside VS Code.**
 
@@ -94,6 +101,8 @@ Change the folder where PHP files live or choose whether output should persist a
 If Laravel Runner saves you time, please:
 
 * ⭐ [Star the GitHub repo](https://github.com/ali-raza-saleem/laravel-runner)
-* 🧩 [Leave a quick review on the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ali-raza-saleem.laravel-runner&ssr=false#review-details)
+* 💬 [Leave a quick review on the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ali-raza-saleem.laravel-runner&ssr=false#review-details)
 
-Happy tinkering! 🛠️
+Happy tinkering!
+
+
