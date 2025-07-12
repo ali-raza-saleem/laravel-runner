@@ -1,6 +1,6 @@
 # Laravel Runner – Laravel Code Runner & Tinker for VS Code
 [![Version](https://img.shields.io/badge/version-v4.5.0-2196f3?style=flat-square)](https://github.com/ali-raza-saleem/laravel-runner/releases)
-[![Last Commit](https://img.shields.io/badge/last_commit-1_day_ago-2196f3?style=flat-square)](https://github.com/ali-raza-saleem/laravel-runner/commits)
+[![Last Commit](https://img.shields.io/github/last-commit/ali-raza-saleem/laravel-runner?style=flat-square&color=2196f3)](https://github.com/ali-raza-saleem/laravel-runner/commits)
 [![License](https://img.shields.io/badge/license-MIT-2196f3?style=flat-square)](https://github.com/ali-raza-saleem/laravel-runner/blob/main/LICENSE)
 
 
