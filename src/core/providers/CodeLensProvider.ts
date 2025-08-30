@@ -23,7 +23,12 @@ export class CodeLensProvider implements vscode.CodeLensProvider {
     const ws = vscode.workspace.getWorkspaceFolder(doc.uri);
     if (!ws) return [];
 
-    if (!doc.uri.fsPath.startsWith(path.join(ws.uri.fsPath, ".playground")))
+    const playgroundFolder =
+      vscode.workspace
+        .getConfiguration("laravelRunner")
+        .get<string>("playgroundFolder") ?? ".playground";
+
+    if (!doc.uri.fsPath.startsWith(path.join(ws.uri.fsPath, playgroundFolder)))
       return [];
 
     const range = new vscode.Range(0, 0, 0, 0);
