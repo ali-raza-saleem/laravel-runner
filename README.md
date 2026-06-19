@@ -1,5 +1,5 @@
 # Laravel Runner – Laravel Code Runner & Tinker for VS Code
-[![Version](https://img.shields.io/badge/version-v4.5.1-2196f3?style=flat-square)](https://github.com/ali-raza-saleem/laravel-runner/releases)
+[![Version](https://img.shields.io/badge/version-v4.6.0-2196f3?style=flat-square)](https://github.com/ali-raza-saleem/laravel-runner/releases)
 [![Last Commit](https://img.shields.io/github/last-commit/ali-raza-saleem/laravel-runner?style=flat-square&color=2196f3)](https://github.com/ali-raza-saleem/laravel-runner/commits)
 [![License](https://img.shields.io/badge/license-MIT-2196f3?style=flat-square)](https://github.com/ali-raza-saleem/laravel-runner/blob/main/LICENSE)
 
@@ -75,13 +75,45 @@ Real `.php` files mean you get full IntelliSense, autocompletion, linting, and C
 
 ## Settings & Configuration
 
-Change the folder where PHP files live or choose whether output should persist across runs.  
+Change the folder where PHP files live, choose whether output should persist across runs, or set a custom PHP executable path.
 **Settings > Extensions > Laravel Runner:**
-
 
 <p>
   <img src="https://raw.githubusercontent.com/ali-raza-saleem/laravel-runner/master/demo/config.png" width="720" alt="Laravel Runner settings in VS Code: playground folder and append output">
 </p>
+
+### Custom PHP Path
+
+By default, Laravel Runner uses `php` from your system PATH. If you use Laravel Herd, WSL, Remote SSH, or a custom PHP installation, you can manually set the PHP executable path:
+
+```json
+{
+  "laravelRunner.phpPath": "php"
+}
+```
+
+Examples:
+
+```json
+{
+  "laravelRunner.phpPath": "/usr/bin/php"
+}
+```
+
+```json
+{
+  "laravelRunner.phpPath": "/opt/homebrew/bin/php"
+}
+```
+
+```json
+{
+  "laravelRunner.phpPath": "C:\\Users\\Admin\\.config\\herd\\bin\\php83\\php.exe"
+}
+```
+
+For Laravel Herd on Windows, prefer the direct `php.exe` path instead of `php.bat`.
+
 
 
 ---
