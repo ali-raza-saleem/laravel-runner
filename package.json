@@ -126,6 +126,11 @@
           "type": "boolean",
           "default": true,
           "description": "preserve output from previous runs and append new output, else clear output from previous runs."
+        },
+        "laravelRunner.phpPath": {
+          "type": "string",
+          "default": "",
+          "description": "Optional PHP executable path. Leave empty to auto-detect. On Windows with Laravel Herd, prefer the real php.exe path, for example C:\\Users\\Admin\\.config\\herd\\bin\\php83\\php.exe."
         }
       }
     }

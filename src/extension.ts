@@ -3,7 +3,6 @@ import * as path from "path";
 import { WebviewManager } from "./core/services/WebviewManager";
 import { CodeLensProvider } from "./core/providers/CodeLensProvider";
 import { TinkerRunner } from "./core/services/TinkerRunner";
-import { register } from "module";
 import { PathUtils } from "./core/utils/PathUtils";
 
 export class ExtensionManager {
@@ -16,7 +15,11 @@ export class ExtensionManager {
     this.context = context;
     this.output = output;
     this.webviewManager = new WebviewManager(context);
-    this.tinkerRunner = new TinkerRunner(context, this.webviewManager);
+    this.tinkerRunner = new TinkerRunner(
+      context,
+      this.webviewManager,
+      output,
+    );
   }
 
   /**
