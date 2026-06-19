@@ -6,6 +6,7 @@ export class Config {
   private playgroundFolder: string;
   private appendOutput: boolean;
   private extensionId: string;
+  private phpPath: string;
 
   private constructor(context: vscode.ExtensionContext) {
     this.packageJson = context.extension.packageJSON;
@@ -50,11 +51,15 @@ export class Config {
    */
   private loadConfig() {
     const config = vscode.workspace.getConfiguration("laravelRunner");
+
     this.playgroundFolder = config.get<string>(
       "playgroundFolder",
       ".playground",
     );
-    this.appendOutput = config.get<boolean>("appendOutput");
+
+    this.appendOutput = config.get<boolean>("appendOutput", true);
+
+    this.phpPath = config.get<string>("phpPath", "php")?.trim() || "php";
   }
 
   /**
@@ -64,18 +69,19 @@ export class Config {
    */
   public get<T>(key: string): T | undefined {
     const classPropertyValue = (this as any)[key];
-    if (classPropertyValue) {
-      return classPropertyValue;
+
+    if (classPropertyValue !== undefined && classPropertyValue !== null) {
+      return classPropertyValue as T;
     }
 
-    const keys = key.split("."); // Support for nested keys like "customConfig.someKey"
+    const keys = key.split(".");
     let value: any = this.packageJson;
 
     for (const k of keys) {
       if (value?.[k] !== undefined) {
         value = value[k];
       } else {
-        return undefined; // Return undefined if key is not found
+        return undefined;
       }
     }
 

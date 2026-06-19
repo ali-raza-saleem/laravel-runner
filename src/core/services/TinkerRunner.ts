@@ -72,8 +72,10 @@ export class TinkerRunner {
         this.tinkerScriptPath,
       );
 
+      const phpPath = this.config.get<string>("phpPath") ?? "php";
+
       this.currentProcess = this.evalScript(
-        "php",
+        phpPath,
         [tinkerScriptAbsolutePath, phpFileRelativePath, workspaceRoot!],
         workspaceRoot!,
       );
@@ -147,28 +149,35 @@ export class TinkerRunner {
     cwd: string,
   ): ChildProcess {
     this.webviewManager.sendScriptStartedMessage();
-    // IMPORTANT: Must be registered after the WebView is created (only first time)
-    // since it is attached on outputPanel webview, latter is null before
-
     this.registerStopExecutionListener();
 
-    const process = spawn(command, args, { cwd });
+    const shouldUseShell =
+      process.platform === "win32" &&
+      (command.trim().toLowerCase() === "php" ||
+        command.trim().toLowerCase().endsWith(".bat") ||
+        command.trim().toLowerCase().endsWith(".cmd"));
+
+    const childProcess = spawn(command, args, {
+      cwd,
+      shell: shouldUseShell,
+      windowsHide: true,
+    });
 
     let output = "";
     let errorOutput = "";
 
-    process.stdout.on("data", (data) => {
+    childProcess.stdout.on("data", (data) => {
       output += data.toString();
     });
 
-    process.stderr.on("data", (data) => {
+    childProcess.stderr.on("data", (data) => {
       errorOutput += data.toString();
     });
 
-    process.on("close", (code, signal) => {
-      const wasKilled = this.killedProcesses.has(process);
+    childProcess.on("close", (code, signal) => {
+      const wasKilled = this.killedProcesses.has(childProcess);
 
-      if (this.currentProcess === process) {
+      if (this.currentProcess === childProcess) {
         this.currentProcess = null;
         eventBus.setRunning(false);
       }
@@ -190,22 +199,32 @@ export class TinkerRunner {
       }
     });
 
-    process.on("error", (err) => {
-      if (this.currentProcess === process) {
+    childProcess.on("error", (err) => {
+      if (this.currentProcess === childProcess) {
         this.currentProcess = null;
         eventBus.setRunning(false);
       }
 
+      const message = [
+        `Error running PHP: ${err.message}`,
+        "",
+        `PHP path used: ${command}`,
+        "",
+        "If you use Laravel Herd, set laravelRunner.phpPath to Herd's php.exe path, for example:",
+        "C:\\Users\\<your-user>\\.config\\herd\\bin\\php83\\php.exe",
+      ].join("\n");
+
       this.webviewManager.updateWebView(
-        errorOutput || output || `Error running script: ${err.message}`,
+        errorOutput || output || message,
         true,
         false,
       );
-
-      vscode.window.showErrorMessage(`Error running script: ${err.message}`);
+      vscode.window.showErrorMessage(
+        `Error running PHP using "${command}": ${err.message}`,
+      );
     });
 
-    return process;
+    return childProcess;
   }
 
   public registerStopExecutionListener() {

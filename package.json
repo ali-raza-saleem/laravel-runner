@@ -125,6 +125,12 @@
           "type": "boolean",
           "default": true,
           "description": "preserve output from previous runs and append new output, else clear output from previous runs."
+        },
+        "laravelRunner.phpPath": {
+          "type": "string",
+          "default": "php",
+          "scope": "resource",
+          "description": "Path to the PHP executable used by Laravel Runner. Examples: php, /usr/bin/php, /opt/homebrew/bin/php, C:\\\\Users\\\\Admin\\\\.config\\\\herd\\\\bin\\\\php83\\\\php.exe"
         }
       }
     }
