@@ -10,9 +10,11 @@ export class ExtensionManager {
   private webviewManager: WebviewManager;
   private tinkerRunner: TinkerRunner;
   private context: vscode.ExtensionContext;
+  private output: vscode.OutputChannel;
 
-  constructor(context: vscode.ExtensionContext) {
+  constructor(context: vscode.ExtensionContext, output: vscode.OutputChannel) {
     this.context = context;
+    this.output = output;
     this.webviewManager = new WebviewManager(context);
     this.tinkerRunner = new TinkerRunner(context, this.webviewManager);
   }
@@ -21,8 +23,10 @@ export class ExtensionManager {
    * Activates the extension and registers commands & providers.
    */
   public activate() {
+    this.output.appendLine("ExtensionManager.activate() called");
     this.registerProviders();
     this.registerCommands();
+    this.output.appendLine("Providers and commands registered");
   }
 
   /**
@@ -41,6 +45,8 @@ export class ExtensionManager {
    * Registers VSCode commands for the extension.
    */
   private registerCommands() {
+    this.output.appendLine("Registering Laravel Runner commands");
+
     const runPhpFileCommand = vscode.commands.registerCommand(
       "myExtension.runPhpFile",
       () => {
@@ -81,15 +87,15 @@ export class ExtensionManager {
 
     const installPlaygroundCommand = this.registerInstallPlaygroundCommand();
 
-    const commands = [
+    this.context.subscriptions.push(
       runPhpFileCommand,
       stopFileCommand,
       clearOutputCommand,
       focusSearchBarCommand,
       installPlaygroundCommand,
-    ];
+    );
 
-    this.context.subscriptions.push(...commands);
+    this.output.appendLine("Laravel Runner commands registered successfully");
   }
 
   private registerInstallPlaygroundCommand() {
@@ -181,9 +187,15 @@ export class ExtensionManager {
             `Playground ready → ${playgroundFolder}/hello.php. Click 'Run PHP File'`,
           );
         } catch (err) {
+          const message =
+            err instanceof Error ? (err.stack ?? err.message) : String(err);
+
           vscode.window.showErrorMessage(
-            "Could not create the playground – see console for details.",
+            "Could not create the playground. Check Output > Laravel Runner.",
           );
+
+          this.output.appendLine("Install playground failed:");
+          this.output.appendLine(message);
         }
       },
     );
@@ -194,8 +206,31 @@ export class ExtensionManager {
  * Called when the extension is activated.
  */
 export function activate(context: vscode.ExtensionContext) {
-  const extensionManager = new ExtensionManager(context);
-  extensionManager.activate();
+  const output = vscode.window.createOutputChannel("Laravel Runner");
+  context.subscriptions.push(output);
+
+  output.appendLine("Laravel Runner activate() called");
+  output.appendLine(`remoteName: ${vscode.env.remoteName ?? "local"}`);
+  output.appendLine(`extensionPath: ${context.extensionPath}`);
+  output.appendLine(`extensionUri: ${context.extensionUri.toString()}`);
+
+  try {
+    const extensionManager = new ExtensionManager(context, output);
+    extensionManager.activate();
+
+    output.appendLine("Laravel Runner activation completed");
+  } catch (error) {
+    output.appendLine("Laravel Runner activation failed:");
+    output.appendLine(
+      error instanceof Error ? (error.stack ?? error.message) : String(error),
+    );
+
+    vscode.window.showErrorMessage(
+      "Laravel Runner failed to activate. Check Output > Laravel Runner.",
+    );
+
+    throw error;
+  }
 }
 
 /**
