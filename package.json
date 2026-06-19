@@ -43,6 +43,9 @@
     "laravel runner",
     "artisan tinker"
   ],
+  "extensionKind": [
+    "workspace"
+  ],
   "activationEvents": [
     "onLanguage:php",
     "onCommand:myExtension.runPhpFile",
