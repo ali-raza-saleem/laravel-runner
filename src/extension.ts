@@ -3,13 +3,13 @@ import * as path from "path";
 import { WebviewManager } from "./core/services/WebviewManager";
 import { CodeLensProvider } from "./core/providers/CodeLensProvider";
 import { TinkerRunner } from "./core/services/TinkerRunner";
-import { register } from "module";
 import { PathUtils } from "./core/utils/PathUtils";
 
 export class ExtensionManager {
   private webviewManager: WebviewManager;
   private tinkerRunner: TinkerRunner;
   private context: vscode.ExtensionContext;
+  private codeLensProvider?: CodeLensProvider;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -21,20 +21,26 @@ export class ExtensionManager {
    * Activates the extension and registers commands & providers.
    */
   public activate() {
-    this.registerProviders();
     this.registerCommands();
+    this.registerProviders();
+
+    setTimeout(() => {
+      this.codeLensProvider?.refresh();
+    }, 250);
   }
 
   /**
    * Registers the CodeLens provider for PHP files.
    */
   private registerProviders() {
-    const provider = new CodeLensProvider();
+    this.codeLensProvider = new CodeLensProvider();
+
     const providerRegistration = vscode.languages.registerCodeLensProvider(
       { language: "php", scheme: "file" },
-      provider,
+      this.codeLensProvider,
     );
-    this.context.subscriptions.push(providerRegistration);
+
+    this.context.subscriptions.push(this.codeLensProvider, providerRegistration);
   }
 
   /**

@@ -13,8 +13,8 @@ export class TinkerRunner {
   private config: Config;
   private pathUtils: PathUtils;
   private tinkerScriptPath: string;
-  private registeredStopExecutionListener: boolean = false;
   private stopListenerFor: vscode.Webview | null = null;
+  private killedProcesses = new WeakSet<ChildProcess>();
 
   constructor(
     context: vscode.ExtensionContext,
@@ -29,7 +29,9 @@ export class TinkerRunner {
     PathUtils.init(this.config); // Initialize PathUtils singleton
     this.pathUtils = PathUtils.getInstance();
 
-    this.tinkerScriptPath = this.config.get("customConfig.tinkerScriptPath");
+    this.tinkerScriptPath =
+      this.config.get<string>("customConfig.tinkerScriptPath") ??
+      "./resources/tinker.php";
   }
 
   /**
@@ -108,11 +110,11 @@ export class TinkerRunner {
   }
 
   private canRunPhpFile(
-    workspaceRoot: string,
+    workspaceRoot: string | null,
     phpFileUri?: vscode.Uri,
   ): boolean {
     if (!phpFileUri) {
-      vscode.window.showErrorMessage("No php file found.");
+      vscode.window.showErrorMessage("No PHP file found.");
       return false;
     }
 
@@ -125,7 +127,7 @@ export class TinkerRunner {
       !this.pathUtils.fileIsInsideTinkerPlayground(workspaceRoot, phpFileUri)
     ) {
       vscode.window.showErrorMessage(
-        "This command can only be run on PHP files inside a Laravel project.",
+        "This command can only be run on PHP files inside the Laravel Runner playground.",
       );
       return false;
     }
@@ -153,33 +155,53 @@ export class TinkerRunner {
     const process = spawn(command, args, { cwd });
 
     let output = "";
+    let errorOutput = "";
+
     process.stdout.on("data", (data) => {
       output += data.toString();
     });
 
-    process.on("close", (code) => {
-      this.currentProcess = null;
-      eventBus.setRunning(false);
+    process.stderr.on("data", (data) => {
+      errorOutput += data.toString();
+    });
+
+    process.on("close", (code, signal) => {
+      const wasKilled = this.killedProcesses.has(process);
+
+      if (this.currentProcess === process) {
+        this.currentProcess = null;
+        eventBus.setRunning(false);
+      }
+
+      if (wasKilled) {
+        return;
+      }
+
+      const finalOutput = output || errorOutput;
 
       if (code !== 0) {
         this.webviewManager.updateWebView(
-          output || `Process exited with code ${code}`,
+          finalOutput || `Process exited with code ${code}, signal ${signal}`,
           true,
           false,
         );
       } else {
-        this.webviewManager.updateWebView(output || "null", false, false);
+        this.webviewManager.updateWebView(finalOutput || "null", false, false);
       }
     });
 
     process.on("error", (err) => {
+      if (this.currentProcess === process) {
+        this.currentProcess = null;
+        eventBus.setRunning(false);
+      }
+
       this.webviewManager.updateWebView(
-        output || `Error running script: ${err.message}`,
+        errorOutput || output || `Error running script: ${err.message}`,
         true,
         false,
       );
-      this.currentProcess = null;
-      eventBus.setRunning(false);
+
       vscode.window.showErrorMessage(`Error running script: ${err.message}`);
     });
 
@@ -218,11 +240,29 @@ export class TinkerRunner {
   /**
    * Stops the currently running PHP process.
    */
-  public stopExecution(): void {
-    this.currentProcess.kill("SIGTERM"); // ✅ Terminate the process gracefully
-    this.currentProcess = null;
 
-    // ✅ Update WebView to hide loader & stop button
+  public stopExecution(): void {
+    const process = this.currentProcess;
+
+    if (!process) {
+      eventBus.setRunning(false);
+      this.webviewManager.sendScriptKilledMessage();
+      return;
+    }
+
+    this.killedProcesses.add(process);
+
+    try {
+      process.kill("SIGTERM");
+    } catch {
+      // Process may already be gone.
+    }
+
+    if (this.currentProcess === process) {
+      this.currentProcess = null;
+    }
+
+    eventBus.setRunning(false);
     this.webviewManager.sendScriptKilledMessage();
   }
 

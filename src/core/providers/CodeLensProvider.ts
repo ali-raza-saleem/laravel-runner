@@ -2,18 +2,34 @@ import { eventBus } from "./../services/EventBus";
 import * as vscode from "vscode";
 import * as path from "path";
 
-export class CodeLensProvider implements vscode.CodeLensProvider {
+export class CodeLensProvider
+  implements vscode.CodeLensProvider, vscode.Disposable
+{
   private _onDidChange = new vscode.EventEmitter<void>();
   readonly onDidChangeCodeLenses = this._onDidChange.event;
-
-  private running = false;
+  private disposables: vscode.Disposable[] = [];
 
   constructor() {
-    /* subscribe once, auto-refresh on change */
-    eventBus.on("scriptRunning", (state) => {
-      this.running = state;
-      this._onDidChange.fire();
-    });
+    eventBus.on("scriptRunning", this.refresh);
+
+    this.disposables.push(
+      vscode.window.onDidChangeActiveTextEditor(() => this.refresh()),
+      vscode.workspace.onDidChangeConfiguration((event) => {
+        if (event.affectsConfiguration("laravelRunner.playgroundFolder")) {
+          this.refresh();
+        }
+      }),
+    );
+  }
+
+  public refresh = () => {
+    this._onDidChange.fire();
+  };
+
+  public dispose() {
+    eventBus.off("scriptRunning", this.refresh);
+    this._onDidChange.dispose();
+    this.disposables.forEach((d) => d.dispose());
   }
 
   provideCodeLenses(
@@ -28,28 +44,21 @@ export class CodeLensProvider implements vscode.CodeLensProvider {
         .getConfiguration("laravelRunner")
         .get<string>("playgroundFolder") ?? ".playground";
 
-    if (!doc.uri.fsPath.startsWith(path.join(ws.uri.fsPath, playgroundFolder)))
+    const playgroundPath = path.join(ws.uri.fsPath, playgroundFolder);
+
+    if (!doc.uri.fsPath.startsWith(playgroundPath + path.sep)) {
       return [];
+    }
 
     const range = new vscode.Range(0, 0, 0, 0);
-    const lenses = [];
+    const running = eventBus.isRunning();
 
-    if (this.running) {
-      lenses.push(
-        new vscode.CodeLens(range, {
-          title: "■ Stop PHP File",
-          command: "myExtension.stopPhpFile",
-        }),
-      );
-    } else {
-      lenses.push(
-        new vscode.CodeLens(range, {
-          title: "▶ Run PHP File (Laravel Runner)",
-          command: "myExtension.runPhpFile",
-          arguments: [doc.uri],
-        }),
-      );
-    }
-    return lenses;
+    return [
+      new vscode.CodeLens(range, {
+        title: running ? "■ Stop PHP File" : "▶ Run PHP File (Laravel Runner)",
+        command: running ? "myExtension.stopPhpFile" : "myExtension.runPhpFile",
+        arguments: running ? [] : [doc.uri],
+      }),
+    ];
   }
 }
