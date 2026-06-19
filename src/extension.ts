@@ -43,8 +43,8 @@ export class ExtensionManager {
   private registerCommands() {
     const runPhpFileCommand = vscode.commands.registerCommand(
       "myExtension.runPhpFile",
-      () => {
-        this.tinkerRunner.runPhpFile();
+      async (fileUri?: vscode.Uri) => {
+        await this.tinkerRunner.runPhpFile(fileUri);
       },
     );
 

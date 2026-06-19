@@ -49,9 +49,11 @@
   "activationEvents": [
     "onLanguage:php",
     "onCommand:myExtension.runPhpFile",
+    "onCommand:myExtension.stopPhpFile",
     "onCommand:myExtension.clearOutput",
     "onCommand:myExtension.focusSearchBar",
-    "onCommand:myExtension.installPlayground"
+    "onCommand:myExtension.installPlayground",
+    "workspaceContains:artisan"
   ],
   "main": "./dist/extension.min.js",
   "files": [

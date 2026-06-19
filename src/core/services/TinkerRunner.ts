@@ -36,43 +36,61 @@ export class TinkerRunner {
    * Runs the given PHP file using the Tinker script and captures all output.
    * @param fileUri The URI of the PHP file to run.
    */
-  public runPhpFile(): void {
-    if (this.currentProcess) {
-      vscode.window.showWarningMessage(
-        "Code is running. Please wait.. If you want to run another code, please stop the current run by pressing Stop button",
+  public async runPhpFile(fileUri?: vscode.Uri): Promise<void> {
+    try {
+      if (this.currentProcess) {
+        vscode.window.showWarningMessage(
+          "Code is running. Please stop the current run before starting another.",
+        );
+        return;
+      }
+
+      const phpFileUri = fileUri ?? this.getPhpFileUri();
+
+      if (!phpFileUri) {
+        vscode.window.showErrorMessage("No PHP file selected to run.");
+        return;
+      }
+
+      const workspaceRoot = this.pathUtils.getWorkspaceRoot(phpFileUri);
+
+      if (!this.canRunPhpFile(workspaceRoot, phpFileUri)) {
+        return;
+      }
+
+      const document = await vscode.workspace.openTextDocument(phpFileUri);
+      await document.save();
+
+      const phpFileRelativePath = path
+        .relative(workspaceRoot!, phpFileUri.fsPath)
+        .replace(/\\/g, "/");
+
+      const tinkerScriptAbsolutePath = path.join(
+        this.extensionUri.fsPath,
+        this.tinkerScriptPath,
       );
-      return;
+
+      this.currentProcess = this.evalScript(
+        "php",
+        [tinkerScriptAbsolutePath, phpFileRelativePath, workspaceRoot!],
+        workspaceRoot!,
+      );
+
+      eventBus.setRunning(true);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+
+      vscode.window.showErrorMessage(`Laravel Runner failed: ${message}`);
+
+      this.webviewManager.updateWebView(
+        `Laravel Runner failed:\n${message}`,
+        true,
+        false,
+      );
+
+      this.currentProcess = null;
+      eventBus.setRunning(false);
     }
-
-    const phpFileUri = this.getPhpFileUri();
-    const workspaceRoot = this.pathUtils.getWorkspaceRoot(phpFileUri);
-
-    if (!this.canRunPhpFile(workspaceRoot, phpFileUri)) {
-      return;
-    }
-
-    const editor = vscode.window.activeTextEditor;
-    if (editor) {
-      editor.document.save();
-    } else {
-      vscode.window.showInformationMessage("No active editor found.");
-    }
-
-    const phpFileRelativePath = path
-      .relative(workspaceRoot, phpFileUri.fsPath)
-      .replace(/\\/g, "/");
-    const tinkerScriptAbsolutePath = path.join(
-      this.extensionUri.fsPath,
-      this.tinkerScriptPath,
-    );
-
-    this.currentProcess = this.evalScript(
-      "php",
-      [tinkerScriptAbsolutePath, phpFileRelativePath, workspaceRoot],
-      workspaceRoot,
-    );
-
-    eventBus.setRunning(true);
   }
 
   /**
