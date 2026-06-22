@@ -96,6 +96,24 @@ function evaluatePhpFile($filePath)
     return eval($transformedCode);
 }
 
+function createPhpParser(): \PhpParser\Parser
+{
+    $factory = new \PhpParser\ParserFactory();
+
+    if (method_exists($factory, 'createForHostVersion')) {
+        return $factory->createForHostVersion();
+    }
+
+    if (method_exists($factory, 'createForNewestSupportedVersion')) {
+        return $factory->createForNewestSupportedVersion();
+    }
+
+    return $factory->create(
+        \PhpParser\ParserFactory::PREFER_PHP7,
+        new \PhpParser\Lexer()
+    );
+}
+
 /**
  * Transform the code by inserting a return statement before the final expression,
  * if the last statement is an expression.
@@ -106,8 +124,7 @@ function evaluatePhpFile($filePath)
 function transformCode($code)
 {
 
-    $lexer = new \PhpParser\Lexer();
-    $parser = new \PhpParser\Parser\Php7($lexer);
+    $parser = createPhpParser();
     try {
         $ast = $parser->parse($code);
     } catch (\PhpParser\Error $error) {
